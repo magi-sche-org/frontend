@@ -24,10 +24,13 @@ export const Header = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: "#FFFFDD", color: "black", height: "62px" }}
+    >
+      <Toolbar sx={{ margin: "0 auto", width: "100%", alignItems: "center" }}>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Photos
+          マジスケ
         </Typography>
         <div>
           <IconButton
