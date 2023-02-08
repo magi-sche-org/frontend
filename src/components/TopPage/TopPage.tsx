@@ -7,23 +7,42 @@ export const TopPage = () => {
     <Box
       sx={{
         background: "#006A71",
-        // 100vhにするとスクロール出来てしまうのが問題だが（ヘッダーのサイズがあるため）
+        // vhにするとスクロール出来てしまうのが問題だが（ヘッダーのサイズがあるため）
         // 良い感じの指定の仕方が欲しい
-        height: "100vh",
+        height: "120vh",
         width: "100%",
         padding: "0 30px",
         flexFlow: "column",
       }}
       display="flex"
     >
-      <Box marginTop={"3rem"} display="flex" justifyContent="center">
+      <Box
+        margin={"3rem 0"}
+        display="flex"
+        justifyContent="center"
+        sx={{
+          flexFlow: "column",
+        }}
+      >
+        <Typography
+          color={"white"}
+          sx={{
+            fontSize: 14,
+          }}
+          textAlign="center"
+        >
+          カレンダーを見ながら簡単にスケジュール調整出来るアプリ。
+          <br />
+          マジックスケジュール
+        </Typography>
         <Image
           src={"/images/schedule.png"}
           alt={"scheduleを考える女性の画像"}
-          height={300}
+          height={200}
           width={300}
           style={{ objectFit: "contain" }}
         />
+        <Box></Box>
       </Box>
       <Button text="イベントを作成する" isPrimary={false} onClick={() => {}} />
       <Box marginTop={"20px"}>

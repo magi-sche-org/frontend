@@ -15,6 +15,9 @@ export const Button: FC<ButtonProps> = ({ text, isPrimary, onClick }) => {
         background: isPrimary ? "#006A71" : "white",
         padding: "12px",
         color: isPrimary ? "white" : "black",
+        // ちょっとかなり微妙
+        // border: "none",
+        ":hover": { background: isPrimary ? "#006A71" : "white" },
       }}
       onClick={onClick}
     >

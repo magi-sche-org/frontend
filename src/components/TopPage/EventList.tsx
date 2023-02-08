@@ -26,12 +26,9 @@ export const EventList = () => {
 
 const EventCard: FC<Event> = ({ id, name }) => {
   return (
-    <Card variant="outlined">
+    <Card>
       <CardContent>
-        <Typography
-          sx={{ fontSize: 14, textAlign: "center" }}
-          color="text.secondary"
-        >
+        <Typography sx={{ fontSize: 14, textAlign: "center" }}>
           {name}
         </Typography>
       </CardContent>
