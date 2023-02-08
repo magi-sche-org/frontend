@@ -19,7 +19,6 @@ export const TopPage = () => {
       <Box
         margin={"3rem 0"}
         display="flex"
-        justifyContent="center"
         sx={{
           flexFlow: "column",
         }}
@@ -35,14 +34,15 @@ export const TopPage = () => {
           <br />
           マジックスケジュール
         </Typography>
-        <Image
-          src={"/images/schedule.png"}
-          alt={"scheduleを考える女性の画像"}
-          height={200}
-          width={300}
-          style={{ objectFit: "contain" }}
-        />
-        <Box></Box>
+        <Box display="flex" justifyContent="center">
+          <Image
+            src={"/images/schedule.png"}
+            alt={"scheduleを考える女性の画像"}
+            height={200}
+            width={300}
+            style={{ objectFit: "contain" }}
+          />
+        </Box>
       </Box>
       <Button text="イベントを作成する" isPrimary={false} onClick={() => {}} />
       <Box marginTop={"20px"}>
