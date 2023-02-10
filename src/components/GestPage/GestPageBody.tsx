@@ -21,7 +21,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRouter } from "next/router";
 
-const GuestPageBody: React.FC = () => {
+const GestPageBody: React.FC = () => {
 	const router = useRouter();
 
 	const [CalenderBarOpen, setCalenderBarOpen] = useState<Boolean>(true);
@@ -186,4 +186,4 @@ const GuestPageBody: React.FC = () => {
 	);
 };
 
-export default GuestPageBody;
+export default GestPageBody;
