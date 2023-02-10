@@ -42,7 +42,7 @@ const GestPageBody: React.FC = () => {
 			{CalenderBarOpen ? (
 				<Stack
 					sx={{ p: 3, pb: 0.5, bgcolor: "primary.main" }}
-					style={{ overflowX: "auto", whiteSpace: "nowrap", width: "390px" }}
+					style={{ overflowX: "auto", whiteSpace: "nowrap", width: "100%" }}
 				>
 					<Stack direction='row' spacing={1}>
 						{calenderData.map((calenderInfo) => {
