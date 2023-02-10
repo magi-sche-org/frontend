@@ -40,7 +40,10 @@ const GestPageBody: React.FC = () => {
 		<>
 			{/* カレンダーバー */}
 			{CalenderBarOpen ? (
-				<Stack sx={{ p: 3, pb: 0.5, bgcolor: "primary.main" }}>
+				<Stack
+					sx={{ p: 3, pb: 0.5, bgcolor: "primary.main" }}
+					style={{ overflowX: "auto", whiteSpace: "nowrap", width: "390px" }}
+				>
 					<Stack direction='row' spacing={1}>
 						{calenderData.map((calenderInfo) => {
 							return (
@@ -48,7 +51,13 @@ const GestPageBody: React.FC = () => {
 									key={calenderInfo.dayNum}
 									direction='column'
 									spacing={0.5}
-									sx={{ bgcolor: "white", borderRadius: 3, width: "120px", height: "120px", p: 2 }}
+									sx={{
+										bgcolor: "white",
+										borderRadius: 3,
+										minwidth: "120px",
+										height: "120px",
+										p: 2
+									}}
 								>
 									<Typography variant='caption' sx={{ textAlign: "center" }}>
 										{calenderInfo.dayNum}
