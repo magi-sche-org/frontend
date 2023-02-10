@@ -1,0 +1,27 @@
+[
+    {
+        "dayNum":1,
+        "schedule":[
+            {
+                "eventTitle":"チームMTG",
+                "startTime":8,
+                "endTime":11
+            }
+        ]
+    },
+    {
+        "dayNum":2,
+        "schedule":[
+            {
+                "eventTitle":"フロントMTG",
+                "startTime":10,
+                "endTime":12
+            }
+        ]
+    },
+    {
+        "dayNum":3,
+        "schedule":[
+        ]
+    }
+]
