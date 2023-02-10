@@ -1,6 +1,5 @@
 import {
 	Alert,
-	AlertTitle,
 	Box,
 	Checkbox,
 	IconButton,
@@ -14,8 +13,7 @@ import {
 	Typography
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { FC, useState } from "react";
-import { SecondaryHeader } from "../SecondaryHeader";
+import { useState } from "react";
 import calenderData from "./calenderData.json";
 import eventData from "./eventData.json";
 import { Button } from "../Button";
@@ -47,6 +45,7 @@ const GuestPageBody: React.FC = () => {
 						{calenderData.map((calenderInfo) => {
 							return (
 								<Stack
+									key={calenderInfo.dayNum}
 									direction='column'
 									spacing={0.5}
 									sx={{ bgcolor: "white", borderRadius: 3, width: "120px", height: "120px", p: 2 }}
@@ -57,6 +56,7 @@ const GuestPageBody: React.FC = () => {
 									{calenderInfo.schedule.map((scheduleInfo) => {
 										return (
 											<Stack
+												key={scheduleInfo.eventTitle}
 												sx={{
 													border: "solid",
 													borderWidth: 1,
@@ -136,7 +136,7 @@ const GuestPageBody: React.FC = () => {
 						<TableBody>
 							{eventData.ScheduleList.map((ScheduleInfo) => {
 								return (
-									<TableRow>
+									<TableRow key={ScheduleInfo.day}>
 										<TableCell>
 											<Typography variant='body1'>
 												{ScheduleInfo.day}
