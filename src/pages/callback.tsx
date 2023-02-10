@@ -11,7 +11,7 @@ const Callback = () => {
         setMessage(`encountered the following error:\n${e}`);
       }
     }
-  })
+  },[])
   return <>
     {message && <pre><code>{message}</code></pre>}
   </>;
