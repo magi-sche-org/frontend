@@ -11,23 +11,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
 import { Stack } from "@mui/system";
 import { FC, useState } from "react";
 import eventData from "./eventData.json";
 import { Button } from "../Button";
 
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { UserCalender } from "./UserCalender";
-import { createProposedScheduleList } from "./proposedSchedule";
+import { eventClient } from "@/service/api-client/client";
 import {
   Answer,
   GetEventResponse,
   RegisterAnswerRequest,
-} from "../../service/api-client/protocol/event_pb";
-import { eventClient } from "../../service/api-client/client";
+} from "@/service/api-client/protocol/event_pb";
+import { useSnackbar } from "notistack";
+import { UserCalender } from "./UserCalender";
 import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
+
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
@@ -43,7 +42,7 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
-    request.setEventid(eventDetail.id);
+    request.setId(eventDetail.id);
     // TODO: トークン入れる
     request.setToken("hogehoge");
     // TODO: 答え登録
@@ -113,15 +112,13 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eventSchedule.map((event) => {
+              {eventData.ScheduleList.map((ScheduleInfo) => {
                 return (
-                  <TableRow key={event.key}>
+                  <TableRow key={ScheduleInfo.id}>
                     <TableCell>
                       <Typography variant="body1">
-                        {event.startTime.getMonth() + 1} /{" "}
-                        {event.startTime.getDay()} {event.startTime.getHours()}:
-                        {event.startTime.getMinutes()}〜
-                        {event.endTime.getHours()}:{event.endTime.getMinutes()}
+                        {ScheduleInfo.day}
+                        {ScheduleInfo.startTime}〜{ScheduleInfo.endTime}
                       </Typography>
                     </TableCell>
                     <TableCell>
