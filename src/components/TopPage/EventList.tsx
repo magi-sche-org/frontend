@@ -7,6 +7,7 @@ import { EventClient } from "@/service/api-client/protocol/EventServiceClientPb"
 import { GetEventRequest } from "@/service/api-client/protocol/event_pb";
 import { AuthorizeClient } from "@/service/api-client/protocol/AuthorizeServiceClientPb";
 import { GetTokenRequest } from "@/service/api-client/protocol/authorize_pb";
+import { client } from "@/service/api-client/client";
 export type Event = {
   id: number;
   name: string;
@@ -15,13 +16,6 @@ export type Event = {
 export const EventList = () => {
   // TODO: LocalStorageから取得
   const data = mockEventList;
-  useEffect(() => {
-    const client = new AuthorizeClient("http://localhost:9000", null, null);
-    const req = new GetTokenRequest();
-    const token = client.getToken(req, null).then((res) => {
-      console.log(res);
-    });
-  }, []);
   return (
     <>
       {data.map((event) => {
