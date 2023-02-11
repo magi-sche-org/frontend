@@ -1,3 +1,3 @@
 export type ApiError = {
-	error: string;
+  error: string;
 };
