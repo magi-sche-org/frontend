@@ -11,34 +11,35 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import React from "react";
 import { Stack } from "@mui/system";
 import { FC, useState } from "react";
 import eventData from "./eventData.json";
 import { Button } from "../Button";
 
 import { useRouter } from "next/router";
-import { eventClient } from "@/service/api-client/client";
+import { useSnackbar } from "notistack";
+import { UserCalender } from "./UserCalender";
+import { createProposedScheduleList } from "./proposedSchedule";
 import {
   GetEventResponse,
   RegisterAnswerRequest,
-} from "@/service/api-client/protocol/event_pb";
-import { useSnackbar } from "notistack";
-import { UserCalender } from "./UserCalender";
-
+} from "../../service/api-client/protocol/event_pb";
+import { eventClient } from "../../service/api-client/client";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
 const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
   const router = useRouter();
-
-  const [NameText, setNameText] = useState<String>("");
-  const [LoginFlg, setLoginFlg] = useState<Boolean>(false);
+  const [eventSchedule, _] = useState(createProposedScheduleList(eventDetail));
+  const [NameText, setNameText] = useState<string>("");
+  const [LoginFlg, setLoginFlg] = useState<boolean>(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
-    request.setId(eventDetail.id);
+    request.setEventid(eventDetail.id);
     // TODO: トークン入れる
     request.setToken("hogehoge");
     // TODO: 答え登録
@@ -93,13 +94,15 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eventData.ScheduleList.map((ScheduleInfo) => {
+              {eventSchedule.map((event) => {
                 return (
-                  <TableRow key={ScheduleInfo.id}>
+                  <TableRow key={event.key}>
                     <TableCell>
                       <Typography variant="body1">
-                        {ScheduleInfo.day}
-                        {ScheduleInfo.startTime}〜{ScheduleInfo.endTime}
+                        {event.startTime.getMonth() + 1} /{" "}
+                        {event.startTime.getDay()} {event.startTime.getHours()}:
+                        {event.startTime.getMinutes()}〜
+                        {event.endTime.getHours()}:{event.endTime.getMinutes()}
                       </Typography>
                     </TableCell>
                     <TableCell>
