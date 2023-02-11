@@ -1,5 +1,6 @@
-import { AuthorizationTokens } from "@/@types/authorization";
-import { ScheduleResponse } from "@/@types/event";
+import type { AuthorizationTokens } from "@/@types/authorization";
+import type { ScheduleResponse } from "@/@types/event";
+import type { userInfo } from "@/@types/userInfo";
 
 const typeGuard = {
 	AuthorizationTokens: (i: unknown): i is AuthorizationTokens =>
@@ -26,6 +27,9 @@ const typeGuard = {
 			"timeZone",
 			"updated",
 		]),
+	userInfo: (i: unknown): i is userInfo =>
+		typeof i === "object" &&
+		objectVerify(i, ["id", "email", "verified_email", "picture"]),
 };
 
 const objectVerify = (item: unknown, keys: string[]): boolean => {
