@@ -17,9 +17,6 @@ export namespace GetTokenRequest {
 }
 
 export class GetTokenReply extends jspb.Message {
-  getStatus(): number;
-  setStatus(value: number): GetTokenReply;
-
   getToken(): string;
   setToken(value: string): GetTokenReply;
 
@@ -33,7 +30,6 @@ export class GetTokenReply extends jspb.Message {
 
 export namespace GetTokenReply {
   export type AsObject = {
-    status: number,
     token: string,
   }
 }
@@ -65,9 +61,6 @@ export namespace LinkTokenRequest {
 }
 
 export class LinkTokenReply extends jspb.Message {
-  getStatus(): number;
-  setStatus(value: number): LinkTokenReply;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): LinkTokenReply.AsObject;
   static toObject(includeInstance: boolean, msg: LinkTokenReply): LinkTokenReply.AsObject;
@@ -78,7 +71,6 @@ export class LinkTokenReply extends jspb.Message {
 
 export namespace LinkTokenReply {
   export type AsObject = {
-    status: number,
   }
 }
 

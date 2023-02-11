@@ -236,7 +236,6 @@ proto.geekCamp.GetTokenReply.prototype.toObject = function(opt_includeInstance) 
  */
 proto.geekCamp.GetTokenReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
     token: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
@@ -274,10 +273,6 @@ proto.geekCamp.GetTokenReply.deserializeBinaryFromReader = function(msg, reader)
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setStatus(value);
-      break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
       msg.setToken(value);
@@ -311,13 +306,6 @@ proto.geekCamp.GetTokenReply.prototype.serializeBinary = function() {
  */
 proto.geekCamp.GetTokenReply.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getStatus();
-  if (f !== 0) {
-    writer.writeInt64(
-      1,
-      f
-    );
-  }
   f = message.getToken();
   if (f.length > 0) {
     writer.writeString(
@@ -325,24 +313,6 @@ proto.geekCamp.GetTokenReply.serializeBinaryToWriter = function(message, writer)
       f
     );
   }
-};
-
-
-/**
- * optional int64 status = 1;
- * @return {number}
- */
-proto.geekCamp.GetTokenReply.prototype.getStatus = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.geekCamp.GetTokenReply} returns this
- */
-proto.geekCamp.GetTokenReply.prototype.setStatus = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -586,7 +556,7 @@ proto.geekCamp.LinkTokenReply.prototype.toObject = function(opt_includeInstance)
  */
 proto.geekCamp.LinkTokenReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0)
+
   };
 
   if (includeInstance) {
@@ -623,10 +593,6 @@ proto.geekCamp.LinkTokenReply.deserializeBinaryFromReader = function(msg, reader
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setStatus(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -656,31 +622,6 @@ proto.geekCamp.LinkTokenReply.prototype.serializeBinary = function() {
  */
 proto.geekCamp.LinkTokenReply.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getStatus();
-  if (f !== 0) {
-    writer.writeInt64(
-      1,
-      f
-    );
-  }
-};
-
-
-/**
- * optional int64 status = 1;
- * @return {number}
- */
-proto.geekCamp.LinkTokenReply.prototype.getStatus = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.geekCamp.LinkTokenReply} returns this
- */
-proto.geekCamp.LinkTokenReply.prototype.setStatus = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
