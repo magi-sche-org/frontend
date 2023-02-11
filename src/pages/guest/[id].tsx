@@ -34,7 +34,7 @@ const GuestPage = () => {
           variant: "error",
         });
       });
-  }, [id]);
+  }, [id,enqueueSnackbar]);
   return (
     <>
       <SecondaryHeader />
