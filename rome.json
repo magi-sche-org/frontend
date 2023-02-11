@@ -1,5 +1,10 @@
 {
-  "linter": {
-    "ignore": ["/src/service/*.*"]
+  "formatter": {
+    "indentStyle": "space",
+    "lineWidth": 120,
+    "ignore": ["src/service"]
+  },
+  "files": {
+    "ignore": ["src/service"]
   }
 }
