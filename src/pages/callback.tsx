@@ -16,7 +16,7 @@ const Callback = () => {
 				}
 			}
 		})();
-	}, [setMessage]);
+	}, [setMessage,router]);
 	return (
 		<>
 			{message && (
