@@ -51,6 +51,11 @@ export class GetEventResponse extends jspb.Message {
   clearAnswersList(): GetEventResponse;
   addAnswers(value?: Answer, index?: number): Answer;
 
+  getProposedstarttimeList(): Array<google_protobuf_timestamp_pb.Timestamp>;
+  setProposedstarttimeList(value: Array<google_protobuf_timestamp_pb.Timestamp>): GetEventResponse;
+  clearProposedstarttimeList(): GetEventResponse;
+  addProposedstarttime(value?: google_protobuf_timestamp_pb.Timestamp, index?: number): google_protobuf_timestamp_pb.Timestamp;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetEventResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetEventResponse): GetEventResponse.AsObject;
@@ -67,6 +72,7 @@ export namespace GetEventResponse {
     timeunit?: google_protobuf_duration_pb.Duration.AsObject,
     duration?: google_protobuf_duration_pb.Duration.AsObject,
     answersList: Array<Answer.AsObject>,
+    proposedstarttimeList: Array<google_protobuf_timestamp_pb.Timestamp.AsObject>,
   }
 }
 
@@ -111,11 +117,8 @@ export namespace CreateEventRequest {
 }
 
 export class CreateEventResponse extends jspb.Message {
-  getStatus(): number;
-  setStatus(value: number): CreateEventResponse;
-
-  getId(): string;
-  setId(value: string): CreateEventResponse;
+  getEventid(): string;
+  setEventid(value: string): CreateEventResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreateEventResponse.AsObject;
@@ -127,14 +130,13 @@ export class CreateEventResponse extends jspb.Message {
 
 export namespace CreateEventResponse {
   export type AsObject = {
-    status: number,
-    id: string,
+    eventid: string,
   }
 }
 
 export class RegisterAnswerRequest extends jspb.Message {
-  getId(): string;
-  setId(value: string): RegisterAnswerRequest;
+  getEventid(): string;
+  setEventid(value: string): RegisterAnswerRequest;
 
   getToken(): string;
   setToken(value: string): RegisterAnswerRequest;
@@ -154,7 +156,7 @@ export class RegisterAnswerRequest extends jspb.Message {
 
 export namespace RegisterAnswerRequest {
   export type AsObject = {
-    id: string,
+    eventid: string,
     token: string,
     answer?: Answer.AsObject,
   }
