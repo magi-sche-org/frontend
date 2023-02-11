@@ -1,7 +1,8 @@
 {
   "formatter": {
     "indentStyle": "space",
-    "lineWidth": 120
+    "lineWidth": 120,
+    "ignore": ["src/service"]
   },
   "linter": {
     "ignore": ["src/service"]
