@@ -7,6 +7,6 @@ export const ModalStyle = {
 	border: "0.5px solid",
 	borderRadius: 5,
 	boxShadow: 10,
-	p: 2,
-	py: 6
+	p: 1,
+	py: 5
 };
