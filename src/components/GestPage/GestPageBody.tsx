@@ -22,10 +22,12 @@ import { useSnackbar } from "notistack";
 import { UserCalender } from "./UserCalender";
 import { createProposedScheduleList } from "./proposedSchedule";
 import {
+  Answer,
   GetEventResponse,
   RegisterAnswerRequest,
 } from "../../service/api-client/protocol/event_pb";
 import { eventClient } from "../../service/api-client/client";
+import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
@@ -34,16 +36,33 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
   const [eventSchedule, _] = useState(createProposedScheduleList(eventDetail));
   const [NameText, setNameText] = useState<string>("");
   const [LoginFlg, setLoginFlg] = useState<boolean>(false);
-
+  const [checklist, setChecklist] = useState<boolean[]>(
+    [...Array(eventSchedule.length)].map(() => true)
+  );
   const { enqueueSnackbar } = useSnackbar();
-
+  
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
     request.setEventid(eventDetail.id);
     // TODO: トークン入れる
     request.setToken("hogehoge");
     // TODO: 答え登録
-    request.setAnswer();
+    const answer = new Answer();
+    answer.setName("名前");
+    const proposedScheduleList = eventSchedule.map((event) => {
+      const proposedSchedule = new Answer.ProposedSchedule();
+      const startTime = new Timestamp();
+      startTime.fromDate(event.startTime);
+      proposedSchedule.setStarttime(startTime);
+      proposedSchedule.setAvailability(
+        checklist[event.key]
+          ? Answer.ProposedSchedule.Availability.AVAILABLE
+          : Answer.ProposedSchedule.Availability.UNAVAILABLE
+      );
+      return proposedSchedule;
+    });
+    answer.setScheduleList(proposedScheduleList);
+    request.setAnswer(answer);
     eventClient
       .registerAnswer(request, null)
       .then((res) => console.log(res))
@@ -55,7 +74,7 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
         router.push("/");
       });
   };
-
+  
   return (
     <>
       <UserCalender />
@@ -106,7 +125,14 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Checkbox defaultChecked />
+                      <Checkbox
+                        onChange={(e) => {
+                          const newChecklist = [...checklist];
+                          newChecklist[event.key] = e.target.checked;
+                          setChecklist(newChecklist);
+                        }}
+                        checked={checklist[event.key]}
+                      />
                     </TableCell>
                   </TableRow>
                 );

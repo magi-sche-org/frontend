@@ -1,7 +1,7 @@
 import { GetEventResponse } from "../../service/api-client/protocol/event_pb";
 
 type EventScheduleUnit = {
-  key: string;
+  key: number;
   startTime: Date;
   endTime: Date;
 };
@@ -17,8 +17,8 @@ export const createProposedScheduleList: (
     const startTime = new Date();
     const endTime = new Date();
     startTime.setDate(startTime.getDate() - i);
-    return { key: String(i), startTime, endTime };
+    return { key: i, startTime, endTime };
   });
-
+  
   return proposedScheduleList;
 };
