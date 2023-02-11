@@ -28,10 +28,6 @@
   },
   "devDependencies": {
     "@grpc/proto-loader": "^0.7.4",
-    "grpc": "^1.24.11",
-    "msw": "^1.0.1"
-  },
-  "msw": {
-    "workerDirectory": "public"
+    "grpc": "^1.24.11"
   }
 }
