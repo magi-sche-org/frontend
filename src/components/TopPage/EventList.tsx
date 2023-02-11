@@ -27,7 +27,7 @@ export const EventList = () => {
       {data.map((event) => {
         return (
           <Box marginBottom={"10px"} key={event.id}>
-            <EventCard {...event}></EventCard>
+            <EventCard {...event} />
           </Box>
         );
       })}
