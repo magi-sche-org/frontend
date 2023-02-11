@@ -52,7 +52,7 @@ jobs:
   rome:
     runs-on: ubuntu-latest
 
-    name: A job to test action
+    name: Run rome scanning
 
     steps:
       - uses: actions/checkout@v1
