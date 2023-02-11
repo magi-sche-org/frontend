@@ -7,6 +7,7 @@ import { EventClient } from "@/service/api-client/protocol/EventServiceClientPb"
 import { GetEventRequest } from "@/service/api-client/protocol/event_pb";
 import { AuthorizeClient } from "@/service/api-client/protocol/AuthorizeServiceClientPb";
 import { GetTokenRequest } from "@/service/api-client/protocol/authorize_pb";
+import { authClient } from "@/service/api-client/client";
 export type Event = {
   id: number;
   name: string;

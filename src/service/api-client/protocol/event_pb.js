@@ -362,7 +362,7 @@ proto.geekCamp.GetEventRequest.prototype.setToken = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.geekCamp.GetEventResponse.repeatedFields_ = [6];
+proto.geekCamp.GetEventResponse.repeatedFields_ = [6,7];
 
 
 
@@ -401,7 +401,9 @@ proto.geekCamp.GetEventResponse.toObject = function(includeInstance, msg) {
     timeunit: (f = msg.getTimeunit()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
     duration: (f = msg.getDuration()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
     answersList: jspb.Message.toObjectList(msg.getAnswersList(),
-    proto.geekCamp.Answer.toObject, includeInstance)
+    proto.geekCamp.Answer.toObject, includeInstance),
+    proposedstarttimeList: jspb.Message.toObjectList(msg.getProposedstarttimeList(),
+    google_protobuf_timestamp_pb.Timestamp.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -464,6 +466,11 @@ proto.geekCamp.GetEventResponse.deserializeBinaryFromReader = function(msg, read
       var value = new proto.geekCamp.Answer;
       reader.readMessage(value,proto.geekCamp.Answer.deserializeBinaryFromReader);
       msg.addAnswers(value);
+      break;
+    case 7:
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
+      msg.addProposedstarttime(value);
       break;
     default:
       reader.skipField();
@@ -537,6 +544,14 @@ proto.geekCamp.GetEventResponse.serializeBinaryToWriter = function(message, writ
       6,
       f,
       proto.geekCamp.Answer.serializeBinaryToWriter
+    );
+  }
+  f = message.getProposedstarttimeList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      7,
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
 };
@@ -705,6 +720,44 @@ proto.geekCamp.GetEventResponse.prototype.addAnswers = function(opt_value, opt_i
  */
 proto.geekCamp.GetEventResponse.prototype.clearAnswersList = function() {
   return this.setAnswersList([]);
+};
+
+
+/**
+ * repeated google.protobuf.Timestamp proposedStartTime = 7;
+ * @return {!Array<!proto.google.protobuf.Timestamp>}
+ */
+proto.geekCamp.GetEventResponse.prototype.getProposedstarttimeList = function() {
+  return /** @type{!Array<!proto.google.protobuf.Timestamp>} */ (
+    jspb.Message.getRepeatedWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 7));
+};
+
+
+/**
+ * @param {!Array<!proto.google.protobuf.Timestamp>} value
+ * @return {!proto.geekCamp.GetEventResponse} returns this
+*/
+proto.geekCamp.GetEventResponse.prototype.setProposedstarttimeList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 7, value);
+};
+
+
+/**
+ * @param {!proto.google.protobuf.Timestamp=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.google.protobuf.Timestamp}
+ */
+proto.geekCamp.GetEventResponse.prototype.addProposedstarttime = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 7, opt_value, proto.google.protobuf.Timestamp, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.geekCamp.GetEventResponse} returns this
+ */
+proto.geekCamp.GetEventResponse.prototype.clearProposedstarttimeList = function() {
+  return this.setProposedstarttimeList([]);
 };
 
 
@@ -1062,8 +1115,7 @@ proto.geekCamp.CreateEventResponse.prototype.toObject = function(opt_includeInst
  */
 proto.geekCamp.CreateEventResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    id: jspb.Message.getFieldWithDefault(msg, 2, "")
+    eventid: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1100,13 +1152,9 @@ proto.geekCamp.CreateEventResponse.deserializeBinaryFromReader = function(msg, r
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setStatus(value);
-      break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setId(value);
+      msg.setEventid(value);
       break;
     default:
       reader.skipField();
@@ -1137,14 +1185,7 @@ proto.geekCamp.CreateEventResponse.prototype.serializeBinary = function() {
  */
 proto.geekCamp.CreateEventResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getStatus();
-  if (f !== 0) {
-    writer.writeInt64(
-      1,
-      f
-    );
-  }
-  f = message.getId();
+  f = message.getEventid();
   if (f.length > 0) {
     writer.writeString(
       2,
@@ -1155,28 +1196,10 @@ proto.geekCamp.CreateEventResponse.serializeBinaryToWriter = function(message, w
 
 
 /**
- * optional int64 status = 1;
- * @return {number}
- */
-proto.geekCamp.CreateEventResponse.prototype.getStatus = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.geekCamp.CreateEventResponse} returns this
- */
-proto.geekCamp.CreateEventResponse.prototype.setStatus = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
-};
-
-
-/**
- * optional string id = 2;
+ * optional string eventId = 2;
  * @return {string}
  */
-proto.geekCamp.CreateEventResponse.prototype.getId = function() {
+proto.geekCamp.CreateEventResponse.prototype.getEventid = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -1185,7 +1208,7 @@ proto.geekCamp.CreateEventResponse.prototype.getId = function() {
  * @param {string} value
  * @return {!proto.geekCamp.CreateEventResponse} returns this
  */
-proto.geekCamp.CreateEventResponse.prototype.setId = function(value) {
+proto.geekCamp.CreateEventResponse.prototype.setEventid = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
@@ -1222,7 +1245,7 @@ proto.geekCamp.RegisterAnswerRequest.prototype.toObject = function(opt_includeIn
  */
 proto.geekCamp.RegisterAnswerRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    eventid: jspb.Message.getFieldWithDefault(msg, 1, ""),
     token: jspb.Message.getFieldWithDefault(msg, 2, ""),
     answer: (f = msg.getAnswer()) && proto.geekCamp.Answer.toObject(includeInstance, f)
   };
@@ -1263,7 +1286,7 @@ proto.geekCamp.RegisterAnswerRequest.deserializeBinaryFromReader = function(msg,
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setId(value);
+      msg.setEventid(value);
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
@@ -1303,7 +1326,7 @@ proto.geekCamp.RegisterAnswerRequest.prototype.serializeBinary = function() {
  */
 proto.geekCamp.RegisterAnswerRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getId();
+  f = message.getEventid();
   if (f.length > 0) {
     writer.writeString(
       1,
@@ -1329,10 +1352,10 @@ proto.geekCamp.RegisterAnswerRequest.serializeBinaryToWriter = function(message,
 
 
 /**
- * optional string id = 1;
+ * optional string eventId = 1;
  * @return {string}
  */
-proto.geekCamp.RegisterAnswerRequest.prototype.getId = function() {
+proto.geekCamp.RegisterAnswerRequest.prototype.getEventid = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -1341,7 +1364,7 @@ proto.geekCamp.RegisterAnswerRequest.prototype.getId = function() {
  * @param {string} value
  * @return {!proto.geekCamp.RegisterAnswerRequest} returns this
  */
-proto.geekCamp.RegisterAnswerRequest.prototype.setId = function(value) {
+proto.geekCamp.RegisterAnswerRequest.prototype.setEventid = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 

@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import "@/styles/globals.css";
 import { createTheme, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
+import { SnackbarProvider } from "notistack";
 
 export default function App({ Component, pageProps }: AppProps) {
   const mainTheme = createTheme({
@@ -28,8 +29,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <ThemeProvider theme={mainTheme}>
-        <Header />
-        <Component {...pageProps} />
+        <SnackbarProvider>
+          <Header />
+          <Component {...pageProps} />
+        </SnackbarProvider>
       </ThemeProvider>
     </>
   );
