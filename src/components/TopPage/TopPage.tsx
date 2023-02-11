@@ -9,7 +9,6 @@ export const TopPage: React.FC = () => {
   const ChangeEventMakePage = () => {
     router.push("/EventMakePage");
   };
-
   return (
     <Box
       sx={{
@@ -19,29 +18,29 @@ export const TopPage: React.FC = () => {
         height: "120vh",
         width: "100%",
         padding: "0 30px",
-        flexFlow: "column"
+        flexFlow: "column",
       }}
-      display='flex'
+      display="flex"
     >
       <Box
         margin={"3rem 0"}
-        display='flex'
+        display="flex"
         sx={{
-          flexFlow: "column"
+          flexFlow: "column",
         }}
       >
         <Typography
           color={"white"}
           sx={{
-            fontSize: 14
+            fontSize: 14,
           }}
-          textAlign='center'
+          textAlign="center"
         >
           カレンダーを見ながら簡単にスケジュール調整出来るアプリ。
           <br />
           マジックスケジュール
         </Typography>
-        <Box display='flex' justifyContent='center'>
+        <Box display="flex" justifyContent="center">
           <Image
             src={"/images/schedule.png"}
             alt={"scheduleを考える女性の画像"}
@@ -51,9 +50,13 @@ export const TopPage: React.FC = () => {
           />
         </Box>
       </Box>
-      <Button text='イベントを作成する' isPrimary={false} onClick={ChangeEventMakePage} />
+      <Button text="イベントを作成する" isPrimary={false} onClick={() => {}} />
       <Box marginTop={"20px"}>
-        <Typography color={"white"} sx={{ fontSize: 16, fontWeight: "bold" }} gutterBottom>
+        <Typography
+          color={"white"}
+          sx={{ fontSize: 16, fontWeight: "bold" }}
+          gutterBottom
+        >
           イベント一覧
         </Typography>
         <EventList />
