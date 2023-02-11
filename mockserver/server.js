@@ -3,6 +3,11 @@ const PROTO_EVENT = "protocol" + "/event.proto";
 
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
+const Timestamp = require("google-protobuf/google/protobuf/timestamp_pb");
+const Duration = require("google-protobuf/google/protobuf/duration_pb");
+
+// console.log(typeof Duration);
+// console.log(Duration.Duration);
 const packageAuthDefinition = protoLoader.loadSync(PROTO_AUTH, {
   keepCase: true,
   longs: String,
@@ -38,6 +43,8 @@ function doGetToken(call, callback) {
 // google.protobuf.Duration duration = 5;  // 所要時間
 // repeated Answer          answers  = 6;  // 参加者の解答
 function doGetEvent(call, callback) {
+  // const d = new Duration();
+  // d.getSeconds(60 * 30);
   callback(null, {
     id: "hoge",
     name: "イベントモック",
@@ -45,11 +52,16 @@ function doGetEvent(call, callback) {
     timeUnit: null,
     duration: null,
     answers: [],
+    proposedStartTime: [...Array(5)].map((_, v) => {
+      const date = new Date();
+      date.setDate(date.getDate() - v);
+      return Timestamp.Timestamp.fromDate(date);
+    }),
   });
 }
 
 function doRegisterAnswer(call, callback) {
-  callback(null, {})
+  callback(null, {});
 }
 
 function getServer() {
