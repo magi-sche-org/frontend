@@ -11,7 +11,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { login, reset } from "@/libraries/authorization";
+import { login, revokeToken } from "@/libraries/authorization";
 import { getUserInfo } from "@/libraries/userInfo";
 
 export const Header = () => {
@@ -19,7 +19,7 @@ export const Header = () => {
 
 	const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
 		if (getUserInfo()) {
-			void reset();
+			void revokeToken();
 		} else {
 			login();
 		}

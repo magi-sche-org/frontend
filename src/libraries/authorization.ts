@@ -17,7 +17,7 @@ const login = () => {
 	location.href = getLoginUrl(uuid);
 };
 
-const reset = async () => {
+const revokeToken = async () => {
 	const token = localStorage.getItem("gcp_token");
 	if (token) {
 		const req = await requests(getRevokeUrl(token));
@@ -52,4 +52,4 @@ const parseToken = async () => {
 	localStorage.setItem("gcp_userInfo", JSON.stringify(await fetchUserInfo()));
 };
 
-export { login, reset, parseToken };
+export { login, revokeToken, parseToken };
