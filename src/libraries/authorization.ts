@@ -1,5 +1,6 @@
 import {typeGuard} from "@/libraries/typeGuard";
 import {generateUuid} from "@/libraries/uuid";
+import {getSchedules} from "@/libraries/calendar";
 
 const baseUri = "https://accounts.google.com/o/oauth2/v2/auth";
 const clientId = process.env.NEXT_PUBLIC_GCP_CLIENT_ID;
@@ -22,7 +23,8 @@ const parseToken = () => {
   if (!typeGuard.AuthorizationTokens(data)||data.state !== localStorage.getItem("gcp_state")){
     throw new Error("Invalid oauth response");
   }
-  console.log(data);
+  localStorage.setItem("gcp_token",data.access_token);
+  //getSchedules(new Date()).then(val=>console.log(val));
 }
 
 export {login,parseToken};
