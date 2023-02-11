@@ -1,8 +1,14 @@
 import { Box, Container, Typography } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { Button } from "../Button";
 import { EventList } from "./EventList";
-export const TopPage = () => {
+export const TopPage: React.FC = () => {
+  const router = useRouter();
+
+  const ChangeEventMakePage = () => {
+    router.push("/EventMakePage");
+  };
   return (
     <Box
       sx={{
