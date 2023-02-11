@@ -1,5 +1,5 @@
 {
   "linter": {
-    "ignore": ["/src/service/*.*
+    "ignore": ["/src/service/*.*"]
   }
 }
