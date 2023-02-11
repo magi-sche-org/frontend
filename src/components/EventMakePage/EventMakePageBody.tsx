@@ -87,6 +87,7 @@ const EventMakePageBody: React.FC = () => {
     eventClient
       .createEvent(request, null)
       .then((res) => {
+        console.log(res);
         const id = res.getEventid();
         // TODO: 環境変数
         setShareURL(`localhost:3000/guest/${id}`);
@@ -106,6 +107,22 @@ const EventMakePageBody: React.FC = () => {
     22, 23, 24,
   ];
 
+  const copyTextToClipboard = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        enqueueSnackbar("URLをコピーしました", {
+          autoHideDuration: 2000,
+          variant: "success",
+        });
+      })
+      .catch(() => {
+        enqueueSnackbar("URLのコピーに失敗しました", {
+          autoHideDuration: 2000,
+          variant: "error",
+        });
+      });
+  };
   return (
     <>
       <Stack sx={{ p: 3 }}>
@@ -237,7 +254,11 @@ const EventMakePageBody: React.FC = () => {
               variant="standard"
               InputProps={{
                 startAdornment: (
-                  <IconButton>
+                  <IconButton
+                    onClick={() => {
+                      copyTextToClipboard(shareURL);
+                    }}
+                  >
                     <ContentCopyOutlinedIcon />
                   </IconButton>
                 ),
