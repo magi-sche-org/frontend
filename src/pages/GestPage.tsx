@@ -4,7 +4,6 @@ import { SecondaryHeader } from "@/components/SecondaryHeader";
 const GestPage = () => {
 	return (
 		<>
-			<SecondaryHeader />
 			<GestPageBody />
 		</>
 	);
