@@ -6,8 +6,18 @@ const protoLoader = require("@grpc/proto-loader");
 const Timestamp = require("google-protobuf/google/protobuf/timestamp_pb");
 const Duration = require("google-protobuf/google/protobuf/duration_pb");
 
-// console.log(typeof Duration);
-// console.log(Duration.Duration);
+console.log(Object.getPrototypeOf(Timestamp));
+console.log(
+  [...Array(5)]
+    .map((_, v) => {
+      const date = new Date();
+      date.setDate(date.getDate() - v);
+      return Timestamp.Timestamp.fromDate(date);
+    })
+    .map((res) => {
+      return Timestamp.Timestamp.toDate(res);
+    })
+);
 const packageAuthDefinition = protoLoader.loadSync(PROTO_AUTH, {
   keepCase: true,
   longs: String,

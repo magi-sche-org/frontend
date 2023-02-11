@@ -11,38 +11,58 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import React from "react";
 import { Stack } from "@mui/system";
 import { FC, useState } from "react";
 import eventData from "./eventData.json";
 import { Button } from "../Button";
 
 import { useRouter } from "next/router";
-import { eventClient } from "@/service/api-client/client";
-import {
-  GetEventResponse,
-  RegisterAnswerRequest,
-} from "@/service/api-client/protocol/event_pb";
 import { useSnackbar } from "notistack";
 import { UserCalender } from "./UserCalender";
-
+import { createProposedScheduleList } from "./proposedSchedule";
+import {
+  Answer,
+  GetEventResponse,
+  RegisterAnswerRequest,
+} from "../../service/api-client/protocol/event_pb";
+import { eventClient } from "../../service/api-client/client";
+import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
 const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
   const router = useRouter();
-
-  const [NameText, setNameText] = useState<String>("");
-  const [LoginFlg, setLoginFlg] = useState<Boolean>(false);
-
+  const [eventSchedule, _] = useState(createProposedScheduleList(eventDetail));
+  const [NameText, setNameText] = useState<string>("");
+  const [LoginFlg, setLoginFlg] = useState<boolean>(false);
+  const [checklist, setChecklist] = useState<boolean[]>(
+    [...Array(eventSchedule.length)].map(() => true)
+  );
   const { enqueueSnackbar } = useSnackbar();
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
-    request.setId(eventDetail.id);
+    request.setEventid(eventDetail.id);
     // TODO: トークン入れる
     request.setToken("hogehoge");
     // TODO: 答え登録
-    request.setAnswer();
+    const answer = new Answer();
+    answer.setName("名前");
+    const proposedScheduleList = eventSchedule.map((event) => {
+      const proposedSchedule = new Answer.ProposedSchedule();
+      const startTime = new Timestamp();
+      startTime.fromDate(event.startTime);
+      proposedSchedule.setStarttime(startTime);
+      proposedSchedule.setAvailability(
+        checklist[event.key]
+          ? Answer.ProposedSchedule.Availability.AVAILABLE
+          : Answer.ProposedSchedule.Availability.UNAVAILABLE
+      );
+      return proposedSchedule;
+    });
+    answer.setScheduleList(proposedScheduleList);
+    request.setAnswer(answer);
     eventClient
       .registerAnswer(request, null)
       .then((res) => console.log(res))
@@ -93,17 +113,26 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eventData.ScheduleList.map((ScheduleInfo) => {
+              {eventSchedule.map((event) => {
                 return (
-                  <TableRow key={ScheduleInfo.id}>
+                  <TableRow key={event.key}>
                     <TableCell>
                       <Typography variant="body1">
-                        {ScheduleInfo.day}
-                        {ScheduleInfo.startTime}〜{ScheduleInfo.endTime}
+                        {event.startTime.getMonth() + 1} /{" "}
+                        {event.startTime.getDay()} {event.startTime.getHours()}:
+                        {event.startTime.getMinutes()}〜
+                        {event.endTime.getHours()}:{event.endTime.getMinutes()}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Checkbox defaultChecked />
+                      <Checkbox
+                        onChange={(e) => {
+                          const newChecklist = [...checklist];
+                          newChecklist[event.key] = e.target.checked;
+                          setChecklist(newChecklist);
+                        }}
+                        checked={checklist[event.key]}
+                      />
                     </TableCell>
                   </TableRow>
                 );
