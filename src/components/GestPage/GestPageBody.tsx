@@ -28,6 +28,7 @@ import {
 } from "../../service/api-client/protocol/event_pb";
 import { eventClient } from "../../service/api-client/client";
 import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
+import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
@@ -40,7 +41,7 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
     [...Array(eventSchedule.length)].map(() => true)
   );
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
     request.setEventid(eventDetail.id);
@@ -71,10 +72,12 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
           autoHideDuration: 2000,
           variant: "success",
         });
+        // イベント入れる
+        setEventToLocalStorage(eventDetail.name, eventDetail.id, localStorage);
         router.push("/");
       });
   };
-  
+
   return (
     <>
       <UserCalender />
