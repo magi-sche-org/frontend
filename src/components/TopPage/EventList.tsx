@@ -15,10 +15,13 @@ export type Event = {
 export const EventList = () => {
   const [eventList, setEventList] = useState<Event[]>([]);
   useEffect(() => {
-    // EventList取得
-    const eventListCache: Event[] = JSON.parse(
-      localStorage.getItem("event-list") || "{}"
-    );
+    const eventListCache: Event[] = (()=>{
+      let data = localStorage.getItem("event-list");
+      if (!data){
+        return process.env.NODE_ENV==="production"?[]:mockEventList;
+      }
+      return JSON.parse(data);
+    })();
     setEventList(eventListCache);
   }, []);
   useEffect(() => {
