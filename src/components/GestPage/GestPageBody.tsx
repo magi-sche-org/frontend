@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useState } from "react";
+import { FC, useState } from "react";
 import calenderData from "./calenderData.json";
 import eventData from "./eventData.json";
 import { Button } from "../Button";
@@ -21,10 +21,17 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRouter } from "next/router";
 import { authClient, eventClient } from "@/service/api-client/client";
-import { RegisterAnswerRequest } from "@/service/api-client/protocol/event_pb";
+import {
+  GetEventResponse,
+  RegisterAnswerRequest,
+} from "@/service/api-client/protocol/event_pb";
 import { SnackbarProvider, useSnackbar } from "notistack";
 
-const GestPageBody: React.FC = () => {
+type GuestPageBodyProps = {
+  eventDetail: GetEventResponse.AsObject | undefined;
+};
+const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
+  console.log(eventDetail);
   const router = useRouter();
 
   const [CalenderBarOpen, setCalenderBarOpen] = useState<Boolean>(true);
@@ -201,4 +208,4 @@ const GestPageBody: React.FC = () => {
   );
 };
 
-export default GestPageBody;
+export default GuestPageBody;
