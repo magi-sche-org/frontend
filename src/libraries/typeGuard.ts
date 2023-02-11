@@ -1,6 +1,7 @@
 import type { AuthorizationTokens } from "@/@types/authorization";
 import type { ScheduleResponse } from "@/@types/event";
 import type { userInfo } from "@/@types/userInfo";
+import {ApiError} from "@/@types/error";
 
 const typeGuard = {
 	AuthorizationTokens: (i: unknown): i is AuthorizationTokens =>
@@ -30,6 +31,9 @@ const typeGuard = {
 	userInfo: (i: unknown): i is userInfo =>
 		typeof i === "object" &&
 		objectVerify(i, ["id", "email", "verified_email", "picture"]),
+	errorResponse: (i: unknown): i is ApiError =>
+		typeof i === "object" &&
+		objectVerify(i, ["error"])
 };
 
 const objectVerify = (item: unknown, keys: string[]): boolean => {

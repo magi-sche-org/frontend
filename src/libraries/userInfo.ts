@@ -7,7 +7,7 @@ import type { userInfo } from "@/@types/userInfo";
 const baseUri = "https://content.googleapis.com/oauth2/v2/userinfo";
 const requestUrl = `${baseUri}?key=${gcp_apiKey}`;
 
-const getUserInfo = async (): Promise<userInfo> => {
+const fetchUserInfo = async (): Promise<userInfo> => {
 	const req = await requests(requestUrl);
 	const res = (await req.json()) as unknown;
 	if (!typeGuard.userInfo(res)) {
@@ -15,3 +15,14 @@ const getUserInfo = async (): Promise<userInfo> => {
 	}
 	return res;
 };
+
+const getUserInfo = () => {
+	if (typeof window !== "object") return false;
+	const data = JSON.parse(localStorage.getItem("gcp_userInfo")||"{}");
+	if (typeGuard.userInfo(data)){
+		return data;
+	}
+	return false;
+}
+
+export {fetchUserInfo,getUserInfo}
