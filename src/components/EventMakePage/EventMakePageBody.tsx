@@ -24,12 +24,12 @@ const EventMakePageBody: React.FC = () => {
 	const router = useRouter();
 
 	// イベント名
-	const [EventNameText, setEventNameText] = useState<String>("");
+	const [EventNameText, setEventNameText] = useState<string>("");
 	// 時間
-	const [StartTime, setStartTime] = useState<Number | String>(10);
-	const [EndTime, setEndTime] = useState<Number | String>(17);
+	const [StartTime, setStartTime] = useState<number | string>(10);
+	const [EndTime, setEndTime] = useState<number | string>(17);
 	// 1コマあたりの時間
-	const [TimePadding, setTimePadding] = useState<String>("30min");
+	const [TimePadding, setTimePadding] = useState<string>("30min");
 	// 日付
 	const [StartDay, setStartDay] = useState<Dayjs | null>(dayjs());
 	const [EndDay, setEndDay] = useState<Dayjs | null>(dayjs().add(2, "h"));
@@ -127,7 +127,7 @@ const EventMakePageBody: React.FC = () => {
 						color='primary'
 						value={TimePadding}
 						exclusive
-						onChange={(e, newAlignment: String) => {
+						onChange={(e, newAlignment: string) => {
 							setTimePadding(newAlignment);
 						}}
 						aria-label='Platform'
