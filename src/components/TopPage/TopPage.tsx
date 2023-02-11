@@ -2,59 +2,55 @@ import { Box, Container, Typography } from "@mui/material";
 import Image from "next/image";
 import { Button } from "../Button";
 import { EventList } from "./EventList";
+import ListButton from "./ListButton";
+
 export const TopPage = () => {
   return (
-    <Box
-      sx={{
-        background: "#006A71",
-        // vhにするとスクロール出来てしまうのが問題だが（ヘッダーのサイズがあるため）
-        // 良い感じの指定の仕方が欲しい
-        height: "120vh",
-        width: "100%",
-        padding: "0 30px",
-        flexFlow: "column",
-      }}
-      display="flex"
-    >
-      <Box
-        margin={"3rem 0"}
-        display="flex"
-        sx={{
-          flexFlow: "column",
-        }}
-      >
-        <Typography
-          color={"white"}
+    <Box sx={{ bgcolor: "primary.main" }}>
+      <Container maxWidth='sm'>
+        <Box
           sx={{
-            fontSize: 14,
+            backgroundColor: "primary.main",
+            // vhにするとスクロール出来てしまうのが問題だが（ヘッダーのサイズがあるため）
+            // 良い感じの指定の仕方が欲しい
+            height: "120vh",
+            width: "100%",
+            padding: "0 30px",
+            flexFlow: "column"
           }}
-          textAlign="center"
+          display='flex'
         >
-          カレンダーを見ながら簡単にスケジュール調整出来るアプリ。
-          <br />
-          マジックスケジュール
-        </Typography>
-        <Box display="flex" justifyContent="center">
-          <Image
-            src={"/images/schedule.png"}
-            alt={"scheduleを考える女性の画像"}
-            height={200}
-            width={300}
-            style={{ objectFit: "contain" }}
-          />
+          <Box
+            margin={"3rem 0"}
+            display='flex'
+            sx={{
+              flexFlow: "column"
+            }}
+          >
+            <Typography variant='body1' sx={{ color: "white", textAlign: "center" }}>
+              カレンダーを見ながら簡単にスケジュール調整出来るアプリ。
+              <br />
+              マジックスケジュール
+            </Typography>
+            <Box display='flex' justifyContent='center'>
+              <Image
+                src={"/images/schedule.png"}
+                alt={"scheduleを考える女性の画像"}
+                height={200}
+                width={300}
+                style={{ objectFit: "contain" }}
+              />
+            </Box>
+          </Box>
+          <ListButton text='イベントを作成する' page='./EventMakePage' />
+          <Box sx={{ mt: 2 }}>
+            <Typography variant='body1' sx={{ fontWeight: "bold", color: "white" }} gutterBottom>
+              イベント一覧
+            </Typography>
+            <EventList />
+          </Box>
         </Box>
-      </Box>
-      <Button text="イベントを作成する" isPrimary={false} onClick={() => {}} />
-      <Box marginTop={"20px"}>
-        <Typography
-          color={"white"}
-          sx={{ fontSize: 16, fontWeight: "bold" }}
-          gutterBottom
-        >
-          イベント一覧
-        </Typography>
-        <EventList />
-      </Box>
+      </Container>
     </Box>
   );
 };
