@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package geekCamp;
 
+option go_package = "./pb";
+
 service Authorize {
     rpc GetToken(GetTokenRequest) returns (GetTokenReply) {}
     rpc LinkToken(LinkTokenRequest) returns (LinkTokenReply) {}
@@ -10,8 +12,7 @@ service Authorize {
 message GetTokenRequest {}
 
 message GetTokenReply {
-    int64  status = 1;  // httpに準拠?
-    string token  = 2;  // トークン
+    string token = 2;  // トークン
 }
 
 // トークンだけじゃ識別できないのでトークンから取得できるメアドと渡したメアドで認証する
@@ -21,6 +22,4 @@ message LinkTokenRequest {
     string email    = 3;  // メアド
 }
 
-message LinkTokenReply {
-    int64 status = 1;  // httpに準拠?
-}
+message LinkTokenReply {}
