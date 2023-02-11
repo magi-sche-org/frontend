@@ -22,6 +22,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRouter } from "next/router";
 import { authClient, eventClient } from "@/service/api-client/client";
 import { RegisterAnswerRequest } from "@/service/api-client/protocol/event_pb";
+import { SnackbarProvider, useSnackbar } from "notistack";
 
 const GestPageBody: React.FC = () => {
   const router = useRouter();
@@ -29,7 +30,8 @@ const GestPageBody: React.FC = () => {
   const [CalenderBarOpen, setCalenderBarOpen] = useState<Boolean>(true);
   const [NameText, setNameText] = useState<String>("");
   const [LoginFlg, setLoginFlg] = useState<Boolean>(false);
-  const [AlartOpen, setAlartOpen] = useState<Boolean>(false);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
@@ -43,7 +45,10 @@ const GestPageBody: React.FC = () => {
       .registerAnswer(request, null)
       .then((res) => console.log(res))
       .then(() => {
-        setAlartOpen(true);
+        enqueueSnackbar("回答を記録しました。", {
+          autoHideDuration: 2000,
+          variant: "success",
+        });
         router.push("/");
       });
   };
@@ -60,7 +65,7 @@ const GestPageBody: React.FC = () => {
             {calenderData.map((calenderInfo) => {
               return (
                 <Stack
-                  key={calenderInfo.dayNum}
+                  key={calenderInfo.id}
                   direction="column"
                   spacing={0.5}
                   sx={{
@@ -77,7 +82,7 @@ const GestPageBody: React.FC = () => {
                   {calenderInfo.schedule.map((scheduleInfo) => {
                     return (
                       <Stack
-                        key={scheduleInfo.eventTitle}
+                        key={scheduleInfo.id}
                         sx={{
                           border: "solid",
                           borderWidth: 1,
@@ -161,7 +166,7 @@ const GestPageBody: React.FC = () => {
             <TableBody>
               {eventData.ScheduleList.map((ScheduleInfo) => {
                 return (
-                  <TableRow key={ScheduleInfo.day}>
+                  <TableRow key={ScheduleInfo.id}>
                     <TableCell>
                       <Typography variant="body1">
                         {ScheduleInfo.day}
@@ -191,23 +196,6 @@ const GestPageBody: React.FC = () => {
         <Stack direction="row" justifyContent="center" sx={{ mx: 15 }}>
           <Button text="決定" isPrimary={true} onClick={Submit} />
         </Stack>
-        {/* アラート */}
-        {AlartOpen ? (
-          <Stack direction="row" justifyContent="center">
-            <Alert
-              variant="outlined"
-              severity="success"
-              sx={{ bgcolor: "white" }}
-              style={{ position: "fixed", bottom: 20 }}
-            >
-              <Typography variant="body2">
-                イベントへの登録が完了しました
-              </Typography>
-            </Alert>
-          </Stack>
-        ) : (
-          <></>
-        )}
       </Stack>
     </>
   );
