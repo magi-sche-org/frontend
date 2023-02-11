@@ -11,16 +11,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import {login, reset} from "@/libraries/authorization";
-import {getUserInfo} from "@/libraries/userInfo";
+import { login, reset } from "@/libraries/authorization";
+import { getUserInfo } from "@/libraries/userInfo";
 
 export const Header = () => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
 	const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-		if(getUserInfo()){
+		if (getUserInfo()) {
 			void reset();
-		}else{
+		} else {
 			login();
 		}
 		setAnchorEl(event.currentTarget);

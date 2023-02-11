@@ -1,22 +1,22 @@
 import { parseToken } from "@/libraries/authorization";
 import { useEffect, useState } from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 const Callback = () => {
 	const router = useRouter();
 	const [message, setMessage] = useState("");
 	useEffect(() => {
-		(async()=>{
+		(async () => {
 			if (typeof window === "object") {
 				try {
 					await parseToken();
-					await router.replace("/")
+					await router.replace("/");
 				} catch (e) {
 					setMessage(`encountered the following error:\n${e}`);
 				}
 			}
 		})();
-	}, [setMessage,router]);
+	}, [setMessage, router]);
 	return (
 		<>
 			{message && (

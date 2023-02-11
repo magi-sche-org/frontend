@@ -18,11 +18,11 @@ const fetchUserInfo = async (): Promise<userInfo> => {
 
 const getUserInfo = () => {
 	if (typeof window !== "object") return false;
-	const data = JSON.parse(localStorage.getItem("gcp_userInfo")||"{}");
-	if (typeGuard.userInfo(data)){
+	const data = JSON.parse(localStorage.getItem("gcp_userInfo") || "{}");
+	if (typeGuard.userInfo(data)) {
 		return data;
 	}
 	return false;
-}
+};
 
-export {fetchUserInfo,getUserInfo}
+export { fetchUserInfo, getUserInfo };
