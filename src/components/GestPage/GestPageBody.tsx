@@ -25,13 +25,12 @@ import {
   GetEventResponse,
   RegisterAnswerRequest,
 } from "@/service/api-client/protocol/event_pb";
-import { SnackbarProvider, useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 
 type GuestPageBodyProps = {
-  eventDetail: GetEventResponse.AsObject | undefined;
+  eventDetail: GetEventResponse.AsObject;
 };
 const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
-  console.log(eventDetail);
   const router = useRouter();
 
   const [CalenderBarOpen, setCalenderBarOpen] = useState<Boolean>(true);
@@ -43,7 +42,7 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
     // TODO: id取得
-    request.setId("hoge");
+    request.setId(eventDetail.id);
     // TODO: トークン入れる
     request.setToken("hogehoge");
     // TODO: 答え登録

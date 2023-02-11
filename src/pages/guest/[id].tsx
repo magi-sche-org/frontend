@@ -15,27 +15,30 @@ const GuestPage = () => {
   const [eventDetail, setEventDetail] = useState<
     GetEventResponse.AsObject | undefined
   >(undefined);
-  console.log(router.query.test);
-  const id = router.query.id;
+  const { id } = router.query;
   useEffect(() => {
     const request = new GetEventRequest();
     if (id === undefined || Array.isArray(id)) {
-      enqueueSnackbar("イベント情報を取得できませんでした", {
-        autoHideDuration: 2000,
-        variant: "error",
-      });
       return;
     }
     request.setId(id);
     request.setToken("token");
-    eventClient.getEvent(request, null).then((res) => {
-      setEventDetail(res.toObject());
-    });
-  }, []);
+    eventClient
+      .getEvent(request, null)
+      .then((res) => {
+        setEventDetail(res.toObject());
+      })
+      .catch((e) => {
+        enqueueSnackbar("イベント情報を取得できませんでした", {
+          autoHideDuration: 2000,
+          variant: "error",
+        });
+      });
+  }, [id]);
   return (
     <>
       <SecondaryHeader />
-      <GuestPageBody eventDetail={eventDetail} />
+      {eventDetail && <GuestPageBody eventDetail={eventDetail} />}
     </>
   );
 };
