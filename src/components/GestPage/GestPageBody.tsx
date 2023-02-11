@@ -20,7 +20,7 @@ import { Button } from "../Button";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRouter } from "next/router";
-import { client } from "@/service/api-client/client";
+import { authClient, eventClient } from "@/service/api-client/client";
 import { RegisterAnswerRequest } from "@/service/api-client/protocol/event_pb";
 
 const GestPageBody: React.FC = () => {
@@ -33,15 +33,19 @@ const GestPageBody: React.FC = () => {
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
+    // TODO: id取得
     request.setId("hoge");
     // TODO: トークン入れる
     request.setToken("hogehoge");
-    //
+    // TODO: 答え登録
     request.setAnswer();
-    setAlartOpen(true);
-    await setTimeout(() => {
-      router.push("/");
-    }, 2000);
+    eventClient
+      .registerAnswer(request, null)
+      .then((res) => console.log(res))
+      .then(() => {
+        setAlartOpen(true);
+        router.push("/");
+      });
   };
 
   return (
