@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package geekCamp;
+
+service Authorize {
+    rpc GetToken(GetTokenRequest) returns (GetTokenReply) {}
+    rpc LinkToken(LinkTokenRequest) returns (LinkTokenReply) {}
+}
+
+message GetTokenRequest {}
+
+message GetTokenReply {
+    int64  status = 1;  // httpに準拠?
+    string token  = 2;  // トークン
+}
+
+// トークンだけじゃ識別できないのでトークンから取得できるメアドと渡したメアドで認証する
+message LinkTokenRequest {
+    string token    = 1;  // 認証トークン
+    string gcpToken = 2;  // googleのトークン?識別子?
+    string email    = 3;  // メアド
+}
+
+message LinkTokenReply {
+    int64 status = 1;  // httpに準拠?
+}
