@@ -11,13 +11,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { login } from "@/libraries/authorization";
+import { Container } from "@mui/system";
 
-export const Header = () => {
+export const SecondaryHeader: React.FC = () => {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
 	const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-		login();
 		setAnchorEl(event.currentTarget);
 	};
 
@@ -26,20 +25,20 @@ export const Header = () => {
 	};
 
 	return (
-		<AppBar
-			position="static"
-			sx={{ backgroundColor: "#FFFFDD", color: "black", height: "62px" }}
-		>
-			<Toolbar sx={{ margin: "0 auto", width: "100%", alignItems: "center" }}>
-				<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-					マジスケ
-				</Typography>
-				<div>
-					<IconButton size="large" onClick={handleMenu} color="inherit">
+		<AppBar position='static' sx={{ backgroundColor: "primary.main", boxShadow: 0, px: 2 }}>
+			<Container disableGutters>
+				<Toolbar sx={{ xs: "flex" }}>
+					<IconButton edge='start' size='large' disabled>
+						<AccountCircle sx={{ color: "primary.main" }} />
+					</IconButton>
+					<Typography variant='h6' sx={{ mx: "auto" }}>
+						Magi-Sche
+					</Typography>
+					<IconButton edge='end' size='large' onClick={handleMenu} color='inherit'>
 						<AccountCircle />
 					</IconButton>
-				</div>
-			</Toolbar>
+				</Toolbar>
+			</Container>
 		</AppBar>
 	);
 };

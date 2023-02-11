@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "rome check src",
+    "lint:fix": "rome check src --fix",
+    "format": "rome format --write --skip-errors ./src"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
