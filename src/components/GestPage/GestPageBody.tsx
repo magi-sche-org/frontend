@@ -15,8 +15,7 @@ import { Stack } from "@mui/system";
 import { FC, useState } from "react";
 import eventData from "./eventData.json";
 import { Button } from "../Button";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import { useRouter } from "next/router";
 import { eventClient } from "@/service/api-client/client";
 import {
@@ -31,8 +30,6 @@ type GuestPageBodyProps = {
 };
 const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
   const router = useRouter();
-
-  const [CalenderBarOpen, setCalenderBarOpen] = useState<Boolean>(true);
 
   const [NameText, setNameText] = useState<String>("");
   const [LoginFlg, setLoginFlg] = useState<Boolean>(false);
@@ -60,26 +57,7 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
 
   return (
     <>
-      {/* カレンダーバー */}
-      {CalenderBarOpen ? <UserCalender /> : <></>}
-      {/* カレンダーバー開閉 */}
-      <Stack
-        direction="row"
-        justifyContent="center"
-        sx={{ bgcolor: "primary.main", pb: 0.5 }}
-      >
-        <IconButton
-          onClick={() => {
-            setCalenderBarOpen(!CalenderBarOpen);
-          }}
-        >
-          {CalenderBarOpen ? (
-            <ExpandLessIcon sx={{ color: "secondary.main" }} />
-          ) : (
-            <ExpandMoreIcon sx={{ color: "secondary.main" }} />
-          )}
-        </IconButton>
-      </Stack>
+      <UserCalender />
       {/* タイトル・名前入力 */}
       <Stack direction="column" sx={{ p: 3 }}>
         <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
