@@ -1,8 +1,10 @@
 import { Box, Container, Typography } from "@mui/material";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { Button } from "../Button";
 import { EventList } from "./EventList";
 export const TopPage = () => {
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -44,7 +46,13 @@ export const TopPage = () => {
           />
         </Box>
       </Box>
-      <Button text="イベントを作成する" isPrimary={false} onClick={() => {}} />
+      <Button
+        text="イベントを作成する"
+        isPrimary={false}
+        onClick={() => {
+          router.push("/create");
+        }}
+      />
       <Box marginTop={"20px"}>
         <Typography
           color={"white"}
