@@ -60,7 +60,7 @@ jobs:
       - name: Install node v12
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 18
 
       - name: Run Rome check
         id: check
