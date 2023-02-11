@@ -1,5 +1,4 @@
 import { Header } from "@/components/Header";
-import { mockEventList } from "@/components/TopPage/data";
 import "@/styles/globals.css";
 import { createTheme, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
