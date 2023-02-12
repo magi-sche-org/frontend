@@ -9,22 +9,17 @@ import { AuthorizeClient } from "@/service/api-client/protocol/AuthorizeServiceC
 import { GetTokenRequest } from "@/service/api-client/protocol/authorize_pb";
 import { authClient } from "@/service/api-client/client";
 import ListButton from "./ListButton";
+import {getEventStorage} from "@/libraries/eventStorage";
 export type Event = {
-  id: number;
+  id: string;
   name: string;
 };
 
 export const EventList = () => {
   const [eventList, setEventList] = useState<Event[]>([]);
   useEffect(() => {
-    const eventListCache: Event[] = (() => {
-      let data = localStorage.getItem("event-list");
-      if (!data) {
-        return process.env.NODE_ENV === "production" ? [] : mockEventList;
-      }
-      return JSON.parse(data);
-    })();
-    setEventList(eventListCache);
+    if (typeof window !== "object")return;
+    setEventList(getEventStorage());
   }, []);
   return (
     <Stack spacing={1.5}>
@@ -35,6 +30,6 @@ export const EventList = () => {
   );
 };
 
-const EventCard: FC<Event> = ({ name }) => {
-  return <ListButton text={name} page='/' />;
+const EventCard: FC<Event> = ({ name,id }) => {
+  return <ListButton text={name} page={`/guest/${id}`} />;
 };

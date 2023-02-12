@@ -24,7 +24,7 @@ import {
   RegisterAnswerRequest,
 } from "@/service/api-client/protocol/event_pb";
 import { eventClient } from "@/service/api-client/client";
-import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
+import {getEventStorage, setEventStorage} from "@/libraries/eventStorage";
 import { getToken } from "@/libraries/token";
 import {Schedule} from "@/@types/event";
 import {getSchedules} from "@/libraries/calendar";
@@ -40,6 +40,9 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined>(undefined);
   const init = useRef(false);
+  
+  const isAnswered = getEventStorage().reduce((pv:boolean,val)=>val.answered||pv,false);
+  
   useEffect(()=>{
     if (typeof window !== "object"||init.current)return;
     init.current = true;
@@ -88,13 +91,14 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
           variant: "success",
         });
         // イベント入れる
-        setEventToLocalStorage(eventDetail.getName(), eventDetail.getId(), localStorage);
+        setEventStorage(eventDetail.getName(), eventDetail.getId());
         router.push("/");
       });
   };
 
   return (
     <>
+      {isAnswered&&<h1>ずでに回答済みです</h1>}
       {schedules&&<UserCalender schedules={schedules}/>}
       {/* タイトル・名前入力 */}
       <Stack direction="column" sx={{ p: 3 }}>
