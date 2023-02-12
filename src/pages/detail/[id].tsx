@@ -1,4 +1,4 @@
-import DetailPageBody from "@/components/detailPage/detailPagebody";
+import {DetailPageBody} from "@/components/detailPage/detailPageBody";
 import { eventClient } from "@/service/api-client/client";
 import { GetEventRequest, GetEventResponse } from "@/service/api-client/protocol/event_pb";
 import { useRouter } from "next/router";
@@ -9,7 +9,7 @@ import {getToken} from "@/libraries/token";
 const DetailPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-  const [eventDetail, setEventDetail] = useState<GetEventResponse.AsObject | undefined>(undefined);
+  const [eventDetail, setEventDetail] = useState<GetEventResponse | undefined>(undefined);
   const { id } = router.query;
   useEffect(() => {
     const request = new GetEventRequest();
@@ -21,7 +21,7 @@ const DetailPage = () => {
     eventClient
       .getEvent(request, null)
       .then((res) => {
-        setEventDetail(res.toObject());
+        setEventDetail(res);
       })
       .catch((e) => {
         enqueueSnackbar("イベント情報を取得できませんでした", {
@@ -30,6 +30,7 @@ const DetailPage = () => {
         });
       });
   }, [id]);
+  console.log(eventDetail);
   return <>{eventDetail && <DetailPageBody eventDetail={eventDetail} />}</>;
 };
 
