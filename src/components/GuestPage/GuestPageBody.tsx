@@ -172,7 +172,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                         {date2time(end)}
                       </Typography>
                     </TableCell>
-                    <TableCell className={`${checklist[key]?.val&&checklist[key]?.block&&Styles.yellow} ${Styles.wrapper}`}>
+                    <TableCell className={`${Styles.wrapper}`}>
                       <Checkbox
                         onChange={(e) => {
                           const value = checklist[key]

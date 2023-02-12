@@ -1,10 +1,12 @@
 .info{
   position: absolute;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #800000;
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
 }
 .wrapper{
   position: relative;
-}
-.yellow {
-  background-color: yellow;
 }
