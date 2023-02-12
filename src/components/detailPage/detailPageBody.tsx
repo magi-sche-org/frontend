@@ -7,11 +7,10 @@ import {
   TableRow,
   Typography
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Stack } from "@mui/system";
 import { FC, useState } from "react";
 import eventData from "../GestPage/eventData.json";
-import { Button } from "../Button";
 
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
@@ -26,6 +25,9 @@ import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
 import { getToken } from "@/libraries/token";
 import { createProposedScheduleList } from "../GestPage/proposedSchedule";
 import { UserCalender } from "../GestPage/UserCalender";
+import { Schedule } from "@/@types/event";
+import { getSchedules } from "@/libraries/calendar";
+import { typeGuard } from "@/libraries/typeGuard";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
@@ -40,51 +42,69 @@ const DetailPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
   );
   const { enqueueSnackbar } = useSnackbar();
 
-  // 分かんね
-  useEffect(() => {
-    const GetEventDetail = async () => {
-      const request = new RegisterAnswerRequest();
-    };
-    GetEventDetail();
-  }, []);
+  const [schedules, setSchedules] = useState<{ [key: string]: Schedule[] } | undefined>(undefined);
+  const init = useRef(false);
 
-  const Submit = async () => {
-    const request = new RegisterAnswerRequest();
-    request.setEventid(eventDetail.id);
-    request.setToken(getToken(localStorage));
-    const answer = new Answer();
-    answer.setName(NameText);
-    const proposedScheduleList = eventSchedule.map((event) => {
-      const proposedSchedule = new Answer.ProposedSchedule();
-      const startTime = new Timestamp();
-      startTime.fromDate(event.startTime);
-      proposedSchedule.setStarttime(startTime);
-      proposedSchedule.setAvailability(
-        checklist[event.key]
-          ? Answer.ProposedSchedule.Availability.AVAILABLE
-          : Answer.ProposedSchedule.Availability.UNAVAILABLE
-      );
-      return proposedSchedule;
-    });
-    answer.setScheduleList(proposedScheduleList);
-    request.setAnswer(answer);
-    eventClient
-      .registerAnswer(request, null)
-      .then((res) => console.log(res))
-      .then(() => {
-        enqueueSnackbar("回答を記録しました。", {
-          autoHideDuration: 2000,
-          variant: "success"
-        });
-        // イベント入れる
-        setEventToLocalStorage(eventDetail.name, eventDetail.id, localStorage);
-        router.push("/");
-      });
-  };
+  useEffect(() => {
+    if (typeof window !== "object" || init.current) return;
+    init.current = true;
+    (async () => {
+      try {
+        const data = (await getSchedules(new Date())).reduce((pv, val) => {
+          const date = new Date(
+            typeGuard.DateTimeSchedule(val) ? val.start.dateTime : val.start.date
+          );
+          const key = `${date.getMonth() + 1}/${date.getDate()}`;
+          if (!pv[key]) {
+            pv[key] = [];
+          }
+          pv[key].push(val);
+          return pv;
+        }, {} as { [key: string]: Schedule[] });
+        setSchedules(data);
+      } catch (e) {
+        setSchedules(undefined);
+      }
+    })();
+  }, [setSchedules]);
+
+  // const Submit = async () => {
+  //   const request = new RegisterAnswerRequest();
+  //   request.setEventid(eventDetail.id);
+  //   request.setToken(getToken(localStorage));
+  //   const answer = new Answer();
+  //   answer.setName(NameText);
+  //   const proposedScheduleList = eventSchedule.map((event) => {
+  //     const proposedSchedule = new Answer.ProposedSchedule();
+  //     const startTime = new Timestamp();
+  //     startTime.fromDate(event.startTime);
+  //     proposedSchedule.setStarttime(startTime);
+  //     proposedSchedule.setAvailability(
+  //       checklist[event.key]
+  //         ? Answer.ProposedSchedule.Availability.AVAILABLE
+  //         : Answer.ProposedSchedule.Availability.UNAVAILABLE
+  //     );
+  //     return proposedSchedule;
+  //   });
+  //   answer.setScheduleList(proposedScheduleList);
+  //   request.setAnswer(answer);
+  //   eventClient
+  //     .registerAnswer(request, null)
+  //     .then((res) => console.log(res))
+  //     .then(() => {
+  //       enqueueSnackbar("回答を記録しました。", {
+  //         autoHideDuration: 2000,
+  //         variant: "success"
+  //       });
+  //       // イベント入れる
+  //       setEventToLocalStorage(eventDetail.name, eventDetail.id, localStorage);
+  //       router.push("/");
+  //     });
+  // };
 
   return (
     <>
-      <UserCalender />
+      <UserCalender schedules={{}} />
       {/* タイトル表示*/}
       <Stack direction='column' sx={{ p: 3, mt: 2 }}>
         <Typography variant='h6' sx={{ textAlign: "center", mb: 3 }}>
