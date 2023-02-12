@@ -10,7 +10,7 @@ import {
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useState } from "react";
@@ -27,6 +27,8 @@ import { Duration } from "google-protobuf/google/protobuf/duration_pb";
 import { useSnackbar } from "notistack";
 import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
 import { getToken } from "@/libraries/token";
+import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
+import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
 
 const EventMakePageBody: React.FC = () => {
   const router = useRouter();
@@ -34,8 +36,8 @@ const EventMakePageBody: React.FC = () => {
   // イベント名
   const [EventNameText, setEventNameText] = useState<string>("");
   // 時間
-  const [StartTime, setStartTime] = useState<number | string>(10);
-  const [EndTime, setEndTime] = useState<number | string>(17);
+  const [StartTime, setStartTime] = useState<number>(10);
+  const [EndTime, setEndTime] = useState<number>(17);
   // イベント時間の長さ
   const [EventTimeRange, setEventTimeRange] = useState<string>("30min");
   // 1コマあたりの時間
@@ -85,9 +87,29 @@ const EventMakePageBody: React.FC = () => {
         break;
     }
     request.setToken(getToken(localStorage));
-    // TODO: 導線が無いと作れない
-    request.setProposedstarttimeList([]);
-    request.setTimeunit();
+    const proposedStartTimeList: Timestamp[] = createProposedStartTimeList(
+      StartDay?.toDate(),
+      EndDay?.toDate(),
+      TimePadding,
+      StartTime,
+      EndTime
+    );
+
+    console.log(proposedStartTimeList);
+    request.setProposedstarttimeList(proposedStartTimeList);
+    const padding = new Duration();
+    switch (TimePadding) {
+      case "30min":
+        padding.setSeconds(30 * 60);
+        break;
+      case "1h":
+        padding.setSeconds(60 * 60);
+        break;
+      case "1day":
+        padding.setSeconds(24 * 60 * 60);
+        break;
+    }
+    request.setTimeunit(padding);
 
     eventClient
       .createEvent(request, null)
@@ -103,13 +125,14 @@ const EventMakePageBody: React.FC = () => {
         console.log(e);
         enqueueSnackbar("イベントの作成に失敗しました", {
           autoHideDuration: 2000,
-          variant: "error"
+          variant: "error",
         });
       });
   };
 
   const timeList = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24,
   ];
 
   const copyTextToClipboard = (text: string) => {
@@ -118,26 +141,26 @@ const EventMakePageBody: React.FC = () => {
       .then(() => {
         enqueueSnackbar("URLをコピーしました", {
           autoHideDuration: 2000,
-          variant: "success"
+          variant: "success",
         });
       })
       .catch(() => {
         enqueueSnackbar("URLのコピーに失敗しました", {
           autoHideDuration: 2000,
-          variant: "error"
+          variant: "error",
         });
       });
   };
   return (
     <>
       <Stack sx={{ p: 3 }}>
-        <Typography variant='h5' sx={{ textAlign: "center", my: 3 }}>
+        <Typography variant="h5" sx={{ textAlign: "center", my: 3 }}>
           イベント作成
         </Typography>
         {/* イベント名 */}
         <TextField
-          variant='outlined'
-          label='イベント名'
+          variant="outlined"
+          label="イベント名"
           sx={{ mx: 3, mb: 5 }}
           value={EventNameText}
           onChange={(e) => {
@@ -145,15 +168,15 @@ const EventMakePageBody: React.FC = () => {
           }}
         />
         {/* 時間帯設定 */}
-        <Typography variant='body1' sx={{ textAlign: "center", mb: 1 }}>
+        <Typography variant="body1" sx={{ textAlign: "center", mb: 1 }}>
           時間帯
         </Typography>
-        <Stack direction='row' justifyContent='center' sx={{ mx: 3, mb: 4 }}>
-          <FormControl variant='standard' sx={{ m: 2, minWidth: 80 }}>
+        <Stack direction="row" justifyContent="center" sx={{ mx: 3, mb: 4 }}>
+          <FormControl variant="standard" sx={{ m: 2, minWidth: 80 }}>
             <Select
               value={StartTime}
               onChange={(e) => {
-                setStartTime(e.target.value);
+                setStartTime(Number(e.target.value));
               }}
             >
               {timeList.map((timeInfo) => {
@@ -165,14 +188,14 @@ const EventMakePageBody: React.FC = () => {
               })}
             </Select>
           </FormControl>
-          <Typography variant='h6' sx={{ mt: 2, mx: 3 }}>
+          <Typography variant="h6" sx={{ mt: 2, mx: 3 }}>
             〜
           </Typography>
-          <FormControl variant='standard' sx={{ m: 2, minWidth: 80 }}>
+          <FormControl variant="standard" sx={{ m: 2, minWidth: 80 }}>
             <Select
               value={EndTime}
               onChange={(e) => {
-                setEndTime(e.target.value);
+                setEndTime(Number(e.target.value));
               }}
             >
               {timeList.map((timeInfo) => {
@@ -186,15 +209,15 @@ const EventMakePageBody: React.FC = () => {
           </FormControl>
         </Stack>
         {/* イベントの長さ */}
-        <Stack direction='column' sx={{ mx: 5, mb: 5 }}>
-          <Typography variant='body1' sx={{ textAlign: "center", mb: 2 }}>
+        <Stack direction="column" sx={{ mx: 5, mb: 5 }}>
+          <Typography variant="body1" sx={{ textAlign: "center", mb: 2 }}>
             イベントの長さ
           </Typography>
           <FormControl>
-            <InputLabel htmlFor='grouped-select'>イベントの時間</InputLabel>
+            <InputLabel htmlFor="grouped-select">イベントの時間</InputLabel>
             <Select
-              defaultValue='30min'
-              label='イベント時間'
+              defaultValue="30min"
+              label="イベント時間"
               value={EventTimeRange}
               onChange={(e) => {
                 setEventTimeRange(e.target.value);
@@ -212,53 +235,53 @@ const EventMakePageBody: React.FC = () => {
           </FormControl>
         </Stack>
         {/* 単位時間の設定 */}
-        <Typography variant='body1' sx={{ textAlign: "center", mb: 2 }}>
+        <Typography variant="body1" sx={{ textAlign: "center", mb: 2 }}>
           イベント枠を作る時間
         </Typography>
-        <Stack direction='row' justifyContent='center' sx={{ mb: 2 }}>
+        <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
           <ToggleButtonGroup
-            color='primary'
+            color="primary"
             value={TimePadding}
             exclusive
             onChange={(e, newAlignment: string) => {
               setTimePadding(newAlignment);
             }}
-            aria-label='Platform'
+            aria-label="Platform"
           >
-            <ToggleButton value='30min'>30min</ToggleButton>
-            <ToggleButton value='1h'>　1h　</ToggleButton>
-            <ToggleButton value='1day'>1day</ToggleButton>
+            <ToggleButton value="30min">30min</ToggleButton>
+            <ToggleButton value="1h">　1h　</ToggleButton>
+            <ToggleButton value="1day">1day</ToggleButton>
           </ToggleButtonGroup>
         </Stack>
-        <Typography variant='caption' sx={{ textAlign: "center", mb: 3 }}>
+        <Typography variant="caption" sx={{ textAlign: "center", mb: 3 }}>
           - イベント枠を生成する単位時間を設定できます
         </Typography>
         {/* 日付ピッカー */}
         <Stack
-          direction='column'
+          direction="column"
           sx={{
             border: 1,
             borderWidth: 0.5,
             borderRadius: 3,
             p: 4,
             mx: 2,
-            mb: 5
+            mb: 5,
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Stack direction='column' sx={{ mb: 2 }}>
-              <Typography variant='body1'>開始日</Typography>
+            <Stack direction="column" sx={{ mb: 2 }}>
+              <Typography variant="body1">開始日</Typography>
               <MobileDatePicker
-                inputFormat='YYYY/MM/DD'
+                inputFormat="YYYY/MM/DD"
                 value={StartDay}
                 onChange={handleStartDay}
                 renderInput={(params) => <TextField {...params} />}
               />
             </Stack>
-            <Stack direction='column' sx={{ mb: 2 }}>
-              <Typography variant='body1'>終了日</Typography>
+            <Stack direction="column" sx={{ mb: 2 }}>
+              <Typography variant="body1">終了日</Typography>
               <MobileDatePicker
-                inputFormat='YYYY/MM/DD'
+                inputFormat="YYYY/MM/DD"
                 value={EndDay}
                 onChange={handleEndDay}
                 renderInput={(params) => <TextField {...params} />}
@@ -266,22 +289,26 @@ const EventMakePageBody: React.FC = () => {
             </Stack>
           </LocalizationProvider>
         </Stack>
-        <Stack direction='row' sx={{ mx: 15 }}>
-          <Button text='決定' isPrimary={true} onClick={Submit} />
+        <Stack direction="row" sx={{ mx: 15 }}>
+          <Button text="決定" isPrimary={true} onClick={Submit} />
         </Stack>
       </Stack>
 
       <Modal open={ModalOpen}>
-        <Container maxWidth='xs' sx={{ ...ModalStyle }}>
-          <Stack direction='column' sx={{ mx: 8 }}>
-            <Typography variant='h6' noWrap={true} sx={{ textAlign: "center", mb: 4 }}>
+        <Container maxWidth="xs" sx={{ ...ModalStyle }}>
+          <Stack direction="column" sx={{ mx: 8 }}>
+            <Typography
+              variant="h6"
+              noWrap={true}
+              sx={{ textAlign: "center", mb: 4 }}
+            >
               イベントを作成しました
             </Typography>
-            <Typography variant='body2' sx={{ textAlign: "center", mb: 1.5 }}>
+            <Typography variant="body2" sx={{ textAlign: "center", mb: 1.5 }}>
               共有URL
             </Typography>
             <TextField
-              variant='standard'
+              variant="standard"
               InputProps={{
                 startAdornment: (
                   <IconButton
@@ -291,7 +318,7 @@ const EventMakePageBody: React.FC = () => {
                   >
                     <ContentCopyOutlinedIcon />
                   </IconButton>
-                )
+                ),
               }}
               sx={{ mb: 4 }}
               value={shareURL}
@@ -299,14 +326,14 @@ const EventMakePageBody: React.FC = () => {
             <Stack spacing={2} sx={{ mb: 2 }}>
               {" "}
               <Button
-                text='トップに戻る'
+                text="トップに戻る"
                 isPrimary={true}
                 onClick={() => {
                   router.push("/");
                 }}
               />{" "}
               <Button
-                text='イベントを確認'
+                text="イベントを確認"
                 isPrimary={false}
                 onClick={() => {
                   router.push("/");
