@@ -1,37 +1,40 @@
-import { Box, Card } from "@mui/material";
+import { Box, Card, Stack } from "@mui/material";
 import { mockEventList } from "./data";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import { EventClient } from "@/service/api-client/protocol/EventServiceClientPb";
+import { GetEventRequest } from "@/service/api-client/protocol/event_pb";
+import { AuthorizeClient } from "@/service/api-client/protocol/AuthorizeServiceClientPb";
+import { GetTokenRequest } from "@/service/api-client/protocol/authorize_pb";
+import { authClient } from "@/service/api-client/client";
+import ListButton from "./ListButton";
 export type Event = {
   id: number;
   name: string;
 };
 
 export const EventList = () => {
-  // TODO: LocalStorageから取得
-  const data = mockEventList;
+  const [eventList, setEventList] = useState<Event[]>([]);
+  useEffect(() => {
+    const eventListCache: Event[] = (() => {
+      let data = localStorage.getItem("event-list");
+      if (!data) {
+        return process.env.NODE_ENV === "production" ? [] : mockEventList;
+      }
+      return JSON.parse(data);
+    })();
+    setEventList(eventListCache);
+  }, []);
   return (
-    <>
-      {data.map((event) => {
-        return (
-          <Box marginBottom={"10px"}>
-            <EventCard {...event}></EventCard>
-          </Box>
-        );
+    <Stack spacing={1.5}>
+      {eventList.map((event) => {
+        return <EventCard key={event.id} {...event} />;
       })}
-    </>
+    </Stack>
   );
 };
 
-const EventCard: FC<Event> = ({ id, name }) => {
-  return (
-    <Card>
-      <CardContent>
-        <Typography sx={{ fontSize: 14, textAlign: "center" }}>
-          {name}
-        </Typography>
-      </CardContent>
-    </Card>
-  );
+const EventCard: FC<Event> = ({ name }) => {
+  return <ListButton text={name} page='/' />;
 };

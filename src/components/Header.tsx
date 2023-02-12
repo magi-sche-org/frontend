@@ -11,33 +11,49 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import { login, revokeToken } from "@/libraries/authorization";
+import { getUserInfo } from "@/libraries/userInfo";
+import { Button, Container } from "@mui/material";
+import Head from "next/head";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    if (getUserInfo()) {
+      void revokeToken();
+    } else {
+      login();
+    }
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
-    <AppBar
-      position="static"
-      sx={{ backgroundColor: "#FFFFDD", color: "black", height: "62px" }}
-    >
-      <Toolbar sx={{ margin: "0 auto", width: "100%", alignItems: "center" }}>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          マジスケ
-        </Typography>
-        <div>
-          <IconButton size="large" onClick={handleMenu} color="inherit">
-            <AccountCircle />
-          </IconButton>
-        </div>
-      </Toolbar>
-    </AppBar>
+    <>
+      <Head>
+        <meta name='theme-color' media='(prefers-color-scheme: light)' content='#FFFFDD' />
+      </Head>
+      <AppBar
+        position='static'
+        sx={{ backgroundColor: "secondary.main", boxShadow: 0, px: 2, py: 0.8 }}
+      >
+        <Container disableGutters>
+          <Toolbar sx={{ xs: "flex" }}>
+            <IconButton edge='start' size='large' disabled>
+              <AccountCircle sx={{ color: "secondary.main" }} />
+            </IconButton>
+            <Typography
+              variant='h5'
+              sx={{ mx: "auto", color: "black", fontFamily: "robots", fontWeight: "bold" }}
+            >
+              Magi-Sche
+            </Typography>
+            <IconButton edge='end' size='large' color='inherit' onClick={handleMenu}>
+              <AccountCircle sx={{ color: "black" }} />
+            </IconButton>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </>
   );
 };
