@@ -75,7 +75,7 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                     <TableCell>
                       <Typography variant="body1">
                         {start.getMonth() + 1}&thinsp;/&thinsp;
-                        {start.getDay()}
+                        {start.getDate()}
                         &emsp;
                         {date2time(start)}〜
                         {date2time(end)}
