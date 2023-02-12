@@ -37,7 +37,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   const [NameText, setNameText] = useState<string>("");
   const [checklist, setChecklist] = useState<{ [key:string]:boolean}>({});
   const { enqueueSnackbar } = useSnackbar();
-  const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined>(undefined);
+  const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined|null>(undefined);
   const init = useRef(false);
   
   const isAnswered = getEventStorage().reduce((pv:boolean,val)=>val.answered||pv,false);
@@ -47,7 +47,8 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
     init.current = true;
     (async()=>{
       try{
-        const data = (await getSchedules(new Date())).reduce((pv,val)=>{
+        const raw = await getSchedules(new Date());
+        const data = raw.reduce((pv,val)=>{
           const date = new Date(typeGuard.DateTimeSchedule(val)?val.start.dateTime:val.start.date);
           const key = `${date.getMonth()+1}/${date.getDate()}`
           if (!pv[key]){
@@ -57,11 +58,32 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
           return pv
         },{} as {[key:string]:Schedule[]});
         setSchedules(data);
+        const list = eventDetail.getProposedstarttimeList().reduce((pv,ts)=>{
+          const start = ts.getSeconds();
+          const end = ts.getSeconds() + (eventDetail.getDuration()?.getSeconds()||0);
+          pv[`${start}`] = raw.reduce((pv,val)=>{
+            const [start_,end_] = (()=>{
+              if (typeGuard.DateTimeSchedule(val)){
+                return [Math.floor(new Date(val.start.dateTime).getTime()/1000),new Date(val.end.dateTime).getTime()/1000]
+              }
+              return [Math.floor(new Date(val.start.date).getTime()/1000),new Date(val.end.date).getTime()/1000]
+            })();
+            if (end_<start||start_ > end){
+              return pv;
+            }
+            return false;
+          },true);
+          return pv;
+        },{} as {[key:string]:boolean});
+        setChecklist(list);
       }catch (e) {
-        setSchedules(undefined);
+        setSchedules(null);
       }
     })();
   },[setSchedules]);
+  if (schedules===undefined) {
+    return <></>;
+  }
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
@@ -141,7 +163,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                   <TableRow key={ts.getSeconds()}>
                     <TableCell>
                       <Typography variant="body1">
-                        {start.getMonth() + 1}/{start.getDay()}{" "}
+                        {start.getMonth() + 1}/{start.getDate()}{" "}
                         {date2time(start)}〜
                         {date2time(end)}
                       </Typography>
