@@ -26,13 +26,6 @@ export const EventList = () => {
     })();
     setEventList(eventListCache);
   }, []);
-  useEffect(() => {
-    const client = new AuthorizeClient("http://localhost:9000", null, null);
-    const req = new GetTokenRequest();
-    const token = client.getToken(req, null).then((res) => {
-      console.log(res);
-    });
-  }, []);
   return (
     <Stack spacing={1.5}>
       {eventList.map((event) => {

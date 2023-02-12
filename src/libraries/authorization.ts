@@ -1,6 +1,6 @@
 import { typeGuard } from "@/libraries/typeGuard";
 import { generateUuid } from "@/libraries/uuid";
-import { gcp_clientId, gcp_redirectUri, gcp_scopes } from "@/libraries/gcpEnv";
+import { gcp_clientId, gcp_redirectUri, gcp_scopes } from "@/libraries/env";
 import { fetchUserInfo } from "@/libraries/userInfo";
 import { requests } from "@/libraries/requests";
 

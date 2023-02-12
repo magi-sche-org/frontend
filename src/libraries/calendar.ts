@@ -1,6 +1,6 @@
 import { requests } from "@/libraries/requests";
 import { typeGuard } from "@/libraries/typeGuard";
-import { gcp_apiKey } from "@/libraries/gcpEnv";
+import { gcp_apiKey } from "@/libraries/env";
 
 import type { Schedule } from "@/@types/event";
 

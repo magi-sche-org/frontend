@@ -1,4 +1,4 @@
-import { gcp_apiKey } from "@/libraries/gcpEnv";
+import { gcp_apiKey } from "@/libraries/env";
 import { requests } from "@/libraries/requests";
 import { typeGuard } from "@/libraries/typeGuard";
 
