@@ -43,9 +43,9 @@ export const UserCalender = ({schedules}:userCalendar) => {
                         const start = new Date(schedule.start.dateTime);
                         const end = new Date(schedule.end.dateTime);
                         return <>
-                          {start.getHours()}:{start.getMinutes()}
+                          {start.getHours()}:{`0${start.getMinutes()}`.slice(-2)}
                           ~
-                          {end.getHours()}:{end.getMinutes()}
+                          {end.getHours()}:{`0${end.getMinutes()}`.slice(-2)}
                         </>;
                       }
                       return <>終日</>;
