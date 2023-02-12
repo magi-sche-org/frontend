@@ -148,7 +148,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                         onChange={(e) => {
                           setChecklist({...checklist,[ts.getSeconds()]:e.target.checked});
                         }}
-                        checked={checklist[ts.getSeconds()??true]}
+                        checked={checklist[ts.getSeconds()]??true}
                       />
                     </TableCell>
                   </TableRow>
