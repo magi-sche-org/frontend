@@ -41,7 +41,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined|null>(undefined);
   const init = useRef(false);
   
-  const isAnswered = getEventStorage().reduce((pv:boolean,val)=>val.answered||pv,false);
+  const isAnswered = getEventStorage().reduce((pv:boolean,val)=>(val.answered&&val.id===eventDetail.getId())||pv,false);
   
   useEffect(()=>{
     if (typeof window !== "object"||init.current)return;
