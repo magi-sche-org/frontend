@@ -1,7 +1,6 @@
 import {
   Box,
   Checkbox,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -11,39 +10,32 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, {useEffect, useRef} from "react";
+import {useEffect, useRef,useState} from "react";
 import { Stack } from "@mui/system";
-import { FC, useState } from "react";
 import eventData from "./eventData.json";
 import { Button } from "../Button";
 
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { UserCalender } from "./UserCalender";
-import { createProposedScheduleList } from "./proposedSchedule";
 import {
   Answer,
   GetEventResponse,
   RegisterAnswerRequest,
-} from "../../service/api-client/protocol/event_pb";
-import { eventClient } from "../../service/api-client/client";
-import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
+} from "@/service/api-client/protocol/event_pb";
+import { eventClient } from "@/service/api-client/client";
 import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
 import { getToken } from "@/libraries/token";
 import {Schedule} from "@/@types/event";
 import {getSchedules} from "@/libraries/calendar";
 import {typeGuard} from "@/libraries/typeGuard";
 type GuestPageBodyProps = {
-  eventDetail: GetEventResponse.AsObject;
+  eventDetail: GetEventResponse;
 };
-const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
+const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   const router = useRouter();
-  const [eventSchedule, _] = useState(createProposedScheduleList(eventDetail));
   const [NameText, setNameText] = useState<string>("");
-  const [LoginFlg, setLoginFlg] = useState<boolean>(false);
-  const [checklist, setChecklist] = useState<boolean[]>(
-    [...Array(eventSchedule.length)].map(() => true)
-  );
+  const [checklist, setChecklist] = useState<{ [key:string]:boolean}>({});
   const { enqueueSnackbar } = useSnackbar();
   const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined>(undefined);
   const init = useRef(false);
@@ -70,17 +62,15 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
-    request.setEventid(eventDetail.id);
+    request.setEventid(eventDetail.getId());
     request.setToken(getToken(localStorage));
     const answer = new Answer();
     answer.setName(NameText);
-    const proposedScheduleList = eventSchedule.map((event) => {
+    const proposedScheduleList = eventDetail.getProposedstarttimeList().map((ts) => {
       const proposedSchedule = new Answer.ProposedSchedule();
-      const startTime = new Timestamp();
-      startTime.fromDate(event.startTime);
-      proposedSchedule.setStarttime(startTime);
+      proposedSchedule.setStarttime(ts);
       proposedSchedule.setAvailability(
-        checklist[event.key]
+        (checklist[ts.getSeconds()]??true)
           ? Answer.ProposedSchedule.Availability.AVAILABLE
           : Answer.ProposedSchedule.Availability.UNAVAILABLE
       );
@@ -97,7 +87,7 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
           variant: "success",
         });
         // イベント入れる
-        setEventToLocalStorage(eventDetail.name, eventDetail.id, localStorage);
+        setEventToLocalStorage(eventDetail.getName(), eventDetail.getId(), localStorage);
         router.push("/");
       });
   };
@@ -140,25 +130,25 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eventSchedule.map((event) => {
+              {eventDetail.getProposedstarttimeList().map((ts) => {
+                const start = new Date(ts.getSeconds()*1000);
+                const end = new Date((ts.getSeconds() + (eventDetail.getDuration()?.getSeconds()||0)) * 1000)
                 return (
-                  <TableRow key={event.key}>
+                  <TableRow key={ts.getSeconds()}>
                     <TableCell>
                       <Typography variant="body1">
-                        {event.startTime.getMonth() + 1} /{" "}
-                        {event.startTime.getDay()} {event.startTime.getHours()}:
-                        {event.startTime.getMinutes()}〜
-                        {event.endTime.getHours()}:{event.endTime.getMinutes()}
+                        {start.getMonth() + 1} /{" "}
+                        {start.getDay()} {start.getHours()}:
+                        {start.getMinutes()}〜
+                        {end.getHours()}:{end.getMinutes()}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Checkbox
                         onChange={(e) => {
-                          const newChecklist = [...checklist];
-                          newChecklist[event.key] = e.target.checked;
-                          setChecklist(newChecklist);
+                          setChecklist({...checklist,[ts.getSeconds()]:e.target.checked});
                         }}
-                        checked={checklist[event.key]}
+                        checked={checklist[ts.getSeconds()??true]}
                       />
                     </TableCell>
                   </TableRow>
@@ -169,13 +159,6 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
         </TableContainer>
         {/* 未ログイン */}
         <Box sx={{ m: 3 }}>
-          {!LoginFlg ? (
-            <Typography variant="caption" sx={{ textAlign: "center" }}>
-              ※未ログインの為、後から予定を編集することができませんがよろしいでしょうか？
-            </Typography>
-          ) : (
-            <></>
-          )}
         </Box>
         {/* 決定 */}
         <Stack direction="row" justifyContent="center" sx={{ mx: 15 }}>
