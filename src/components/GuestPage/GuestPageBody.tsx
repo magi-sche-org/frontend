@@ -90,7 +90,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
           variant: "success",
         });
         // イベント入れる
-        setEventStorage(eventDetail.getName(), eventDetail.getId());
+        setEventStorage(eventDetail.getName(), eventDetail.getId(),true);
         router.push("/");
       });
   };
