@@ -184,7 +184,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                       <Checkbox
                         onChange={(e) => {
                           const value = checklist[key]
-                          setChecklist({...checklist,[key]:{val:e.target.checked,block:(value.block||false)}});
+                          setChecklist({...checklist,[key]:{val:e.target.checked,block:value.block}});
                         }}
                         checked={checklist[ts.getSeconds()]?.val??true}
                       />

@@ -12,6 +12,7 @@ import {
   Answer,
   GetEventResponse,
 } from "@/service/api-client/protocol/event_pb";
+import {date2time} from "@/libraries/time";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
@@ -76,9 +77,8 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                         {start.getMonth() + 1}&thinsp;/&thinsp;
                         {start.getDay()}
                         &emsp;
-                        {start.getHours()}:
-                        {start.getMinutes()}〜
-                        {end.getHours()}:{end.getMinutes()}
+                        {date2time(start)}〜
+                        {date2time(end)}
                       </Typography>
                     </TableCell>
                     <TableCell>
