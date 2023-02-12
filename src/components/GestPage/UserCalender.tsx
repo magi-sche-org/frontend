@@ -58,6 +58,8 @@ export const UserCalender = ({schedules}:userCalendar) => {
                           {start.getHours()}:{start.getMinutes()}
                           ~
                           {end.getHours()}:{end.getMinutes()}
+                          <br />
+                          {schedule.summary}
                         </Typography>
                       </Stack>
                     );
