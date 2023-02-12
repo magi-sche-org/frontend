@@ -81,6 +81,12 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
         setChecklist(list);
       }catch (e) {
         setSchedules(null);
+        const list = eventDetail.getProposedstarttimeList().reduce((pv,ts)=>{
+          const start = ts.getSeconds();
+          pv[`${start}`] = {val:true,block:false};
+          return pv;
+        },{} as {[key:string]:{ val:boolean,block:boolean }});
+        setChecklist(list);
       }
     })();
   },[setSchedules]);
@@ -177,7 +183,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                       <Checkbox
                         onChange={(e) => {
                           const value = checklist[key]
-                          setChecklist({...checklist,[key]:{val:e.target.checked,block:value.block}});
+                          setChecklist({...checklist,[key]:{val:e.target.checked,block:(value.block||false)}});
                         }}
                         checked={checklist[ts.getSeconds()]?.val??true}
                       />

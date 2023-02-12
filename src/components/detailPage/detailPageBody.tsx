@@ -26,6 +26,7 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
       if (!list[key]){
         list[key] = {available: 0, unavailable:0};
       }
+      console.log(schedule.getAvailability());
       if (schedule.getAvailability() === Answer.ProposedSchedule.Availability.AVAILABLE){
         list[key].available ++;
       }else{
