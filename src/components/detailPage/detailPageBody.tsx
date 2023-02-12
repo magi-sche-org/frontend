@@ -7,18 +7,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useRef, useState } from "react";
 import { Stack } from "@mui/system";
-import eventData from "../GestPage/eventData.json";
-
-import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
 import {
   Answer,
   GetEventResponse,
 } from "@/service/api-client/protocol/event_pb";
-import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
-import { createProposedScheduleList } from "../GestPage/proposedSchedule";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
@@ -47,7 +40,7 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
       {/* タイトル表示*/}
       <Stack direction="column" sx={{ p: 3, mt: 2 }}>
         <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
-          {eventData.EventTitle}
+          {eventDetail.getName()}
         </Typography>
         {/* 候補リスト */}
         <TableContainer
