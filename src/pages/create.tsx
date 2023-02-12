@@ -1,11 +1,11 @@
 import EventMakePageBody from "@/components/EventMakePage/EventMakePageBody";
 
 const EventMakePage = () => {
-	return (
-		<>
-			<EventMakePageBody />
-		</>
-	);
+  return (
+    <>
+      <EventMakePageBody />
+    </>
+  );
 };
 
 export default EventMakePage;

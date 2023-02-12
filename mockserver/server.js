@@ -6,18 +6,6 @@ const protoLoader = require("@grpc/proto-loader");
 const Timestamp = require("google-protobuf/google/protobuf/timestamp_pb");
 const Duration = require("google-protobuf/google/protobuf/duration_pb");
 
-console.log(Object.getPrototypeOf(Timestamp));
-console.log(
-  [...Array(5)]
-    .map((_, v) => {
-      const date = new Date();
-      date.setDate(date.getDate() - v);
-      return Timestamp.Timestamp.fromDate(date);
-    })
-    .map((res) => {
-      return Timestamp.Timestamp.toDate(res);
-    })
-);
 const packageAuthDefinition = protoLoader.loadSync(PROTO_AUTH, {
   keepCase: true,
   longs: String,
@@ -70,6 +58,12 @@ function doGetEvent(call, callback) {
   });
 }
 
+function doCreateEvent(call, callback) {
+  callback(null, {
+    eventId: "test create event",
+  });
+}
+
 function doRegisterAnswer(call, callback) {
   callback(null, {});
 }
@@ -82,6 +76,7 @@ function getServer() {
   server.addService(serviceEvent.Event.service, {
     GetEvent: doGetEvent,
     RegisterAnswer: doRegisterAnswer,
+    CreateEvent: doCreateEvent,
   });
   return server;
 }
