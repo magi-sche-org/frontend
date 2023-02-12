@@ -29,6 +29,7 @@ import { getToken } from "@/libraries/token";
 import {Schedule} from "@/@types/event";
 import {getSchedules} from "@/libraries/calendar";
 import {typeGuard} from "@/libraries/typeGuard";
+import {date2time} from "@/libraries/time";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
@@ -137,10 +138,9 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                   <TableRow key={ts.getSeconds()}>
                     <TableCell>
                       <Typography variant="body1">
-                        {start.getMonth() + 1} /{" "}
-                        {start.getDay()} {start.getHours()}:
-                        {start.getMinutes()}〜
-                        {end.getHours()}:{end.getMinutes()}
+                        {start.getMonth() + 1}/{start.getDay()}{" "}
+                        {date2time(start)}〜
+                        {date2time(end)}
                       </Typography>
                     </TableCell>
                     <TableCell>
