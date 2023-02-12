@@ -1,10 +1,6 @@
 import GuestPageBody from "@/components/GestPage/GestPageBody";
-import { SecondaryHeader } from "@/components/SecondaryHeader";
 import { eventClient } from "@/service/api-client/client";
-import {
-  GetEventRequest,
-  GetEventResponse,
-} from "@/service/api-client/protocol/event_pb";
+import { GetEventRequest, GetEventResponse } from "@/service/api-client/protocol/event_pb";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -12,9 +8,7 @@ import { useEffect, useState } from "react";
 const GuestPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-  const [eventDetail, setEventDetail] = useState<
-    GetEventResponse.AsObject | undefined
-  >(undefined);
+  const [eventDetail, setEventDetail] = useState<GetEventResponse.AsObject | undefined>(undefined);
   const { id } = router.query;
   useEffect(() => {
     const request = new GetEventRequest();
@@ -31,16 +25,11 @@ const GuestPage = () => {
       .catch((e) => {
         enqueueSnackbar("イベント情報を取得できませんでした", {
           autoHideDuration: 2000,
-          variant: "error",
+          variant: "error"
         });
       });
   }, [id]);
-  return (
-    <>
-      <SecondaryHeader />
-      {eventDetail && <GuestPageBody eventDetail={eventDetail} />}
-    </>
-  );
+  return <>{eventDetail && <GuestPageBody eventDetail={eventDetail} />}</>;
 };
 
 export default GuestPage;
