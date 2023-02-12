@@ -1,11 +1,16 @@
 import { IconButton, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useState } from "react";
-import calenderData from "./calenderData.json";
+import {useState} from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {Schedule} from "@/@types/event";
+import {typeGuard} from "@/libraries/typeGuard";
 
-export const UserCalender = () => {
+type userCalendar = {
+  schedules: {[key:string]:Schedule[]}
+}
+
+export const UserCalender = ({schedules}:userCalendar) => {
   const [CalenderBarOpen, setCalenderBarOpen] = useState<boolean>(true);
   return (
     <>
@@ -15,27 +20,39 @@ export const UserCalender = () => {
           style={{ overflowX: "auto", whiteSpace: "nowrap", width: "100%" }}
         >
           <Stack direction="row" spacing={1}>
-            {calenderData.map((calenderInfo) => {
+            {Object.keys(schedules).map((date) => {
               return (
                 <Stack
-                  key={calenderInfo.id}
+                  key={date}
                   direction="column"
                   spacing={0.5}
                   sx={{
                     bgcolor: "white",
                     borderRadius: 3,
-                    minwidth: "120px",
+                    minWidth: "120px",
                     height: "120px",
                     p: 2,
                   }}
                 >
                   <Typography variant="caption" sx={{ textAlign: "center" }}>
-                    {calenderInfo.dayNum}
+                    {date}
                   </Typography>
-                  {calenderInfo.schedule.map((scheduleInfo) => {
+                  {schedules[date].map((schedule) => {
+                    const duration = (()=>{
+                      if (typeGuard.DateTimeSchedule(schedule)){
+                        const start = new Date(schedule.start.dateTime);
+                        const end = new Date(schedule.end.dateTime);
+                        return <>
+                          {start.getHours()}:{`0${start.getMinutes()}`.slice(-2)}
+                          ~
+                          {end.getHours()}:{`0${end.getMinutes()}`.slice(-2)}
+                        </>;
+                      }
+                      return <>終日</>;
+                    })()
                     return (
                       <Stack
-                        key={scheduleInfo.id}
+                        key={schedule.id}
                         sx={{
                           border: "solid",
                           borderWidth: 1,
@@ -49,9 +66,9 @@ export const UserCalender = () => {
                           variant="caption"
                           sx={{ color: "primary.main", lineHeight: "1.2" }}
                         >
-                          {scheduleInfo.eventTitle}
+                          {duration}
                           <br />
-                          {scheduleInfo.startTime}時〜{scheduleInfo.endTime}時
+                          {schedule.summary}
                         </Typography>
                       </Stack>
                     );

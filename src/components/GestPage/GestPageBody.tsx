@@ -10,7 +10,7 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import { Stack } from "@mui/system";
 import { FC, useState } from "react";
 import eventData from "./eventData.json";
@@ -29,6 +29,9 @@ import { eventClient } from "../../service/api-client/client";
 import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
 import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
 import { getToken } from "@/libraries/token";
+import {Schedule} from "@/@types/event";
+import {getSchedules} from "@/libraries/calendar";
+import {typeGuard} from "@/libraries/typeGuard";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
@@ -41,6 +44,28 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
     [...Array(eventSchedule.length)].map(() => true)
   );
   const { enqueueSnackbar } = useSnackbar();
+  const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined>(undefined);
+  const init = useRef(false);
+  useEffect(()=>{
+    if (typeof window !== "object"||init.current)return;
+    init.current = true;
+    (async()=>{
+      try{
+        const data = (await getSchedules(new Date())).reduce((pv,val)=>{
+          const date = new Date(typeGuard.DateTimeSchedule(val)?val.start.dateTime:val.start.date);
+          const key = `${date.getMonth()+1}/${date.getDate()}`
+          if (!pv[key]){
+            pv[key] = [];
+          }
+          pv[key].push(val);
+          return pv
+        },{} as {[key:string]:Schedule[]});
+        setSchedules(data);
+      }catch (e) {
+        setSchedules(undefined);
+      }
+    })();
+  },[setSchedules]);
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
@@ -78,7 +103,7 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
 
   return (
     <>
-      <UserCalender />
+      {schedules&&<UserCalender schedules={schedules}/>}
       {/* タイトル・名前入力 */}
       <Stack direction='column' sx={{ p: 3 }}>
         <Typography variant='h6' sx={{ textAlign: "center", mb: 3 }}>

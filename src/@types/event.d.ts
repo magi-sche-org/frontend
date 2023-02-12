@@ -12,16 +12,15 @@ export type ScheduleResponse = {
   updated: string;
 };
 
-export type Schedule = {
+export type Schedule = DateTimeSchedule|DateSchedule;
+
+type DateTimeSchedule = {
   created: string;
   creator: {
     email: string;
     self: boolean;
   };
-  end: {
-    dateTime: string;
-    timeZone: string;
-  };
+  end: EventDateTime;
   etag: string;
   eventType: string;
   htmlLink: string;
@@ -36,11 +35,43 @@ export type Schedule = {
     useDefault: boolean;
   };
   sequence: number;
-  start: {
-    dateTime: string;
-    timeZone: string;
-  };
+  start: EventDateTime;
   status: string;
   summary: string;
   updated: string;
-};
+}
+
+type DateSchedule = {
+  created: string;
+  creator: {
+    email: string;
+    self: boolean;
+  };
+  end: EventDate;
+  etag: string;
+  eventType: string;
+  htmlLink: string;
+  iCalUID: string;
+  id: string;
+  kind: string;
+  organizer: {
+    email: string;
+    self: boolean;
+  };
+  reminders: {
+    useDefault: boolean;
+  };
+  sequence: number;
+  start: EventDate;
+  status: string;
+  summary: string;
+  updated: string;
+}
+
+type EventDateTime = {
+  dateTime: string;
+  timeZone: string;
+}
+type EventDate = {
+  date: string;
+}

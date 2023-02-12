@@ -5,8 +5,8 @@ import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
-import { useEffect, useRef } from "react";
-import { getToken } from "@/libraries/token";
+import {useEffect, useRef} from "react";
+import {fetchToken} from "@/libraries/token";
 
 export default function App({ Component, pageProps }: AppProps) {
   const init = useRef(false);
@@ -14,8 +14,8 @@ export default function App({ Component, pageProps }: AppProps) {
     if (typeof window !== "object" || init.current) return;
     init.current = true;
     if (localStorage.getItem("go_token")) return;
-    (async () => {
-      await getToken();
+    (async()=>{
+      await fetchToken();
     })();
   }, []);
   const mainTheme = createTheme({
