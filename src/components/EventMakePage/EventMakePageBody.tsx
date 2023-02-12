@@ -24,6 +24,7 @@ import { CreateEventRequest } from "@/service/api-client/protocol/event_pb";
 import { Duration } from "google-protobuf/google/protobuf/duration_pb";
 import { useSnackbar } from "notistack";
 import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
+import { getToken } from "@/libraries/token";
 
 const EventMakePageBody: React.FC = () => {
   const router = useRouter();
@@ -79,8 +80,7 @@ const EventMakePageBody: React.FC = () => {
         duration.setSeconds(24 * 60 * 60);
         break;
     }
-    // TODO: token
-    request.setToken("hoge");
+    request.setToken(getToken(localStorage));
     // TODO: 導線が無いと作れない
     request.setProposedstarttimeList([]);
     request.setTimeunit();
@@ -88,7 +88,6 @@ const EventMakePageBody: React.FC = () => {
     eventClient
       .createEvent(request, null)
       .then((res) => {
-        console.log(res);
         const id = res.getEventid();
         // TODO: 環境変数
         // イベント入れる

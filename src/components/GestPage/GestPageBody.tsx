@@ -29,6 +29,7 @@ import {
 import { eventClient } from "../../service/api-client/client";
 import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
 import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
+import { getToken } from "@/libraries/token";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
@@ -45,11 +46,9 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
     request.setEventid(eventDetail.id);
-    // TODO: トークン入れる
-    request.setToken("hogehoge");
-    // TODO: 答え登録
+    request.setToken(getToken(localStorage));
     const answer = new Answer();
-    answer.setName("名前");
+    answer.setName(NameText);
     const proposedScheduleList = eventSchedule.map((event) => {
       const proposedSchedule = new Answer.ProposedSchedule();
       const startTime = new Timestamp();
