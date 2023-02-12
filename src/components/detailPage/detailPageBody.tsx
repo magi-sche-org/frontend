@@ -12,6 +12,7 @@ import {
   Answer,
   GetEventResponse,
 } from "@/service/api-client/protocol/event_pb";
+import {date2time} from "@/libraries/time";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
@@ -33,7 +34,6 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
       }
     }
   }
-  console.log(list)
   
   return (
     <>
@@ -58,33 +58,42 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                   <Typography variant="caption">日時</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="caption">参加可能人数</Typography>
+                  <Typography variant="caption">参加可能</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="caption">参加不可</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {/*[].map((event) => {
+              {Object.keys(list).map((ts) => {
+                const val = list[ts];
+                const start = new Date(Number(ts)*1000);
+                const end = new Date((Number(ts)+(eventDetail.getDuration()?.getSeconds()||0))*1000)
                 return (
-                  <TableRow key={event.key}>
+                  <TableRow key={ts}>
                     <TableCell>
                       <Typography variant="body1">
-                        {event.startTime.getMonth() + 1}&thinsp;/&thinsp;
-                        {event.startTime.getDay()}
+                        {start.getMonth() + 1}&thinsp;/&thinsp;
+                        {start.getDay()}
                         &emsp;
-                        {event.startTime.getHours()}:
-                        {event.startTime.getMinutes()}〜
-                        {event.endTime.getHours()}:{event.endTime.getMinutes()}
+                        {date2time(start)}〜
+                        {date2time(end)}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1" sx={{ ml: 1 }}>
-                        {/* 参加できる人数を入れる }
-                        {calcAttendance(event.key)}
+                        {val.available}人
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1" sx={{ ml: 1 }}>
+                        {val.unavailable}人
                       </Typography>
                     </TableCell>
                   </TableRow>
                 );
-              })*/}
+              })}
             </TableBody>
           </Table>
         </TableContainer>

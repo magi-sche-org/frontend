@@ -81,6 +81,12 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
         setChecklist(list);
       }catch (e) {
         setSchedules(null);
+        const list = eventDetail.getProposedstarttimeList().reduce((pv,ts)=>{
+          const start = ts.getSeconds();
+          pv[`${start}`] = {val:true,block:false};
+          return pv;
+        },{} as {[key:string]:{ val:boolean,block:boolean }});
+        setChecklist(list);
       }
     })();
   },[setSchedules]);
@@ -97,8 +103,9 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
     const proposedScheduleList = eventDetail.getProposedstarttimeList().map((ts) => {
       const proposedSchedule = new Answer.ProposedSchedule();
       proposedSchedule.setStarttime(ts);
+      console.log(checklist[ts.getSeconds()],Answer.ProposedSchedule.Availability.AVAILABLE,Answer.ProposedSchedule.Availability.UNAVAILABLE)
       proposedSchedule.setAvailability(
-        (checklist[ts.getSeconds()]??true)
+        (checklist[ts.getSeconds()].val??true)
           ? Answer.ProposedSchedule.Availability.AVAILABLE
           : Answer.ProposedSchedule.Availability.UNAVAILABLE
       );
