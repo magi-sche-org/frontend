@@ -1,4 +1,4 @@
-import GuestPageBody from "@/components/GestPage/GestPageBody";
+import GuestPageBody from "@/components/GuestPage/GuestPageBody";
 import { eventClient } from "@/service/api-client/client";
 import { GetEventRequest, GetEventResponse } from "@/service/api-client/protocol/event_pb";
 import { useRouter } from "next/router";
