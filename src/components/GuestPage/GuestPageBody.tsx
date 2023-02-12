@@ -1,7 +1,6 @@
 import {
   Box,
   Checkbox,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -11,48 +10,46 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, {useEffect, useRef} from "react";
+import {useEffect, useRef,useState} from "react";
 import { Stack } from "@mui/system";
-import { FC, useState } from "react";
-import eventData from "./eventData.json";
 import { Button } from "../Button";
 
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { UserCalender } from "./UserCalender";
-import { createProposedScheduleList } from "./proposedSchedule";
 import {
   Answer,
   GetEventResponse,
   RegisterAnswerRequest,
-} from "../../service/api-client/protocol/event_pb";
-import { eventClient } from "../../service/api-client/client";
-import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
-import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
+} from "@/service/api-client/protocol/event_pb";
+import { eventClient } from "@/service/api-client/client";
+import {getEventStorage, setEventStorage} from "@/libraries/eventStorage";
 import { getToken } from "@/libraries/token";
 import {Schedule} from "@/@types/event";
 import {getSchedules} from "@/libraries/calendar";
 import {typeGuard} from "@/libraries/typeGuard";
+import {date2time} from "@/libraries/time";
+import Styles from "./GuestPageBody.module.scss";
 type GuestPageBodyProps = {
-  eventDetail: GetEventResponse.AsObject;
+  eventDetail: GetEventResponse;
 };
-const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
+const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   const router = useRouter();
-  const [eventSchedule, _] = useState(createProposedScheduleList(eventDetail));
   const [NameText, setNameText] = useState<string>("");
-  const [LoginFlg, setLoginFlg] = useState<boolean>(false);
-  const [checklist, setChecklist] = useState<boolean[]>(
-    [...Array(eventSchedule.length)].map(() => true)
-  );
+  const [checklist, setChecklist] = useState<{ [key:string]: { val:boolean,block:boolean }}>({});
   const { enqueueSnackbar } = useSnackbar();
-  const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined>(undefined);
+  const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined|null>(undefined);
   const init = useRef(false);
+  
+  const isAnswered = getEventStorage().reduce((pv:boolean,val)=>val.answered||pv,false);
+  
   useEffect(()=>{
     if (typeof window !== "object"||init.current)return;
     init.current = true;
     (async()=>{
       try{
-        const data = (await getSchedules(new Date())).reduce((pv,val)=>{
+        const raw = await getSchedules(new Date());
+        const data = raw.reduce((pv,val)=>{
           const date = new Date(typeGuard.DateTimeSchedule(val)?val.start.dateTime:val.start.date);
           const key = `${date.getMonth()+1}/${date.getDate()}`
           if (!pv[key]){
@@ -62,25 +59,46 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
           return pv
         },{} as {[key:string]:Schedule[]});
         setSchedules(data);
+        const list = eventDetail.getProposedstarttimeList().reduce((pv,ts)=>{
+          const start = ts.getSeconds();
+          const end = ts.getSeconds() + (eventDetail.getDuration()?.getSeconds()||0);
+          const block = raw.reduce((pv,val)=>{
+            const [start_,end_] = (()=>{
+              if (typeGuard.DateTimeSchedule(val)){
+                return [Math.floor(new Date(val.start.dateTime).getTime()/1000),new Date(val.end.dateTime).getTime()/1000]
+              }
+              return [Math.floor(new Date(val.start.date).getTime()/1000),new Date(val.end.date).getTime()/1000]
+            })();
+            console.log(start,end,start_,end_);
+            if (end_<start||start_ > end){
+              return pv;
+            }
+            return true;
+          },false);
+          pv[`${start}`] = {val:!block,block};
+          return pv;
+        },{} as {[key:string]:{ val:boolean,block:boolean }});
+        setChecklist(list);
       }catch (e) {
-        setSchedules(undefined);
+        setSchedules(null);
       }
     })();
   },[setSchedules]);
+  if (schedules===undefined) {
+    return <></>;
+  }
 
   const Submit = async () => {
     const request = new RegisterAnswerRequest();
-    request.setEventid(eventDetail.id);
+    request.setEventid(eventDetail.getId());
     request.setToken(getToken(localStorage));
     const answer = new Answer();
     answer.setName(NameText);
-    const proposedScheduleList = eventSchedule.map((event) => {
+    const proposedScheduleList = eventDetail.getProposedstarttimeList().map((ts) => {
       const proposedSchedule = new Answer.ProposedSchedule();
-      const startTime = new Timestamp();
-      startTime.fromDate(event.startTime);
-      proposedSchedule.setStarttime(startTime);
+      proposedSchedule.setStarttime(ts);
       proposedSchedule.setAvailability(
-        checklist[event.key]
+        (checklist[ts.getSeconds()]??true)
           ? Answer.ProposedSchedule.Availability.AVAILABLE
           : Answer.ProposedSchedule.Availability.UNAVAILABLE
       );
@@ -97,18 +115,19 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
           variant: "success",
         });
         // イベント入れる
-        setEventToLocalStorage(eventDetail.name, eventDetail.id, localStorage);
+        setEventStorage(eventDetail.getName(), eventDetail.getId(),true);
         router.push("/");
       });
   };
 
   return (
     <>
+      {isAnswered&&<h1>ずでに回答済みです</h1>}
       {schedules&&<UserCalender schedules={schedules}/>}
       {/* タイトル・名前入力 */}
       <Stack direction="column" sx={{ p: 3 }}>
         <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
-          {eventData.EventTitle}
+          {eventDetail.getName()}
         </Typography>
         <TextField
           label="表示名"
@@ -140,26 +159,28 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eventSchedule.map((event) => {
+              {eventDetail.getProposedstarttimeList().map((ts) => {
+                const start = new Date(ts.getSeconds()*1000);
+                const end = new Date((ts.getSeconds() + (eventDetail.getDuration()?.getSeconds()||0)) * 1000)
+                const key = ts.getSeconds();
                 return (
-                  <TableRow key={event.key}>
+                  <TableRow key={ts.getSeconds()}>
                     <TableCell>
                       <Typography variant="body1">
-                        {event.startTime.getMonth() + 1} /{" "}
-                        {event.startTime.getDay()} {event.startTime.getHours()}:
-                        {event.startTime.getMinutes()}〜
-                        {event.endTime.getHours()}:{event.endTime.getMinutes()}
+                        {start.getMonth() + 1}/{start.getDate()}{" "}
+                        {date2time(start)}〜
+                        {date2time(end)}
                       </Typography>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className={`${Styles.wrapper}`}>
                       <Checkbox
                         onChange={(e) => {
-                          const newChecklist = [...checklist];
-                          newChecklist[event.key] = e.target.checked;
-                          setChecklist(newChecklist);
+                          const value = checklist[key]
+                          setChecklist({...checklist,[key]:{val:e.target.checked,block:value.block}});
                         }}
-                        checked={checklist[event.key]}
+                        checked={checklist[ts.getSeconds()]?.val??true}
                       />
+                      {checklist[key]?.val&&checklist[key]?.block&&<span className={Styles.info}>[i] 他の予定と重複しています</span>}
                     </TableCell>
                   </TableRow>
                 );
@@ -169,13 +190,6 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
         </TableContainer>
         {/* 未ログイン */}
         <Box sx={{ m: 3 }}>
-          {!LoginFlg ? (
-            <Typography variant="caption" sx={{ textAlign: "center" }}>
-              ※未ログインの為、後から予定を編集することができませんがよろしいでしょうか？
-            </Typography>
-          ) : (
-            <></>
-          )}
         </Box>
         {/* 決定 */}
         <Stack direction="row" justifyContent="center" sx={{ mx: 15 }}>

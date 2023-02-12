@@ -5,6 +5,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {Schedule} from "@/@types/event";
 import {typeGuard} from "@/libraries/typeGuard";
+import {date2time} from "@/libraries/time";
 
 type userCalendar = {
   schedules: {[key:string]:Schedule[]}
@@ -43,9 +44,9 @@ export const UserCalender = ({schedules}:userCalendar) => {
                         const start = new Date(schedule.start.dateTime);
                         const end = new Date(schedule.end.dateTime);
                         return <>
-                          {start.getHours()}:{`0${start.getMinutes()}`.slice(-2)}
+                          {date2time(start)}
                           ~
-                          {end.getHours()}:{`0${end.getMinutes()}`.slice(-2)}
+                          {date2time(end)}
                         </>;
                       }
                       return <>終日</>;

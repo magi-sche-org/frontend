@@ -23,7 +23,7 @@ import { eventClient } from "@/service/api-client/client";
 import { CreateEventRequest } from "@/service/api-client/protocol/event_pb";
 import { Duration } from "google-protobuf/google/protobuf/duration_pb";
 import { useSnackbar } from "notistack";
-import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
+import { setEventStorage} from "@/libraries/eventStorage";
 import { getToken } from "@/libraries/token";
 
 const EventMakePageBody: React.FC = () => {
@@ -91,7 +91,7 @@ const EventMakePageBody: React.FC = () => {
         const id = res.getEventid();
         // TODO: 環境変数
         // イベント入れる
-        setEventToLocalStorage(EventNameText, id, localStorage);
+        setEventStorage(EventNameText, id);
         setShareURL(`localhost:3000/guest/${id}`);
         setModalOpen(true);
       })
