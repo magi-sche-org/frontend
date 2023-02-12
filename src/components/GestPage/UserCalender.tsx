@@ -29,7 +29,7 @@ export const UserCalender = ({schedules}:userCalendar) => {
                   sx={{
                     bgcolor: "white",
                     borderRadius: 3,
-                    minwidth: "120px",
+                    minWidth: "120px",
                     height: "120px",
                     p: 2,
                   }}
