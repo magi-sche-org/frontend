@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import {useEffect, useRef,useState} from "react";
 import { Stack } from "@mui/system";
-import eventData from "./eventData.json";
 import { Button } from "../Button";
 
 import { useRouter } from "next/router";
@@ -103,7 +102,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
       {/* タイトル・名前入力 */}
       <Stack direction="column" sx={{ p: 3 }}>
         <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
-          {eventData.EventTitle}
+          {eventDetail.getName()}
         </Typography>
         <TextField
           label="表示名"

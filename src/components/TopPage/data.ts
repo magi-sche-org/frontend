@@ -2,9 +2,12 @@ import { Event } from "./EventList";
 
 export const mockEventList: Event[] = [
 	{
-		id: 1,
+		id: "hoge",
 		name: "フロントエンドMTG",
+		answered: false,
 	},
-	{ id: 2, name: "バックエンドMTG" },
-	{ id: 3, name: "都内LT会" },
+	{ id: "hogehoge", name: "バックエンドMTG",
+		answered: false, },
+	{ id: "huga", name: "都内LT会",
+		answered: false, },
 ];

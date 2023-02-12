@@ -13,6 +13,7 @@ import {getEventStorage} from "@/libraries/eventStorage";
 export type Event = {
   id: string;
   name: string;
+  answered: boolean;
 };
 
 export const EventList = () => {
