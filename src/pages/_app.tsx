@@ -6,7 +6,7 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
 import {useEffect, useRef} from "react";
-import {getToken} from "@/libraries/token";
+import {fetchToken} from "@/libraries/token";
 
 export default function App({ Component, pageProps }: AppProps) {
   const init = useRef(false);
@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
     init.current = true;
     if (localStorage.getItem("go_token")) return;
     (async()=>{
-      await getToken();
+      await fetchToken();
     })();
   },[]);
   const mainTheme = createTheme({

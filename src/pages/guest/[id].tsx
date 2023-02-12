@@ -4,6 +4,7 @@ import { GetEventRequest, GetEventResponse } from "@/service/api-client/protocol
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import {getToken} from "@/libraries/token";
 
 const GuestPage = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -16,7 +17,7 @@ const GuestPage = () => {
       return;
     }
     request.setId(id);
-    request.setToken("token");
+    request.setToken(getToken(localStorage));
     eventClient
       .getEvent(request, null)
       .then((res) => {
