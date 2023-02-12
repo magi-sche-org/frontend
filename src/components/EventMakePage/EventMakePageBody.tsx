@@ -75,7 +75,7 @@ const EventMakePageBody: React.FC = () => {
     request.setName(EventNameText);
     const duration = new Duration();
 
-    switch (TimePadding) {
+    switch (EventTimeRange) {
       case "30min":
         duration.setSeconds(30 * 60);
         break;
@@ -86,6 +86,7 @@ const EventMakePageBody: React.FC = () => {
         duration.setSeconds(24 * 60 * 60);
         break;
     }
+    request.setDuration(duration);
     request.setToken(getToken(localStorage));
     const proposedStartTimeList: Timestamp[] = createProposedStartTimeList(
       StartDay?.toDate(),

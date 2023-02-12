@@ -31,6 +31,6 @@ export const EventList = () => {
   );
 };
 
-const EventCard: FC<Event> = ({ name,id }) => {
-  return <ListButton text={name} page={`/guest/${id}`} />;
+const EventCard: FC<Event> = ({ name, id }) => {
+  return <ListButton text={name} page={`/detail/${id}`} />;
 };
