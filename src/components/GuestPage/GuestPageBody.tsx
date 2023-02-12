@@ -103,8 +103,9 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
     const proposedScheduleList = eventDetail.getProposedstarttimeList().map((ts) => {
       const proposedSchedule = new Answer.ProposedSchedule();
       proposedSchedule.setStarttime(ts);
+      console.log(checklist[ts.getSeconds()],Answer.ProposedSchedule.Availability.AVAILABLE,Answer.ProposedSchedule.Availability.UNAVAILABLE)
       proposedSchedule.setAvailability(
-        (checklist[ts.getSeconds()]??true)
+        (checklist[ts.getSeconds()].val??true)
           ? Answer.ProposedSchedule.Availability.AVAILABLE
           : Answer.ProposedSchedule.Availability.UNAVAILABLE
       );
