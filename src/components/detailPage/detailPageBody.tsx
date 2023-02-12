@@ -1,0 +1,142 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from "@mui/material";
+import React, { useEffect } from "react";
+import { Stack } from "@mui/system";
+import { FC, useState } from "react";
+import eventData from "../GestPage/eventData.json";
+import { Button } from "../Button";
+
+import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
+import {
+  Answer,
+  GetEventResponse,
+  RegisterAnswerRequest
+} from "../../service/api-client/protocol/event_pb";
+import { eventClient } from "../../service/api-client/client";
+import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
+import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
+import { getToken } from "@/libraries/token";
+import { createProposedScheduleList } from "../GestPage/proposedSchedule";
+import { UserCalender } from "../GestPage/UserCalender";
+type GuestPageBodyProps = {
+  eventDetail: GetEventResponse.AsObject;
+};
+
+const DetailPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
+  const router = useRouter();
+  const [eventSchedule, _] = useState(createProposedScheduleList(eventDetail));
+  const [NameText, setNameText] = useState<string>("");
+  const [LoginFlg, setLoginFlg] = useState<boolean>(false);
+  const [checklist, setChecklist] = useState<boolean[]>(
+    [...Array(eventSchedule.length)].map(() => true)
+  );
+  const { enqueueSnackbar } = useSnackbar();
+
+  // 分かんね
+  useEffect(() => {
+    const GetEventDetail = async () => {
+      const request = new RegisterAnswerRequest();
+    };
+    GetEventDetail();
+  }, []);
+
+  const Submit = async () => {
+    const request = new RegisterAnswerRequest();
+    request.setEventid(eventDetail.id);
+    request.setToken(getToken(localStorage));
+    const answer = new Answer();
+    answer.setName(NameText);
+    const proposedScheduleList = eventSchedule.map((event) => {
+      const proposedSchedule = new Answer.ProposedSchedule();
+      const startTime = new Timestamp();
+      startTime.fromDate(event.startTime);
+      proposedSchedule.setStarttime(startTime);
+      proposedSchedule.setAvailability(
+        checklist[event.key]
+          ? Answer.ProposedSchedule.Availability.AVAILABLE
+          : Answer.ProposedSchedule.Availability.UNAVAILABLE
+      );
+      return proposedSchedule;
+    });
+    answer.setScheduleList(proposedScheduleList);
+    request.setAnswer(answer);
+    eventClient
+      .registerAnswer(request, null)
+      .then((res) => console.log(res))
+      .then(() => {
+        enqueueSnackbar("回答を記録しました。", {
+          autoHideDuration: 2000,
+          variant: "success"
+        });
+        // イベント入れる
+        setEventToLocalStorage(eventDetail.name, eventDetail.id, localStorage);
+        router.push("/");
+      });
+  };
+
+  return (
+    <>
+      <UserCalender />
+      {/* タイトル表示*/}
+      <Stack direction='column' sx={{ p: 3, mt: 2 }}>
+        <Typography variant='h6' sx={{ textAlign: "center", mb: 3 }}>
+          {eventData.EventTitle}
+        </Typography>
+        {/* 候補リスト */}
+        <TableContainer
+          sx={{
+            border: "solid",
+            borderWidth: 0.3,
+            borderRadius: 5,
+            p: 1
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Typography variant='caption'>日時</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant='caption'>参加可能人数</Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {eventSchedule.map((event) => {
+                return (
+                  <TableRow key={event.key}>
+                    <TableCell>
+                      <Typography variant='body1'>
+                        {event.startTime.getMonth() + 1}&thinsp;/&thinsp;{event.startTime.getDay()}
+                        &emsp;
+                        {event.startTime.getHours()}:{event.startTime.getMinutes()}〜
+                        {event.endTime.getHours()}:{event.endTime.getMinutes()}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant='body1' sx={{ ml: 1 }}>
+                        {/* 参加できる人数を入れる */}
+                        {10}人
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Stack>
+    </>
+  );
+};
+
+export default DetailPageBody;
