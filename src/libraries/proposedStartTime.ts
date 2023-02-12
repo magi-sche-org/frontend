@@ -47,7 +47,7 @@ export const createProposedStartTimeList = (
     // 終了時間がOKだったら、時間分を引いて配列に入れた後、分数を二倍で登録
     while (stCopy <= edCopy) {
       stCopy.setMinutes(stCopy.getMinutes() - addMinutes);
-      dateArray.push(stCopy);
+      dateArray.push(new Date(stCopy));
       stCopy.setMinutes(stCopy.getMinutes() + addMinutes * 2);
     }
   });
