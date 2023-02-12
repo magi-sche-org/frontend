@@ -129,7 +129,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
 
   return (
     <>
-      {isAnswered&&<h1>ずでに回答済みです</h1>}
+      {isAnswered&&<h1>すでに回答済みです</h1>}
       {schedules&&<UserCalender schedules={schedules}/>}
       {/* タイトル・名前入力 */}
       <Stack direction='column' sx={{ p: 3 }}>
