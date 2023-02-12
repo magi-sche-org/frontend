@@ -161,6 +161,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
             <TableBody>
               {eventDetail.getProposedstarttimeList().map((ts) => {
                 const start = new Date(ts.getSeconds()*1000);
+                console.log(eventDetail)
                 const end = new Date((ts.getSeconds() + (eventDetail.getDuration()?.getSeconds()||0)) * 1000)
                 const key = ts.getSeconds();
                 return (
