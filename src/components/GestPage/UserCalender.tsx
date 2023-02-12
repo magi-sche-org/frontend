@@ -4,6 +4,7 @@ import {useState} from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {Schedule} from "@/@types/event";
+import {typeGuard} from "@/libraries/typeGuard";
 
 type userCalendar = {
   schedules: {[key:string]:Schedule[]}
@@ -37,8 +38,18 @@ export const UserCalender = ({schedules}:userCalendar) => {
                     {date}
                   </Typography>
                   {schedules[date].map((schedule) => {
-                    const start = new Date(schedule.start.dateTime);
-                    const end = new Date(schedule.end.dateTime);
+                    const duration = (()=>{
+                      if (typeGuard.DateTimeSchedule(schedule)){
+                        const start = new Date(schedule.start.dateTime);
+                        const end = new Date(schedule.end.dateTime);
+                        return <>
+                          {start.getHours()}:{start.getMinutes()}
+                          ~
+                          {end.getHours()}:{end.getMinutes()}
+                        </>;
+                      }
+                      return <>終日</>;
+                    })()
                     return (
                       <Stack
                         key={schedule.id}
@@ -55,9 +66,7 @@ export const UserCalender = ({schedules}:userCalendar) => {
                           variant="caption"
                           sx={{ color: "primary.main", lineHeight: "1.2" }}
                         >
-                          {start.getHours()}:{start.getMinutes()}
-                          ~
-                          {end.getHours()}:{end.getMinutes()}
+                          {duration}
                           <br />
                           {schedule.summary}
                         </Typography>

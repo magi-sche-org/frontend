@@ -32,6 +32,7 @@ import { setEventToLocalStorage } from "@/libraries/setEventToLocalStorage";
 import { getToken } from "@/libraries/token";
 import {Schedule} from "@/@types/event";
 import {getSchedules} from "@/libraries/calendar";
+import {typeGuard} from "@/libraries/typeGuard";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse.AsObject;
 };
@@ -52,7 +53,7 @@ const GuestPageBody: FC<GuestPageBodyProps> = ({ eventDetail }) => {
     (async()=>{
       try{
         const data = (await getSchedules(new Date())).reduce((pv,val)=>{
-          const date = new Date(val.start.dateTime);
+          const date = new Date(typeGuard.DateTimeSchedule(val)?val.start.dateTime:val.start.date);
           const key = `${date.getMonth()+1}/${date.getDate()}`
           if (!pv[key]){
             pv[key] = [];
