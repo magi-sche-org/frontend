@@ -2,6 +2,8 @@ import {
   Container,
   FormControl,
   IconButton,
+  InputLabel,
+  ListSubheader,
   MenuItem,
   Modal,
   Select,
@@ -25,6 +27,8 @@ import { Duration } from "google-protobuf/google/protobuf/duration_pb";
 import { useSnackbar } from "notistack";
 import { setEventStorage} from "@/libraries/eventStorage";
 import { getToken } from "@/libraries/token";
+import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
+import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
 
 const EventMakePageBody: React.FC = () => {
   const router = useRouter();
@@ -32,8 +36,10 @@ const EventMakePageBody: React.FC = () => {
   // イベント名
   const [EventNameText, setEventNameText] = useState<string>("");
   // 時間
-  const [StartTime, setStartTime] = useState<number | string>(10);
-  const [EndTime, setEndTime] = useState<number | string>(17);
+  const [StartTime, setStartTime] = useState<number>(10);
+  const [EndTime, setEndTime] = useState<number>(17);
+  // イベント時間の長さ
+  const [EventTimeRange, setEventTimeRange] = useState<string>("30min");
   // 1コマあたりの時間
   const [TimePadding, setTimePadding] = useState<string>("30min");
   // 日付
@@ -81,9 +87,29 @@ const EventMakePageBody: React.FC = () => {
         break;
     }
     request.setToken(getToken(localStorage));
-    // TODO: 導線が無いと作れない
-    request.setProposedstarttimeList([]);
-    request.setTimeunit();
+    const proposedStartTimeList: Timestamp[] = createProposedStartTimeList(
+      StartDay?.toDate(),
+      EndDay?.toDate(),
+      TimePadding,
+      StartTime,
+      EndTime
+    );
+
+    console.log(proposedStartTimeList);
+    request.setProposedstarttimeList(proposedStartTimeList);
+    const padding = new Duration();
+    switch (TimePadding) {
+      case "30min":
+        padding.setSeconds(30 * 60);
+        break;
+      case "1h":
+        padding.setSeconds(60 * 60);
+        break;
+      case "1day":
+        padding.setSeconds(24 * 60 * 60);
+        break;
+    }
+    request.setTimeunit(padding);
 
     eventClient
       .createEvent(request, null)
@@ -142,15 +168,15 @@ const EventMakePageBody: React.FC = () => {
           }}
         />
         {/* 時間帯設定 */}
-        <Typography variant="body1" sx={{ textAlign: "center", mb: 2 }}>
+        <Typography variant="body1" sx={{ textAlign: "center", mb: 1 }}>
           時間帯
         </Typography>
-        <Stack direction="row" justifyContent="center" sx={{ mx: 3, mb: 3 }}>
+        <Stack direction="row" justifyContent="center" sx={{ mx: 3, mb: 4 }}>
           <FormControl variant="standard" sx={{ m: 2, minWidth: 80 }}>
             <Select
               value={StartTime}
               onChange={(e) => {
-                setStartTime(e.target.value);
+                setStartTime(Number(e.target.value));
               }}
             >
               {timeList.map((timeInfo) => {
@@ -169,7 +195,7 @@ const EventMakePageBody: React.FC = () => {
             <Select
               value={EndTime}
               onChange={(e) => {
-                setEndTime(e.target.value);
+                setEndTime(Number(e.target.value));
               }}
             >
               {timeList.map((timeInfo) => {
@@ -182,7 +208,36 @@ const EventMakePageBody: React.FC = () => {
             </Select>
           </FormControl>
         </Stack>
+        {/* イベントの長さ */}
+        <Stack direction="column" sx={{ mx: 5, mb: 5 }}>
+          <Typography variant="body1" sx={{ textAlign: "center", mb: 2 }}>
+            イベントの長さ
+          </Typography>
+          <FormControl>
+            <InputLabel htmlFor="grouped-select">イベントの時間</InputLabel>
+            <Select
+              defaultValue="30min"
+              label="イベント時間"
+              value={EventTimeRange}
+              onChange={(e) => {
+                setEventTimeRange(e.target.value);
+              }}
+            >
+              <ListSubheader>MIN</ListSubheader>
+              <MenuItem value={"15min"}>15min</MenuItem>
+              <MenuItem value={"30min"}>30min</MenuItem>
+              <ListSubheader>Hour</ListSubheader>
+              <MenuItem value={"1h"}>1h</MenuItem>
+              <MenuItem value={"2h"}>2h</MenuItem>
+              <MenuItem value={"3h"}>3h</MenuItem>
+              <MenuItem value={"4h"}>4h</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
         {/* 単位時間の設定 */}
+        <Typography variant="body1" sx={{ textAlign: "center", mb: 2 }}>
+          イベント枠を作る時間
+        </Typography>
         <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
           <ToggleButtonGroup
             color="primary"
@@ -198,8 +253,8 @@ const EventMakePageBody: React.FC = () => {
             <ToggleButton value="1day">1day</ToggleButton>
           </ToggleButtonGroup>
         </Stack>
-        <Typography variant="caption" sx={{ textAlign: "center", mb: 2 }}>
-          イベントの1コマあたりの時間を設定できます
+        <Typography variant="caption" sx={{ textAlign: "center", mb: 3 }}>
+          - イベント枠を生成する単位時間を設定できます
         </Typography>
         {/* 日付ピッカー */}
         <Stack

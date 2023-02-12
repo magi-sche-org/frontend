@@ -7,6 +7,7 @@ const fetchToken = async () => {
   const req = new GetTokenRequest();
   const res = await client.getToken(req, null);
   localStorage.setItem("go_token", res.getToken());
+  console.log(res)
 };
 
 const getToken = (localStorage: Storage) => {
