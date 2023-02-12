@@ -8,7 +8,7 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import {useEffect, useRef,useState} from "react";
 import { Stack } from "@mui/system";
@@ -112,7 +112,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
       .then(() => {
         enqueueSnackbar("回答を記録しました。", {
           autoHideDuration: 2000,
-          variant: "success",
+          variant: "success"
         });
         // イベント入れる
         setEventStorage(eventDetail.getName(), eventDetail.getId(),true);
@@ -125,13 +125,13 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
       {isAnswered&&<h1>ずでに回答済みです</h1>}
       {schedules&&<UserCalender schedules={schedules}/>}
       {/* タイトル・名前入力 */}
-      <Stack direction="column" sx={{ p: 3 }}>
-        <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
+      <Stack direction='column' sx={{ p: 3 }}>
+        <Typography variant='h6' sx={{ textAlign: "center", mb: 3 }}>
           {eventDetail.getName()}
         </Typography>
         <TextField
-          label="表示名"
-          variant="outlined"
+          label='表示名'
+          variant='outlined'
           sx={{ mx: 7, mb: 3 }}
           value={NameText}
           onChange={(e) => {
@@ -144,17 +144,17 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
             border: "solid",
             borderWidth: 0.3,
             borderRadius: 5,
-            p: 1,
+            p: 1
           }}
         >
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Typography variant="caption">日時</Typography>
+                  <Typography variant='caption'>日時</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="caption">参加</Typography>
+                  <Typography variant='caption'>参加</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -192,8 +192,8 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
         <Box sx={{ m: 3 }}>
         </Box>
         {/* 決定 */}
-        <Stack direction="row" justifyContent="center" sx={{ mx: 15 }}>
-          <Button text="決定" isPrimary={true} onClick={Submit} />
+        <Stack direction='row' justifyContent='center' sx={{ mx: 15 }}>
+          <Button text='決定' isPrimary={true} onClick={Submit} />
         </Stack>
       </Stack>
     </>
