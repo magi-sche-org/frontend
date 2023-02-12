@@ -29,13 +29,14 @@ import {Schedule} from "@/@types/event";
 import {getSchedules} from "@/libraries/calendar";
 import {typeGuard} from "@/libraries/typeGuard";
 import {date2time} from "@/libraries/time";
+import Styles from "./GuestPageBody.module.scss";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
 const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   const router = useRouter();
   const [NameText, setNameText] = useState<string>("");
-  const [checklist, setChecklist] = useState<{ [key:string]:boolean}>({});
+  const [checklist, setChecklist] = useState<{ [key:string]: { val:boolean,block:boolean }}>({});
   const { enqueueSnackbar } = useSnackbar();
   const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined|null>(undefined);
   const init = useRef(false);
@@ -61,20 +62,22 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
         const list = eventDetail.getProposedstarttimeList().reduce((pv,ts)=>{
           const start = ts.getSeconds();
           const end = ts.getSeconds() + (eventDetail.getDuration()?.getSeconds()||0);
-          pv[`${start}`] = raw.reduce((pv,val)=>{
+          const block = raw.reduce((pv,val)=>{
             const [start_,end_] = (()=>{
               if (typeGuard.DateTimeSchedule(val)){
                 return [Math.floor(new Date(val.start.dateTime).getTime()/1000),new Date(val.end.dateTime).getTime()/1000]
               }
               return [Math.floor(new Date(val.start.date).getTime()/1000),new Date(val.end.date).getTime()/1000]
             })();
+            console.log(start,end,start_,end_);
             if (end_<start||start_ > end){
               return pv;
             }
-            return false;
-          },true);
+            return true;
+          },false);
+          pv[`${start}`] = {val:!block,block};
           return pv;
-        },{} as {[key:string]:boolean});
+        },{} as {[key:string]:{ val:boolean,block:boolean }});
         setChecklist(list);
       }catch (e) {
         setSchedules(null);
@@ -159,6 +162,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
               {eventDetail.getProposedstarttimeList().map((ts) => {
                 const start = new Date(ts.getSeconds()*1000);
                 const end = new Date((ts.getSeconds() + (eventDetail.getDuration()?.getSeconds()||0)) * 1000)
+                const key = ts.getSeconds();
                 return (
                   <TableRow key={ts.getSeconds()}>
                     <TableCell>
@@ -168,13 +172,15 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                         {date2time(end)}
                       </Typography>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className={`${checklist[key]?.val&&checklist[key]?.block&&Styles.yellow} ${Styles.wrapper}`}>
                       <Checkbox
                         onChange={(e) => {
-                          setChecklist({...checklist,[ts.getSeconds()]:e.target.checked});
+                          const value = checklist[key]
+                          setChecklist({...checklist,[key]:{val:e.target.checked,block:value.block}});
                         }}
-                        checked={checklist[ts.getSeconds()]??true}
+                        checked={checklist[ts.getSeconds()]?.val??true}
                       />
+                      {checklist[key]?.val&&checklist[key]?.block&&<span className={Styles.info}>[i] 他の予定と重複しています</span>}
                     </TableCell>
                   </TableRow>
                 );
