@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import {getToken} from "@/libraries/token";
+import Head from "next/head";
 
 const DetailPage = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -30,7 +31,12 @@ const DetailPage = () => {
         });
       });
   }, [id]);
-  return <>{eventDetail && <DetailPageBody eventDetail={eventDetail} />}</>;
+  return <>
+    <Head>
+      <title>{eventDetail&&`${eventDetail?.getName()} - `}Magi-Sche</title>
+    </Head>
+    {eventDetail && <DetailPageBody eventDetail={eventDetail} />}
+  </>;
 };
 
 export default DetailPage;
