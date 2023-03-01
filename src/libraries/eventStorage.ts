@@ -6,6 +6,11 @@ const setEventStorage = (
   answered: boolean = false
 ) => {
   const eventList = JSON.parse(localStorage.getItem("event-list") || "[]");
+  for (const event of eventList){
+    if (event.id === id){
+      return;
+    }
+  }
   eventList.push({
     name,
     id,
