@@ -146,6 +146,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
 
   return (
     <>
+      {isAnswered&&<Button text={"閲覧ページへ"} isPrimary={true} onClick={()=>{router.push(`/detail/${router.query.id}`)}}/>}
       {schedules&&<UserCalender schedules={schedules}/>}
       {/* タイトル・名前入力 */}
       <Stack direction='column' sx={{ p: 3 }}>

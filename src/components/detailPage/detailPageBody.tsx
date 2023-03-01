@@ -13,12 +13,14 @@ import {
   GetEventResponse,
 } from "@/service/api-client/protocol/event_pb";
 import {date2time} from "@/libraries/time";
+import {Button} from "@/components/Button";
+import {useRouter} from "next/router";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
 
 const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
-  
+  const router = useRouter();
   const list: {[key:string]: { available:number,unavailable: number }} = {};
   
   for (const answer of eventDetail.getAnswersList()){
@@ -38,6 +40,7 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   return (
     <>
       {/* タイトル表示*/}
+      <Button text={"回答ページへ"} isPrimary={true} onClick={()=>{router.push(`/guest/${router.query.id}`)}}/>
       <Stack direction="column" sx={{ p: 3, mt: 2 }}>
         <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
           {eventDetail.getName()}
