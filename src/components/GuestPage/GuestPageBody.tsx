@@ -35,14 +35,33 @@ type GuestPageBodyProps = {
 };
 const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   const router = useRouter();
-  const [NameText, setNameText] = useState<string>("");
-  const [checklist, setChecklist] = useState<{ [key:string]: { val:boolean,block:boolean }}>({});
+  const [NameText, setNameText] = useState<string>(()=>{
+    const answers = eventDetail.getAnswersList();
+    for (const answer of answers) {
+      if (answer.getNote() === getToken(localStorage)){
+        
+        return answer.getName();
+      }
+    }
+    return "";
+  });
+  const [checklist, setChecklist] = useState<{ [key:string]: { val:boolean,block:boolean }}>(()=>{
+    const answers = eventDetail.getAnswersList();
+    for (const answer of answers) {
+      if (answer.getNote() === getToken(localStorage)){
+        const result:{[key:number]:{val:boolean,block:boolean}} = {};
+        for (const schedule of answer.getScheduleList()){
+          result[Math.floor((schedule.getStarttime()?.toDate().getTime()||0)/1000)] = {val: schedule.getAvailability()===Answer.ProposedSchedule.Availability.AVAILABLE,block:false}
+        }
+        return result;
+      }
+    }
+    return {};
+  });
   const { enqueueSnackbar } = useSnackbar();
   const [schedules,setSchedules] = useState<{[key:string]:Schedule[]}|undefined|null>(undefined);
   const init = useRef(false);
-  
   const isAnswered = getEventStorage().reduce((pv:boolean,val)=>(val.answered&&val.id===eventDetail.getId())||pv,false);
-  
   useEffect(()=>{
     if (typeof window !== "object"||init.current)return;
     init.current = true;
@@ -69,13 +88,12 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
               }
               return [Math.floor(new Date(val.start.date).getTime()/1000),new Date(val.end.date).getTime()/1000]
             })();
-            console.log(start,end,start_,end_);
             if (end_<start||start_ > end){
               return pv;
             }
             return true;
           },false);
-          pv[`${start}`] = {val:!block,block};
+          pv[`${start}`] = {val:checklist[`${start}`]?.val??(!block),block};
           return pv;
         },{} as {[key:string]:{ val:boolean,block:boolean }});
         setChecklist(list);
@@ -83,7 +101,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
         setSchedules(null);
         const list = eventDetail.getProposedstarttimeList().reduce((pv,ts)=>{
           const start = ts.getSeconds();
-          pv[`${start}`] = {val:true,block:false};
+          pv[`${start}`] = {val:checklist[`${start}`]?.val??true,block:false};
           return pv;
         },{} as {[key:string]:{ val:boolean,block:boolean }});
         setChecklist(list);
@@ -103,7 +121,6 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
     const proposedScheduleList = eventDetail.getProposedstarttimeList().map((ts) => {
       const proposedSchedule = new Answer.ProposedSchedule();
       proposedSchedule.setStarttime(ts);
-      console.log(checklist[ts.getSeconds()],Answer.ProposedSchedule.Availability.AVAILABLE,Answer.ProposedSchedule.Availability.UNAVAILABLE)
       proposedSchedule.setAvailability(
         (checklist[ts.getSeconds()].val??true)
           ? Answer.ProposedSchedule.Availability.AVAILABLE
@@ -112,10 +129,10 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
       return proposedSchedule;
     });
     answer.setScheduleList(proposedScheduleList);
+    answer.setNote(getToken(localStorage));
     request.setAnswer(answer);
     eventClient
       .registerAnswer(request, null)
-      .then((res) => console.log(res))
       .then(() => {
         enqueueSnackbar("回答を記録しました。", {
           autoHideDuration: 2000,
@@ -129,7 +146,6 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
 
   return (
     <>
-      {isAnswered&&<h1>すでに回答済みです</h1>}
       {schedules&&<UserCalender schedules={schedules}/>}
       {/* タイトル・名前入力 */}
       <Stack direction='column' sx={{ p: 3 }}>
@@ -168,7 +184,6 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
             <TableBody>
               {eventDetail.getProposedstarttimeList().map((ts) => {
                 const start = new Date(ts.getSeconds()*1000);
-                console.log(eventDetail)
                 const end = new Date((ts.getSeconds() + (eventDetail.getDuration()?.getSeconds()||0)) * 1000)
                 const key = ts.getSeconds();
                 return (
@@ -201,7 +216,7 @@ const GuestPageBody = ({ eventDetail }:GuestPageBodyProps) => {
         </Box>
         {/* 決定 */}
         <Stack direction='row' justifyContent='center' sx={{ mx: 15 }}>
-          <Button text='決定' isPrimary={true} onClick={Submit} />
+          <Button text={isAnswered?"更新":"決定"} isPrimary={true} onClick={Submit} />
         </Stack>
       </Stack>
     </>
