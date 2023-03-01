@@ -30,7 +30,6 @@ const DetailPage = () => {
         });
       });
   }, [id]);
-  console.log(eventDetail);
   return <>{eventDetail && <DetailPageBody eventDetail={eventDetail} />}</>;
 };
 

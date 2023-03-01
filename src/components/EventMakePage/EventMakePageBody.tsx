@@ -96,7 +96,6 @@ const EventMakePageBody: React.FC = () => {
       EndTime
     );
 
-    console.log(proposedStartTimeList);
     request.setProposedstarttimeList(proposedStartTimeList);
     const padding = new Duration();
     switch (TimePadding) {
@@ -123,7 +122,6 @@ const EventMakePageBody: React.FC = () => {
         setModalOpen(true);
       })
       .catch((e) => {
-        console.log(e);
         enqueueSnackbar("イベントの作成に失敗しました", {
           autoHideDuration: 2000,
           variant: "error",
