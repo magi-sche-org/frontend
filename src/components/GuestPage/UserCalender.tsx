@@ -21,6 +21,21 @@ export const UserCalender = ({schedules}:userCalendar) => {
           style={{ overflowX: "auto", whiteSpace: "nowrap", width: "100%" }}
         >
           <Stack direction="row" spacing={1}>
+            {Object.keys(schedules).length===0&&
+
+                <Stack
+                    direction="column"
+                    spacing={0.5}
+                    sx={{
+                      bgcolor: "white",
+                      borderRadius: 3,
+                      width: "100%",
+                      height: "120px",
+                      p: 2,
+                    }}
+                ><Typography variant="caption" sx={{ textAlign: "center" }}>
+                  直近の予定はありません
+                </Typography></Stack>}
             {Object.keys(schedules).map((date) => {
               return (
                 <Stack
