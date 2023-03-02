@@ -5,6 +5,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
@@ -16,6 +17,7 @@ import { date2time } from "@/libraries/time";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
 import { getEventStorage } from "@/libraries/eventStorage";
+import { useCallback, useMemo } from "react";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
@@ -29,6 +31,38 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
       (val.answered && val.id === eventDetail.getId()) || pv,
     false
   );
+  // key: timeStamp value: その時間の参加者の可否と名前
+  const participantsAvailability: {
+    [key: number]: { name: string; availability: boolean }[];
+  } = useMemo(() => {
+    const keys = eventDetail
+      .getProposedstarttimeList()
+      .map((startTime) => startTime);
+    const res: { [key: string]: { name: string; availability: boolean }[] } =
+      {};
+    keys.forEach((key) => {
+      const participants = eventDetail.getAnswersList().map((answer) => {
+        const name = answer.getName();
+        const availability = answer
+          .getScheduleList()
+          .filter(
+            (schedule) =>
+              schedule.getStarttime()?.getSeconds() === key.getSeconds()
+          );
+        if (availability.length === 1) {
+          return {
+            name,
+            availability:
+              availability[0].getAvailability() ===
+              Answer.ProposedSchedule.Availability.AVAILABLE,
+          };
+        }
+      });
+      const a = participants.filter(isParticipantsInfo);
+      res[key.getSeconds()] = a;
+    });
+    return res;
+  }, [eventDetail]);
 
   for (const answer of eventDetail.getAnswersList()) {
     for (const schedule of answer.getScheduleList()) {
@@ -94,26 +128,34 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
                     1000
                 );
                 return (
-                  <TableRow key={ts} sx={determineRowColor(val)}>
-                    <TableCell>
-                      <Typography variant="body1">
-                        {start.getMonth() + 1}&thinsp;/&thinsp;
-                        {start.getDate()}
-                        &emsp;
-                        {date2time(start)}〜{date2time(end)}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1" sx={{ ml: 1 }}>
-                        {val.available}人
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1" sx={{ ml: 1 }}>
-                        {val.unavailable}人
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
+                  <Tooltip
+                    key={ts}
+                    title={getParticipantsText(
+                      participantsAvailability[Number(ts)]
+                    )}
+                    enterTouchDelay={0}
+                  >
+                    <TableRow sx={determineRowColor(val)}>
+                      <TableCell>
+                        <Typography variant="body1">
+                          {start.getMonth() + 1}&thinsp;/&thinsp;
+                          {start.getDate()}
+                          &emsp;
+                          {date2time(start)}〜{date2time(end)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1" sx={{ ml: 1 }}>
+                          {val.available}人
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1" sx={{ ml: 1 }}>
+                          {val.unavailable}人
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </Tooltip>
                 );
               })}
             </TableBody>
@@ -137,5 +179,22 @@ const determineRowColor = (val: { available: number; unavailable: number }) => {
       backgroundColor: "#ffff00",
     };
   }
+};
+
+function isParticipantsInfo(
+  p: { name: string; availability: boolean } | undefined
+): p is { name: string; availability: boolean } {
+  return p !== undefined;
+}
+const getParticipantsText = (
+  participantsArray: { name: string; availability: boolean }[]
+) => {
+  const resText = participantsArray.map((p) => (
+    <span key={p.name}>
+      {`${p.name} ${p.availability ? "○" : "×"}`}
+      <br />
+    </span>
+  ));
+  return resText;
 };
 export { DetailPageBody };
