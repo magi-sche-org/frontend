@@ -13,9 +13,11 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useState } from "react";
 import Image from "next/image";
 import { Stack } from "@mui/system";
+import { useRouter } from "next/router";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const router = useRouter();
   // booleanとして認識させたいためlint避ける
   // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
   const [isLogin, setIsLogin] = useState(getUserInfo() && true);
@@ -45,7 +47,7 @@ export const Header = () => {
             <IconButton edge="start" size="large" disabled>
               <AccountCircle sx={{ color: "secondary.main" }} />
             </IconButton>
-            <Button>
+            <Button onClick={() => router.push("/")}>
               <Image
                 src={"/images/logo.png"}
                 alt={"logo"}
