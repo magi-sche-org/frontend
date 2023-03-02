@@ -136,7 +136,7 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
                     )}
                     enterTouchDelay={0}
                   >
-                    <TableRow>
+                    <TableRow sx={determineRowColor(val)}>
                       <TableCell>
                         <Typography variant="body1">
                           {start.getMonth() + 1}&thinsp;/&thinsp;
