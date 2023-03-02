@@ -94,7 +94,7 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
                     1000
                 );
                 return (
-                  <TableRow key={ts}>
+                  <TableRow key={ts} sx={determineRowColor(val)}>
                     <TableCell>
                       <Typography variant="body1">
                         {start.getMonth() + 1}&thinsp;/&thinsp;
@@ -124,4 +124,18 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   );
 };
 
+const determineRowColor = (val: { available: number; unavailable: number }) => {
+  const participantsNumber = val.available + val.unavailable;
+  if (participantsNumber === val.available) {
+    return {
+      backgroundColor: "#7fffd4",
+    };
+  }
+
+  if (val.unavailable <= 2) {
+    return {
+      backgroundColor: "#ffff00",
+    };
+  }
+};
 export { DetailPageBody };
