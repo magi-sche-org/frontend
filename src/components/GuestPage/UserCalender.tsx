@@ -62,42 +62,103 @@ export const UserCalender = ({ schedules }: userCalendar) => {
                     {dayNum}
                   </Typography>
                   {schedules[dayNum] !== undefined ? (
-                    schedules[dayNum].map((schedule) => {
-                      const duration = (() => {
-                        if (typeGuard.DateTimeSchedule(schedule)) {
-                          const start = new Date(schedule.start.dateTime);
-                          const end = new Date(schedule.end.dateTime);
-                          return (
-                            <>
-                              {date2time(start)}~{date2time(end)}
-                            </>
-                          );
-                        }
-                        return <>終日</>;
-                      })();
-                      return (
-                        <Stack
-                          key={schedule.id}
-                          sx={{
-                            border: "solid",
-                            borderWidth: 1,
-                            borderRadius: 1,
-                            borderColor: "primary.main",
-                            bgcolor: "white",
-                            p: 0.5
-                          }}
-                        >
-                          <Typography
-                            variant='caption'
-                            sx={{ color: "primary.main", lineHeight: "1.2" }}
+                    schedules[dayNum].length < 2 ? (
+                      // 予定が2個以下の場合
+                      schedules[dayNum].map((schedule) => {
+                        const duration = (() => {
+                          if (typeGuard.DateTimeSchedule(schedule)) {
+                            const start = new Date(schedule.start.dateTime);
+                            const end = new Date(schedule.end.dateTime);
+                            return (
+                              <>
+                                {date2time(start)}~{date2time(end)}
+                              </>
+                            );
+                          }
+                          return <>終日</>;
+                        })();
+                        return (
+                          <Stack
+                            key={schedule.id}
+                            sx={{
+                              border: "solid",
+                              borderWidth: 1,
+                              borderRadius: 1,
+                              borderColor: "primary.main",
+                              bgcolor: "white",
+                              p: 0.5
+                            }}
                           >
-                            {duration}
-                            <br />
-                            {schedule.summary}
-                          </Typography>
-                        </Stack>
-                      );
-                    })
+                            <Typography
+                              variant='caption'
+                              sx={{ color: "primary.main", lineHeight: "1.2" }}
+                            >
+                              {duration}
+                              <br />
+                              {schedule.summary}
+                            </Typography>
+                          </Stack>
+                        );
+                      })
+                    ) : (
+                      // 予定が3個以上の場合
+                      schedules[dayNum]
+                        .map((schedule) => {
+                          const duration = (() => {
+                            if (typeGuard.DateTimeSchedule(schedule)) {
+                              const start = new Date(schedule.start.dateTime);
+                              const end = new Date(schedule.end.dateTime);
+                              return (
+                                <>
+                                  {date2time(start)}~{date2time(end)}
+                                </>
+                              );
+                            }
+                            return <>終日</>;
+                          })();
+                          return (
+                            <Stack key={schedule.id} spacing={0.5}>
+                              <Stack
+                                sx={{
+                                  border: "solid",
+                                  borderWidth: 1,
+                                  borderRadius: 1,
+                                  borderColor: "primary.main",
+                                  bgcolor: "white",
+                                  p: 0.5
+                                }}
+                              >
+                                <Typography
+                                  variant='caption'
+                                  sx={{ color: "primary.main", lineHeight: "1.2" }}
+                                >
+                                  {duration}
+                                  <br />
+                                  {schedule.summary}
+                                </Typography>
+                              </Stack>
+                              <Stack
+                                sx={{
+                                  border: "solid",
+                                  borderWidth: 1,
+                                  borderRadius: 1,
+                                  borderColor: "primary.main",
+                                  bgcolor: "white",
+                                  p: 0.5
+                                }}
+                              >
+                                <Typography
+                                  variant='caption'
+                                  sx={{ color: "primary.main", lineHeight: "1.2" }}
+                                >
+                                  {`他${schedules[dayNum].length}件のイベント`}{" "}
+                                </Typography>
+                              </Stack>
+                            </Stack>
+                          );
+                        })
+                        .slice(schedules[dayNum].length - 1)
+                    )
                   ) : (
                     <Stack textAlign='center'>
                       <Typography
