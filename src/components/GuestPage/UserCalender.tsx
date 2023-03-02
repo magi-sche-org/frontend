@@ -6,10 +6,16 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Schedule } from "@/@types/event";
 import { typeGuard } from "@/libraries/typeGuard";
 import { date2time } from "@/libraries/time";
+import dayjs from "dayjs";
 
 type userCalendar = {
   schedules: { [key: string]: Schedule[] };
 };
+
+const timeList: string[] = [];
+for (let i = 0; i < 30; i++) {
+  timeList.push(`${dayjs().add(i, "d").format("M")}/${dayjs().add(i, "d").format("D")}`);
+}
 
 export const UserCalender = ({ schedules }: userCalendar) => {
   const [CalenderBarOpen, setCalenderBarOpen] = useState<boolean>(true);
@@ -38,10 +44,10 @@ export const UserCalender = ({ schedules }: userCalendar) => {
                 </Typography>
               </Stack>
             )}
-            {Object.keys(schedules).map((date) => {
+            {timeList.map((dayNum) => {
               return (
                 <Stack
-                  key={date}
+                  key={dayNum}
                   direction='column'
                   spacing={0.5}
                   sx={{
@@ -53,44 +59,55 @@ export const UserCalender = ({ schedules }: userCalendar) => {
                   }}
                 >
                   <Typography variant='caption' sx={{ textAlign: "center" }}>
-                    {date}
+                    {dayNum}
                   </Typography>
-                  {schedules[date].map((schedule) => {
-                    const duration = (() => {
-                      if (typeGuard.DateTimeSchedule(schedule)) {
-                        const start = new Date(schedule.start.dateTime);
-                        const end = new Date(schedule.end.dateTime);
-                        return (
-                          <>
-                            {date2time(start)}~{date2time(end)}
-                          </>
-                        );
-                      }
-                      return <>終日</>;
-                    })();
-                    return (
-                      <Stack
-                        key={schedule.id}
-                        sx={{
-                          border: "solid",
-                          borderWidth: 1,
-                          borderRadius: 1,
-                          borderColor: "primary.main",
-                          bgcolor: "white",
-                          p: 0.5
-                        }}
-                      >
-                        <Typography
-                          variant='caption'
-                          sx={{ color: "primary.main", lineHeight: "1.2" }}
+                  {schedules[dayNum] !== undefined ? (
+                    schedules[dayNum].map((schedule) => {
+                      const duration = (() => {
+                        if (typeGuard.DateTimeSchedule(schedule)) {
+                          const start = new Date(schedule.start.dateTime);
+                          const end = new Date(schedule.end.dateTime);
+                          return (
+                            <>
+                              {date2time(start)}~{date2time(end)}
+                            </>
+                          );
+                        }
+                        return <>終日</>;
+                      })();
+                      return (
+                        <Stack
+                          key={schedule.id}
+                          sx={{
+                            border: "solid",
+                            borderWidth: 1,
+                            borderRadius: 1,
+                            borderColor: "primary.main",
+                            bgcolor: "white",
+                            p: 0.5
+                          }}
                         >
-                          {duration}
-                          <br />
-                          {schedule.summary}
-                        </Typography>
-                      </Stack>
-                    );
-                  })}
+                          <Typography
+                            variant='caption'
+                            sx={{ color: "primary.main", lineHeight: "1.2" }}
+                          >
+                            {duration}
+                            <br />
+                            {schedule.summary}
+                          </Typography>
+                        </Stack>
+                      );
+                    })
+                  ) : (
+                    <Stack textAlign='center'>
+                      <Typography
+                        variant='caption'
+                        sx={{ color: "primary.main", lineHeight: "1.2", mt: 0.3 }}
+                      >
+                        予定なし
+                      </Typography>
+                    </Stack>
+                  )}
                 </Stack>
               );
             })}
