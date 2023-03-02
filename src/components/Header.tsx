@@ -4,52 +4,67 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Switch from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import { login, revokeToken } from "@/libraries/authorization";
 import { getUserInfo } from "@/libraries/userInfo";
 import { Button, Container } from "@mui/material";
 import Head from "next/head";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useState } from "react";
 
 export const Header = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isLogin, setIsLogin] = useState(getUserInfo() && true);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (getUserInfo()) {
-      void revokeToken();
+      revokeToken().then(() => setIsLogin(false));
     } else {
       login();
     }
     setAnchorEl(event.currentTarget);
   };
-
   return (
     <>
       <Head>
-        <meta name='theme-color' media='(prefers-color-scheme: light)' content='#FFFFDD' />
+        <meta
+          name="theme-color"
+          media="(prefers-color-scheme: light)"
+          content="#FFFFDD"
+        />
       </Head>
       <AppBar
-        position='static'
+        position="static"
         sx={{ backgroundColor: "secondary.main", boxShadow: 0, px: 2, py: 0.8 }}
       >
         <Container disableGutters>
           <Toolbar sx={{ xs: "flex" }}>
-            <IconButton edge='start' size='large' disabled>
+            <IconButton edge="start" size="large" disabled>
               <AccountCircle sx={{ color: "secondary.main" }} />
             </IconButton>
             <Typography
-              variant='h5'
-              sx={{ mx: "auto", color: "black", fontFamily: "robots", fontWeight: "bold" }}
+              variant="h5"
+              sx={{
+                mx: "auto",
+                color: "black",
+                fontFamily: "robots",
+                fontWeight: "bold",
+              }}
             >
               Magi-Sche
             </Typography>
-            <IconButton edge='end' size='large' color='inherit' onClick={handleMenu}>
-              <AccountCircle sx={{ color: "black" }} />
+            <IconButton
+              edge="end"
+              size="large"
+              color="inherit"
+              onClick={handleMenu}
+            >
+              {isLogin ? (
+                <>
+                  <LogoutIcon sx={{ color: "black" }} />
+                </>
+              ) : (
+                <AccountCircle sx={{ color: "black" }} />
+              )}
             </IconButton>
           </Toolbar>
         </Container>
