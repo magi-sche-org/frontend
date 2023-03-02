@@ -14,7 +14,9 @@ type userCalendar = {
 
 const timeList: string[] = [];
 for (let i = 0; i < 30; i++) {
-  timeList.push(`${dayjs().add(i, "d").format("M")}/${dayjs().add(i, "d").format("D")}`);
+  timeList.push(
+    `${dayjs().add(i, "d").format("M")}/${dayjs().add(i, "d").format("D")}`
+  );
 }
 
 export const UserCalender = ({ schedules }: userCalendar) => {
@@ -25,157 +27,106 @@ export const UserCalender = ({ schedules }: userCalendar) => {
         <Stack
           sx={{ p: 3, pt: 1, pb: 0.5, bgcolor: "primary.main" }}
           style={{ overflowX: "auto", whiteSpace: "nowrap", width: "100%" }}
+          direction="row"
+          spacing={1}
+          overflow="hidden"
         >
-          <Stack direction='row' spacing={1}>
-            {Object.keys(schedules).length === 0 && (
+          {Object.keys(schedules).length === 0 && (
+            <Stack
+              direction="column"
+              spacing={0.5}
+              sx={{
+                bgcolor: "white",
+                borderRadius: 3,
+                width: "100%",
+                height: "120px",
+                p: 2,
+              }}
+            >
+              <Typography variant="caption" sx={{ textAlign: "center" }}>
+                直近の予定はありません
+              </Typography>
+            </Stack>
+          )}
+          {timeList.map((dayNum) => {
+            return (
               <Stack
-                direction='column'
+                key={dayNum}
+                direction="column"
                 spacing={0.5}
                 sx={{
                   bgcolor: "white",
                   borderRadius: 3,
-                  width: "100%",
-                  height: "120px",
-                  p: 2
+                  minWidth: "130px",
+                  height: "130px",
+                  p: 2,
                 }}
+                overflow="scroll"
               >
-                <Typography variant='caption' sx={{ textAlign: "center" }}>
-                  直近の予定はありません
+                <Typography variant="caption" sx={{ textAlign: "center" }}>
+                  {dayNum}
                 </Typography>
-              </Stack>
-            )}
-            {timeList.map((dayNum) => {
-              return (
-                <Stack
-                  key={dayNum}
-                  direction='column'
-                  spacing={0.5}
-                  sx={{
-                    bgcolor: "white",
-                    borderRadius: 3,
-                    minWidth: "130px",
-                    height: "130px",
-                    p: 2
-                  }}
-                >
-                  <Typography variant='caption' sx={{ textAlign: "center" }}>
-                    {dayNum}
-                  </Typography>
-                  {schedules[dayNum] !== undefined ? (
-                    schedules[dayNum].length < 2 ? (
-                      // 予定が2個以下の場合
-                      schedules[dayNum].map((schedule) => {
-                        const duration = (() => {
-                          if (typeGuard.DateTimeSchedule(schedule)) {
-                            const start = new Date(schedule.start.dateTime);
-                            const end = new Date(schedule.end.dateTime);
-                            return (
-                              <>
-                                {date2time(start)}~{date2time(end)}
-                              </>
-                            );
-                          }
-                          return <>終日</>;
-                        })();
+                {schedules[dayNum] !== undefined ? (
+                  schedules[dayNum].map((schedule) => {
+                    const duration = (() => {
+                      if (typeGuard.DateTimeSchedule(schedule)) {
+                        const start = new Date(schedule.start.dateTime);
+                        const end = new Date(schedule.end.dateTime);
                         return (
-                          <Stack
-                            key={schedule.id}
-                            sx={{
-                              border: "solid",
-                              borderWidth: 1,
-                              borderRadius: 1,
-                              borderColor: "primary.main",
-                              bgcolor: "white",
-                              p: 0.5
-                            }}
-                          >
-                            <Typography
-                              variant='caption'
-                              sx={{ color: "primary.main", lineHeight: "1.2" }}
-                            >
-                              {duration}
-                              <br />
-                              {schedule.summary}
-                            </Typography>
-                          </Stack>
+                          <>
+                            {date2time(start)}~{date2time(end)}
+                          </>
                         );
-                      })
-                    ) : (
-                      // 予定が3個以上の場合
-                      schedules[dayNum]
-                        .map((schedule) => {
-                          const duration = (() => {
-                            if (typeGuard.DateTimeSchedule(schedule)) {
-                              const start = new Date(schedule.start.dateTime);
-                              const end = new Date(schedule.end.dateTime);
-                              return (
-                                <>
-                                  {date2time(start)}~{date2time(end)}
-                                </>
-                              );
-                            }
-                            return <>終日</>;
-                          })();
-                          return (
-                            <Stack key={schedule.id} spacing={0.5}>
-                              <Stack
-                                sx={{
-                                  border: "solid",
-                                  borderWidth: 1,
-                                  borderRadius: 1,
-                                  borderColor: "primary.main",
-                                  bgcolor: "white",
-                                  p: 0.5
-                                }}
-                              >
-                                <Typography
-                                  variant='caption'
-                                  sx={{ color: "primary.main", lineHeight: "1.2" }}
-                                >
-                                  {duration}
-                                  <br />
-                                  {schedule.summary}
-                                </Typography>
-                              </Stack>
-                              <Stack
-                                sx={{
-                                  border: "solid",
-                                  borderWidth: 1,
-                                  borderRadius: 1,
-                                  borderColor: "primary.main",
-                                  bgcolor: "white",
-                                  p: 0.5
-                                }}
-                              >
-                                <Typography
-                                  variant='caption'
-                                  sx={{ color: "primary.main", lineHeight: "1.2" }}
-                                >
-                                  {`他${schedules[dayNum].length}件のイベント`}{" "}
-                                </Typography>
-                              </Stack>
-                            </Stack>
-                          );
-                        })
-                        .slice(schedules[dayNum].length - 1)
-                    )
-                  ) : (
-                    <Stack textAlign='center'>
-                      <Typography
-                        variant='caption'
-                        sx={{ color: "primary.main", lineHeight: "1.2", mt: 0.3 }}
+                      }
+                      return <>終日</>;
+                    })();
+                    return (
+                      <Stack
+                        key={schedule.id}
+                        sx={{
+                          border: "solid",
+                          borderWidth: 1,
+                          borderRadius: 1,
+                          borderColor: "primary.main",
+                          bgcolor: "white",
+                          p: 0.5,
+                        }}
                       >
-                        予定なし
-                      </Typography>
-                    </Stack>
-                  )}
-                </Stack>
-              );
-            })}
-          </Stack>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "primary.main", lineHeight: "1.2" }}
+                        >
+                          {duration}
+                          <br />
+                          {schedule.summary}
+                        </Typography>
+                      </Stack>
+                    );
+                  })
+                ) : (
+                  <Stack textAlign="center">
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "primary.main",
+                        lineHeight: "1.2",
+                        mt: 0.3,
+                      }}
+                    >
+                      予定なし
+                    </Typography>
+                  </Stack>
+                )}
+              </Stack>
+            );
+          })}
         </Stack>
       )}
-      <Stack direction='row' justifyContent='center' sx={{ bgcolor: "primary.main", pb: 0.5 }}>
+      <Stack
+        direction="row"
+        justifyContent="center"
+        sx={{ bgcolor: "primary.main", pb: 0.5 }}
+      >
         <IconButton
           onClick={() => {
             setCalenderBarOpen(!CalenderBarOpen);
