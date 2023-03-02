@@ -14,6 +14,8 @@ import { useState } from "react";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  // booleanとして認識させたいためlint避ける
+  // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
   const [isLogin, setIsLogin] = useState(getUserInfo() && true);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (getUserInfo()) {
