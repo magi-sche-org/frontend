@@ -20,6 +20,7 @@ for (let i = 0; i < 30; i++) {
 }
 
 export const UserCalender = ({ schedules }: userCalendar) => {
+  console.log(schedules);
   const [CalenderBarOpen, setCalenderBarOpen] = useState<boolean>(true);
   return (
     <>

@@ -39,7 +39,7 @@ export const SecondaryHeader: FC = () => {
         sx={{ backgroundColor: "primary.main", boxShadow: 0, px: 2, py: 0.8 }}
       >
         <Container disableGutters>
-          <Toolbar sx={{ xs: "flex" }}>
+          <Stack direction="row" justifyContent="space-around">
             <IconButton edge="start" size="large" disabled>
               <AccountCircle sx={{ color: "primary.main" }} />
             </IconButton>
@@ -64,7 +64,7 @@ export const SecondaryHeader: FC = () => {
                 <AccountCircle sx={{ color: "black" }} />
               )}
             </IconButton>
-          </Toolbar>
+          </Stack>
         </Container>
       </AppBar>
     </>

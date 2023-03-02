@@ -84,14 +84,15 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   return (
     <>
       {/* タイトル表示*/}
-      <Button
-        text={`${isAnswered ? "編集" : "回答"}ページへ`}
-        isPrimary={true}
-        onClick={() => {
-          router.push(`/guest/${router.query.id}`);
-        }}
-      />
+
       <Stack direction="column" sx={{ p: 3, mt: 2 }}>
+        <Button
+          text={`${isAnswered ? "編集" : "回答"}ページへ`}
+          isPrimary={true}
+          onClick={() => {
+            router.push(`/guest/${router.query.id}`);
+          }}
+        />
         <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
           {eventDetail.getName()}
         </Typography>
