@@ -12,35 +12,51 @@ import {
   Answer,
   GetEventResponse,
 } from "@/service/api-client/protocol/event_pb";
-import {date2time} from "@/libraries/time";
-import {Button} from "@/components/Button";
-import {useRouter} from "next/router";
+import { date2time } from "@/libraries/time";
+import { Button } from "@/components/Button";
+import { useRouter } from "next/router";
+import { getEventStorage } from "@/libraries/eventStorage";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
 
-const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
+const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   const router = useRouter();
-  const list: {[key:string]: { available:number,unavailable: number }} = {};
-  
-  for (const answer of eventDetail.getAnswersList()){
-    for (const schedule of answer.getScheduleList()){
-      const key = schedule.getStarttime()?.getSeconds()||0;
-      if (!list[key]){
-        list[key] = {available: 0, unavailable:0};
+  const list: { [key: string]: { available: number; unavailable: number } } =
+    {};
+  const isAnswered = getEventStorage().reduce(
+    (pv: boolean, val) =>
+      (val.answered && val.id === eventDetail.getId()) || pv,
+    false
+  );
+
+  for (const answer of eventDetail.getAnswersList()) {
+    for (const schedule of answer.getScheduleList()) {
+      const key = schedule.getStarttime()?.getSeconds() || 0;
+      if (!list[key]) {
+        list[key] = { available: 0, unavailable: 0 };
       }
-      if (schedule.getAvailability() === Answer.ProposedSchedule.Availability.AVAILABLE){
-        list[key].available ++;
-      }else{
-        list[key].unavailable ++;
+      if (
+        schedule.getAvailability() ===
+        Answer.ProposedSchedule.Availability.AVAILABLE
+      ) {
+        list[key].available++;
+      } else {
+        list[key].unavailable++;
       }
     }
   }
-  
+
   return (
     <>
       {/* タイトル表示*/}
-      <Button text={"回答ページへ"} isPrimary={true} onClick={()=>{router.push(`/guest/${router.query.id}`)}}/>
+      <Button
+        text={`${isAnswered ? "編集" : "回答"}ページへ`}
+        isPrimary={true}
+        onClick={() => {
+          router.push(`/guest/${router.query.id}`);
+        }}
+      />
       <Stack direction="column" sx={{ p: 3, mt: 2 }}>
         <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
           {eventDetail.getName()}
@@ -71,8 +87,12 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
             <TableBody>
               {Object.keys(list).map((ts) => {
                 const val = list[ts];
-                const start = new Date(Number(ts)*1000);
-                const end = new Date((Number(ts)+(eventDetail.getDuration()?.getSeconds()||0))*1000)
+                const start = new Date(Number(ts) * 1000);
+                const end = new Date(
+                  (Number(ts) +
+                    (eventDetail.getDuration()?.getSeconds() || 0)) *
+                    1000
+                );
                 return (
                   <TableRow key={ts}>
                     <TableCell>
@@ -80,8 +100,7 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
                         {start.getMonth() + 1}&thinsp;/&thinsp;
                         {start.getDate()}
                         &emsp;
-                        {date2time(start)}〜
-                        {date2time(end)}
+                        {date2time(start)}〜{date2time(end)}
                       </Typography>
                     </TableCell>
                     <TableCell>
@@ -105,4 +124,4 @@ const DetailPageBody = ({ eventDetail }:GuestPageBodyProps) => {
   );
 };
 
-export {DetailPageBody};
+export { DetailPageBody };
