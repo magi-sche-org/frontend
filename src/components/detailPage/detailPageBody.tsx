@@ -5,20 +5,64 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Answer, GetEventResponse } from "@/service/api-client/protocol/event_pb";
+import {
+  Answer,
+  GetEventResponse,
+} from "@/service/api-client/protocol/event_pb";
 import { date2time } from "@/libraries/time";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
+import { getEventStorage } from "@/libraries/eventStorage";
+import { useCallback, useMemo } from "react";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
 
 const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   const router = useRouter();
-  const list: { [key: string]: { available: number; unavailable: number } } = {};
+  const list: { [key: string]: { available: number; unavailable: number } } =
+    {};
+  const isAnswered = getEventStorage().reduce(
+    (pv: boolean, val) =>
+      (val.answered && val.id === eventDetail.getId()) || pv,
+    false
+  );
+  // key: timeStamp value: その時間の参加者の可否と名前
+  const participantsAvailability: {
+    [key: number]: { name: string; availability: boolean }[];
+  } = useMemo(() => {
+    const keys = eventDetail
+      .getProposedstarttimeList()
+      .map((startTime) => startTime);
+    const res: { [key: string]: { name: string; availability: boolean }[] } =
+      {};
+    keys.forEach((key) => {
+      const participants = eventDetail.getAnswersList().map((answer) => {
+        const name = answer.getName();
+        const availability = answer
+          .getScheduleList()
+          .filter(
+            (schedule) =>
+              schedule.getStarttime()?.getSeconds() === key.getSeconds()
+          );
+        if (availability.length === 1) {
+          return {
+            name,
+            availability:
+              availability[0].getAvailability() ===
+              Answer.ProposedSchedule.Availability.AVAILABLE,
+          };
+        }
+      });
+      const a = participants.filter(isParticipantsInfo);
+      res[key.getSeconds()] = a;
+    });
+    return res;
+  }, [eventDetail]);
 
   for (const answer of eventDetail.getAnswersList()) {
     for (const schedule of answer.getScheduleList()) {
@@ -26,7 +70,10 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
       if (!list[key]) {
         list[key] = { available: 0, unavailable: 0 };
       }
-      if (schedule.getAvailability() === Answer.ProposedSchedule.Availability.AVAILABLE) {
+      if (
+        schedule.getAvailability() ===
+        Answer.ProposedSchedule.Availability.AVAILABLE
+      ) {
         list[key].available++;
       } else {
         list[key].unavailable++;
@@ -37,17 +84,15 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   return (
     <>
       {/* タイトル表示*/}
-      <Stack sx={{ mt: 5, mx: 10 }}>
-        <Button
-          text={"回答ページへ"}
-          isPrimary={true}
-          onClick={() => {
-            router.push(`/guest/${router.query.id}`);
-          }}
-        />
-      </Stack>
-      <Stack direction='column' sx={{ p: 3, mt: 2 }}>
-        <Typography variant='h6' sx={{ textAlign: "center", mb: 3 }}>
+      <Button
+        text={`${isAnswered ? "編集" : "回答"}ページへ`}
+        isPrimary={true}
+        onClick={() => {
+          router.push(`/guest/${router.query.id}`);
+        }}
+      />
+      <Stack direction="column" sx={{ p: 3, mt: 2 }}>
+        <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
           {eventDetail.getName()}
         </Typography>
         {/* 候補リスト */}
@@ -56,20 +101,20 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
             border: "solid",
             borderWidth: 0.3,
             borderRadius: 5,
-            p: 1
+            p: 1,
           }}
         >
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Typography variant='caption'>日時</Typography>
+                  <Typography variant="caption">日時</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant='caption'>参加可能</Typography>
+                  <Typography variant="caption">参加可能</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant='caption'>参加不可</Typography>
+                  <Typography variant="caption">参加不可</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -78,29 +123,39 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
                 const val = list[ts];
                 const start = new Date(Number(ts) * 1000);
                 const end = new Date(
-                  (Number(ts) + (eventDetail.getDuration()?.getSeconds() || 0)) * 1000
+                  (Number(ts) +
+                    (eventDetail.getDuration()?.getSeconds() || 0)) *
+                    1000
                 );
                 return (
-                  <TableRow key={ts}>
-                    <TableCell>
-                      <Typography variant='body1'>
-                        {start.getMonth() + 1}&thinsp;/&thinsp;
-                        {start.getDate()}
-                        &emsp;
-                        {date2time(start)}〜{date2time(end)}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant='body1' sx={{ ml: 1 }}>
-                        {val.available}人
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant='body1' sx={{ ml: 1 }}>
-                        {val.unavailable}人
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
+                  <Tooltip
+                    key={ts}
+                    title={getParticipantsText(
+                      participantsAvailability[Number(ts)]
+                    )}
+                    enterTouchDelay={0}
+                  >
+                    <TableRow>
+                      <TableCell>
+                        <Typography variant="body1">
+                          {start.getMonth() + 1}&thinsp;/&thinsp;
+                          {start.getDate()}
+                          &emsp;
+                          {date2time(start)}〜{date2time(end)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1" sx={{ ml: 1 }}>
+                          {val.available}人
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1" sx={{ ml: 1 }}>
+                          {val.unavailable}人
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </Tooltip>
                 );
               })}
             </TableBody>
@@ -111,4 +166,35 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   );
 };
 
+const determineRowColor = (val: { available: number; unavailable: number }) => {
+  const participantsNumber = val.available + val.unavailable;
+  if (participantsNumber === val.available) {
+    return {
+      backgroundColor: "#7fffd4",
+    };
+  }
+
+  if (val.unavailable <= 2) {
+    return {
+      backgroundColor: "#ffff00",
+    };
+  }
+};
+
+function isParticipantsInfo(
+  p: { name: string; availability: boolean } | undefined
+): p is { name: string; availability: boolean } {
+  return p !== undefined;
+}
+const getParticipantsText = (
+  participantsArray: { name: string; availability: boolean }[]
+) => {
+  const resText = participantsArray.map((p) => (
+    <span key={p.name}>
+      {`${p.name} ${p.availability ? "○" : "×"}`}
+      <br />
+    </span>
+  ));
+  return resText;
+};
 export { DetailPageBody };
