@@ -14,11 +14,7 @@ const setEventStorage = (
     .findIndex((eid: string) => {
       return eid === id;
     });
-  console.log(
-    indexToChange,
-    eventList.map((event) => event.id),
-    id
-  );
+
   if (indexToChange !== -1) {
     // update
     eventList[indexToChange] = { name, id, answered };
