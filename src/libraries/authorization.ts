@@ -14,6 +14,7 @@ const getRevokeUrl = (token: string) => `${revokeBaseUri}?token=${token}`;
 const login = () => {
   const uuid = generateUuid();
   localStorage.setItem("gcp_state", uuid);
+  localStorage.setItem("redirect_url", location.pathname);
   location.href = getLoginUrl(uuid);
 };
 

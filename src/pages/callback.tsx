@@ -10,7 +10,9 @@ const Callback = () => {
       if (typeof window === "object") {
         try {
           await parseToken();
-          await router.replace("/");
+          const url = localStorage.getItem("gcp_state")||"/";
+          localStorage.removeItem("gcp_state");
+          await router.replace(url);
         } catch (e) {
           setMessage(`encountered the following error:\n${e}`);
         }

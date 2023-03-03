@@ -18,9 +18,7 @@ import { useRouter } from "next/router";
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
-  // booleanとして認識させたいためlint避ける
-  // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
-  const [isLogin, setIsLogin] = useState(getUserInfo() && true);
+  const [isLogin, setIsLogin] = useState(!!getUserInfo());
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (getUserInfo()) {
       revokeToken().then(() => setIsLogin(false));
