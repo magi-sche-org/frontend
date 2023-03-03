@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
 import { useEffect, useRef } from "react";
 import { fetchToken } from "@/libraries/token";
+import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   const init = useRef(false);
@@ -37,6 +38,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <title>Magi-Sche</title>
+        <meta name='description' content='カレンダーを見ながら簡単にスケジュール調整出来るアプリ。Magi-Sche' />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <link rel='icon' type='image/png' sizes='64x64' href='/favicon.ico' />
+      </Head>
       <ThemeProvider theme={mainTheme}>
         <SnackbarProvider>
           {router.asPath === "/" && <Header />}

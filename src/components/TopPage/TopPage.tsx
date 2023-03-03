@@ -34,7 +34,7 @@ export const TopPage = () => {
               <br />
               スケジュール調整出来るアプリ。
               <br />
-              マジックスケジュール
+              Magi-Sche
             </Typography>
             <Box display='flex' justifyContent='center' sx={{ mt: 1 }}>
               <Image
