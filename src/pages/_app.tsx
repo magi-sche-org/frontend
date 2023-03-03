@@ -40,10 +40,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={mainTheme}>
         <SnackbarProvider>
           {router.asPath === "/" && <Header />}
-          {router.asPath.indexOf("guest") === 1 || router.asPath.indexOf("detail") === 1 ? (
+          {(router.asPath.indexOf("guest") === 1 || router.asPath.indexOf("detail") === 1) && (
             <SecondaryHeader />
-          ) : (
-            <></>
           )}
           <Component {...pageProps} />
           <CssBaseline />
