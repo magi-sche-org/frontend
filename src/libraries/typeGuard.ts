@@ -1,4 +1,4 @@
-import type { AuthorizationTokens } from "@/@types/authorization";
+import type {AuthorizationError, AuthorizationTokens} from "@/@types/authorization";
 import type {
   DateSchedule,
   DateTimeSchedule,
@@ -16,6 +16,9 @@ const typeGuard = {
     objectVerify(i, ["access_token", "authuser", "expires_in", "prompt", "scope", "token_type"]) &&
     (i as AuthorizationTokens).prompt === "consent" &&
     (i as AuthorizationTokens).token_type === "Bearer",
+  AuthorizationError: (i: unknown): i is AuthorizationError =>
+    typeof i === "object" &&
+    objectVerify(i, ["error", "state"]),
   ScheduleResponse: (i: unknown): i is ScheduleResponse =>
     typeof i === "object" &&
     objectVerify(i, ["accessRole", "defaultReminders", "etag", "items", "kind", "summary", "timeZone", "updated"]),

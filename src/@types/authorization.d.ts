@@ -7,3 +7,8 @@ export type AuthorizationTokens = {
   token_type: "Bearer";
   state: string;
 };
+
+export type AuthorizationError = {
+  error: string;
+  state: string;
+}
