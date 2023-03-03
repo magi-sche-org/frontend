@@ -10,29 +10,32 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import { Stack } from "@mui/system";
-import { Button } from "../Button";
+import {useEffect, useRef, useState} from "react";
+import {Stack} from "@mui/system";
+import {Button} from "../Button";
 
-import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { UserCalender } from "./UserCalender";
-import {
-  Answer,
-  GetEventResponse,
-  RegisterAnswerRequest
-} from "@/service/api-client/protocol/event_pb";
-import { eventClient } from "@/service/api-client/client";
-import { getEventStorage, setEventStorage } from "@/libraries/eventStorage";
-import { getToken } from "@/libraries/token";
-import { Schedule } from "@/@types/event";
-import { getSchedules } from "@/libraries/calendar";
-import { typeGuard } from "@/libraries/typeGuard";
-import { date2time } from "@/libraries/time";
+import {useRouter} from "next/router";
+import {useSnackbar} from "notistack";
+import {UserCalender} from "./UserCalender";
+import {Answer, GetEventResponse, RegisterAnswerRequest} from "@/service/api-client/protocol/event_pb";
+import {eventClient} from "@/service/api-client/client";
+import {getEventStorage, setEventStorage} from "@/libraries/eventStorage";
+import {getToken} from "@/libraries/token";
+import {Schedule} from "@/@types/event";
+import {getSchedules} from "@/libraries/calendar";
+import {typeGuard} from "@/libraries/typeGuard";
+import {date2time} from "@/libraries/time";
 import Styles from "./GuestPageBody.module.scss";
+import crypto from 'crypto-js';
+
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };
+
+const hashToken = (hash:string):string => {
+  return crypto.SHA256(hash).toString(crypto.enc.Base64);
+}
+
 const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   const router = useRouter();
   const [NameText, setNameText] = useState<string>(() => {
@@ -48,7 +51,7 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
     () => {
       const answers = eventDetail.getAnswersList();
       for (const answer of answers) {
-        if (answer.getNote() === getToken(localStorage)) {
+        if (answer.getNote() === hashToken(getToken(localStorage))) {
           const result: { [key: number]: { val: boolean; block: boolean } } = {};
           for (const schedule of answer.getScheduleList()) {
             result[Math.floor((schedule.getStarttime()?.toDate().getTime() || 0) / 1000)] = {
@@ -146,14 +149,13 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
       return proposedSchedule;
     });
     answer.setScheduleList(proposedScheduleList);
-    answer.setNote(getToken(localStorage));
+    answer.setNote(hashToken(getToken(localStorage)));
     request.setAnswer(answer);
     eventClient.registerAnswer(request, null).then(() => {
       enqueueSnackbar("回答を記録しました。", {
         autoHideDuration: 2000,
         variant: "success"
       });
-      // イベント入れる
       setEventStorage(eventDetail.getName(), eventDetail.getId(), true);
       router.push("/");
     });
