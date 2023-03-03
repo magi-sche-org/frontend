@@ -32,19 +32,15 @@ export const Header = () => {
   return (
     <>
       <Head>
-        <meta
-          name="theme-color"
-          media="(prefers-color-scheme: light)"
-          content="#FFFFDD"
-        />
+        <meta name='theme-color' content='#FFFFDD' />
       </Head>
       <AppBar
-        position="static"
+        position='static'
         sx={{ backgroundColor: "secondary.main", boxShadow: 0, px: 2, py: 0.8 }}
       >
         <Container disableGutters>
-          <Stack direction="row" justifyContent="space-around">
-            <IconButton edge="start" size="large" disabled>
+          <Stack direction='row' justifyContent='space-around'>
+            <IconButton edge='start' size='large' disabled>
               <AccountCircle sx={{ color: "secondary.main" }} />
             </IconButton>
             <Button onClick={() => router.push("/")}>
@@ -56,12 +52,7 @@ export const Header = () => {
                 style={{ objectFit: "contain" }}
               />
             </Button>
-            <IconButton
-              edge="end"
-              size="large"
-              color="inherit"
-              onClick={handleMenu}
-            >
+            <IconButton edge='end' size='large' color='inherit' onClick={handleMenu}>
               {isLogin ? (
                 <>
                   <LogoutIcon sx={{ color: "black" }} />
