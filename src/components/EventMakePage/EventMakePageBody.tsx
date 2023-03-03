@@ -25,7 +25,7 @@ import { eventClient } from "@/service/api-client/client";
 import { CreateEventRequest } from "@/service/api-client/protocol/event_pb";
 import { Duration } from "google-protobuf/google/protobuf/duration_pb";
 import { useSnackbar } from "notistack";
-import { setEventStorage} from "@/libraries/eventStorage";
+import { setEventStorage } from "@/libraries/eventStorage";
 import { getToken } from "@/libraries/token";
 import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
 import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
@@ -71,6 +71,13 @@ const EventMakePageBody: React.FC = () => {
   };
 
   const Submit = () => {
+    if (!EventNameText) {
+      enqueueSnackbar("イベント名を入力してください", {
+        autoHideDuration: 2000,
+        variant: "error",
+      });
+      return;
+    }
     const request = new CreateEventRequest();
     request.setName(EventNameText);
     const duration = new Duration();
