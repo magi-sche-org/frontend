@@ -45,7 +45,7 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   const [NameText, setNameText] = useState<string>(() => {
     const answers = eventDetail.getAnswersList();
     for (const answer of answers) {
-      if (answer.getNote() === getToken(localStorage)) {
+      if (answer.getNote() === hashToken(getToken(localStorage))) {
         return answer.getName();
       }
     }
