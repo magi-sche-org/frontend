@@ -44,7 +44,7 @@ export const UserCalender = ({ schedules }: userCalendar) => {
                   height: "130px",
                   p: 2,
                 }}
-                overflow="scroll"
+                overflow="auto"
               >
                 <Typography variant="caption" sx={{ textAlign: "center" }}>
                   {dayNum}
