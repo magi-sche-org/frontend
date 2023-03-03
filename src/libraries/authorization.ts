@@ -25,8 +25,12 @@ const revokeToken = async () => {
     const res = await req.json();
     if (typeGuard.errorResponse(res)) {
       if (res.error === "invalid_token") {
+        localStorage.removeItem("gcp_token");
+        localStorage.removeItem("gcp_userInfo");
         throw new Error("failed to revoke token");
       }
+      localStorage.removeItem("gcp_token");
+      localStorage.removeItem("gcp_userInfo");
       throw new Error(`Encountered unknown error\n${res.error}`);
     }
   }
