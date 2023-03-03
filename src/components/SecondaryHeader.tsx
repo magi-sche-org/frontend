@@ -9,9 +9,13 @@ import { getUserInfo } from "@/libraries/userInfo";
 import { login, revokeToken } from "@/libraries/authorization";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { FC, useState } from "react";
+import { Button, Stack } from "@mui/material";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 export const SecondaryHeader: FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const router = useRouter();
   // booleanとして認識させたいためlint避ける
   // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
   const [isLogin, setIsLogin] = useState(getUserInfo() && true);
@@ -26,40 +30,30 @@ export const SecondaryHeader: FC = () => {
   return (
     <>
       <Head>
-        <meta
-          name="theme-color"
-          media="(prefers-color-scheme: light)"
-          content="#006A71"
-        />
+        <meta name='theme-color' content='#006A71' />
       </Head>
       <AppBar
-        position="static"
+        position='static'
         sx={{ backgroundColor: "primary.main", boxShadow: 0, px: 2, py: 0.8 }}
       >
         <Container disableGutters>
-          <Toolbar sx={{ xs: "flex" }}>
-            <IconButton edge="start" size="large" disabled>
+          <Stack direction='row' justifyContent='space-around'>
+            <IconButton edge='start' size='large' disabled>
               <AccountCircle sx={{ color: "primary.main" }} />
             </IconButton>
-            <Typography
-              variant="h5"
-              sx={{ mx: "auto", fontFamily: "robots", fontWeight: "bold" }}
-            >
-              Magi-Sche
-            </Typography>
-            <IconButton
-              edge="end"
-              size="large"
-              color="inherit"
-              onClick={handleMenu}
-            >
-              {isLogin ? (
-                <LogoutIcon />
-              ) : (
-                <AccountCircle sx={{ color: "black" }} />
-              )}
+            <Button onClick={() => router.push("/")}>
+              <Image
+                src={"/images/logo.png"}
+                alt={"logo"}
+                height={40}
+                width={200}
+                style={{ objectFit: "contain" }}
+              />
+            </Button>
+            <IconButton edge='end' size='large' color='inherit' onClick={handleMenu}>
+              {isLogin ? <LogoutIcon /> : <AccountCircle sx={{ color: "black" }} />}
             </IconButton>
-          </Toolbar>
+          </Stack>
         </Container>
       </AppBar>
     </>

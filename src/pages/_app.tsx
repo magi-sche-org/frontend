@@ -20,17 +20,17 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
   const mainTheme = createTheme({
     typography: {
-      fontFamily: ['"Noto Sans"', '"Helvetica"', "Arial"].join(","),
+      fontFamily: ['"Noto Sans"', '"Helvetica"', "Arial"].join(",")
     },
     palette: {
       primary: {
         main: "#006A71",
-        light: "#46989F",
+        light: "#46989F"
       },
       secondary: {
-        main: "#FFFFDD",
-      },
-    },
+        main: "#FFFFDD"
+      }
+    }
   });
 
   const router = useRouter();
@@ -39,11 +39,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <ThemeProvider theme={mainTheme}>
         <SnackbarProvider>
-          {router.asPath === "/" ? <Header /> : <></>}
-          {router.asPath.indexOf("guest") === 1 || router.asPath.indexOf("detail") === 1 ? (
+          {router.asPath === "/" && <Header />}
+          {(router.asPath.indexOf("guest") === 1 || router.asPath.indexOf("detail") === 1) && (
             <SecondaryHeader />
-          ) : (
-            <></>
           )}
           <Component {...pageProps} />
           <CssBaseline />
