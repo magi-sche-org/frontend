@@ -14,7 +14,7 @@ export const Button: FC<ButtonProps> = ({ text, isPrimary, onClick }) => {
       sx={{
         borderRadius: 2,
         background: isPrimary ? "#006A71" : "white",
-        p: 1.5,
+        p: 1,
         color: isPrimary ? "white" : "black",
         // ちょっとかなり微妙
         // border: "none",
