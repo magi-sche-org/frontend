@@ -125,7 +125,7 @@ const EventMakePageBody: React.FC = () => {
         // TODO: 環境変数
         // イベント入れる
         setEventStorage(EventNameText, id);
-        setShareURL(`${location.hostname}/guest/${id}`);
+        setShareURL(`https://${location.hostname}/guest/${id}`);
         setModalOpen(true);
       })
       .catch((e) => {
