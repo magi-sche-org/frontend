@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "rome check src",
     "lint:fix": "rome check src --fix",
-    "format": "rome format --write --skip-errors ./src"
+    "format": "rome format --write --skip-errors ./src",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
