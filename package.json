@@ -37,6 +37,8 @@
   "devDependencies": {
     "@grpc/proto-loader": "^0.7.4",
     "@types/node": "^20.4.8",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
     "rome": "^12.1.3"
   }
 }
