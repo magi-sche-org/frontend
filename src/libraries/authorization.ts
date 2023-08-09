@@ -2,7 +2,7 @@ import { typeGuard } from "@/libraries/typeGuard";
 import { generateUuid } from "@/libraries/uuid";
 import { gcp_clientId, gcp_redirectUri, gcp_scopes } from "@/libraries/env";
 import { fetchUserInfo } from "@/libraries/userInfo";
-import { requests } from "@/libraries/requests";
+import { gcpRequests } from "@/libraries/gcpRequests";
 
 const loginBaseUri = "https://accounts.google.com/o/oauth2/v2/auth";
 const getLoginUrl = (state: string) =>
@@ -21,7 +21,7 @@ const login = () => {
 const revokeToken = async () => {
   const token = localStorage.getItem("gcp_token");
   if (token) {
-    const req = await requests(getRevokeUrl(token));
+    const req = await gcpRequests(getRevokeUrl(token));
     const res = await req.json();
     if (typeGuard.errorResponse(res)) {
       if (res.error === "invalid_token") {

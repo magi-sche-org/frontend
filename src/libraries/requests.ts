@@ -1,13 +1,6 @@
-const requests = (url: RequestInfo | URL, init?: RequestInit | undefined) => {
-  const key = localStorage.getItem("gcp_token");
-  if (!key) {
-    throw new Error("token is not set");
-  }
-  return fetch(url, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${key}`,
-    },
-  });
-};
+const requests = async<T>(url: RequestInfo | URL, init?: RequestInit | undefined, type:"json"|"text"="json"): Promise<T> => {
+  const req = await fetch(url,{credentials: "include", ...init});
+  return type === "json" ? await req.json() : await req.text();
+}
+
 export { requests };
