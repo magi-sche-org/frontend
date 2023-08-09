@@ -4,13 +4,14 @@ export type IEvent = {
   name: string;
   description: string;
   unitDuration: number;
+  yourAnswerId?: string;
   units: IUnit[];
   userAnswers: IUserAnswer[];
 };
 
 export type IUnit = {
   id: string;
-  startAt: string;
+  startsAt: string;
 };
 
 export type IUserAnswer = {
@@ -27,3 +28,19 @@ export type IUserAnswerUnit = {
 };
 
 export type IAvailability = "available" | "unavailable" | "maybe";
+
+export type IDateAnswers = {
+  [startsTime: string]: IDateAnswer;
+};
+
+export type IDateAnswer = {
+  startsTime: string;
+  counts: { [availability in IAvailability | "total"]: number };
+  answers: IDateAnswerItem[];
+};
+
+export type IDateAnswerItem = {
+  userId: string;
+  name: string;
+  availability: IAvailability;
+};

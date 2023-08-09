@@ -6,7 +6,6 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
 import { useEffect, useRef } from "react";
-import { fetchToken } from "@/libraries/token";
 import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -14,10 +13,6 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (typeof window !== "object" || init.current) return;
     init.current = true;
-    if (localStorage.getItem("go_token")) return;
-    (async () => {
-      await fetchToken();
-    })();
   }, []);
   const mainTheme = createTheme({
     typography: {

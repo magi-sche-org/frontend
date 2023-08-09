@@ -1,29 +1,21 @@
 import { mockEventList } from "@/components/TopPage/data";
-import { Event } from "@/components/TopPage/EventList";
+import { IEvent } from "@/@types/api/event";
 
-const setEventStorage = (
-  name: string,
-  id: string,
-  answered: boolean = false,
-) => {
-  const eventList: Event[] = JSON.parse(
-    localStorage.getItem("event-list") || "[]",
+const setEventStorage = (event: IEvent) => {
+  const eventList: IEvent[] = JSON.parse(
+    localStorage.getItem("event-list") ?? "[]",
   );
-  const indexToChange = eventList
+  const indexToOverwrite = eventList
     .map((event) => event.id)
     .findIndex((eid: string) => {
-      return eid === id;
+      return eid === event.id;
     });
 
-  if (indexToChange !== -1) {
+  if (indexToOverwrite !== -1) {
     // update
-    eventList[indexToChange] = { name, id, answered };
+    eventList[indexToOverwrite] = event;
   } else {
-    eventList.push({
-      name,
-      id,
-      answered,
-    });
+    eventList.push(event);
   }
   localStorage.setItem("event-list", JSON.stringify(eventList));
 };
@@ -33,7 +25,7 @@ const getEventStorage = () => {
   if (!data) {
     return process.env.NODE_ENV === "production" ? [] : mockEventList;
   }
-  return JSON.parse(data) as Event[];
+  return JSON.parse(data) as IEvent[];
 };
 
 export { getEventStorage, setEventStorage };

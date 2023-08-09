@@ -9,93 +9,55 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import {
-  Answer,
-  GetEventResponse,
-} from "@/service/api-client/protocol/event_pb";
-import { date2time } from "@/libraries/time";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
 import { getEventStorage } from "@/libraries/eventStorage";
 import { useMemo } from "react";
-type GuestPageBodyProps = {
-  eventDetail: GetEventResponse;
+import {
+  IAvailability,
+  IDateAnswers,
+  IDateAnswerItem,
+  IEvent,
+  IDateAnswer,
+} from "@/@types/api/event";
+import { groupAnswerByStartsTime } from "@/libraries/event";
+import Link from "next/link";
+import dayjs from "dayjs";
+type props = {
+  event: IEvent;
 };
 
-const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
+const availabilityMap: { [availability in IAvailability]: string } = {
+  available: "参加可能",
+  unavailable: "参加不可",
+  maybe: "不明",
+};
+
+const DetailPageBody = ({ event }: props) => {
   const router = useRouter();
-  const list: { [key: string]: { available: number; unavailable: number } } =
-    {};
   const isAnswered = getEventStorage().reduce(
-    (pv: boolean, val) =>
-      (val.answered && val.id === eventDetail.getId()) || pv,
+    (pv: boolean, val) => (val.yourAnswerId && val.id === event.id) || pv,
     false,
   );
-  // key: timeStamp value: その時間の参加者の可否と名前
-  const participantsAvailability: {
-    [key: number]: { name: string; availability: boolean }[];
-  } = useMemo(() => {
-    const keys = eventDetail
-      .getProposedstarttimeList()
-      .map((startTime) => startTime);
-    const res: { [key: string]: { name: string; availability: boolean }[] } =
-      {};
-    keys.forEach((key) => {
-      const participants = eventDetail.getAnswersList().map((answer) => {
-        const name = answer.getName();
-        const availability = answer
-          .getScheduleList()
-          .filter(
-            (schedule) =>
-              schedule.getStarttime()?.getSeconds() === key.getSeconds(),
-          );
-        if (availability.length === 1) {
-          return {
-            name,
-            availability:
-              availability[0].getAvailability() ===
-              Answer.ProposedSchedule.Availability.AVAILABLE,
-          };
-        }
-      });
-      const a = participants.filter(isParticipantsInfo);
-      res[key.getSeconds()] = a;
-    });
-    return res;
-  }, [eventDetail]);
-
-  for (const answer of eventDetail.getAnswersList()) {
-    for (const schedule of answer.getScheduleList()) {
-      const key = schedule.getStarttime()?.getSeconds() || 0;
-      if (!list[key]) {
-        list[key] = { available: 0, unavailable: 0 };
-      }
-      if (
-        schedule.getAvailability() ===
-        Answer.ProposedSchedule.Availability.AVAILABLE
-      ) {
-        list[key].available++;
-      } else {
-        list[key].unavailable++;
-      }
-    }
-  }
+  const participantsAvailability: IDateAnswers = useMemo(
+    () => groupAnswerByStartsTime(event.userAnswers),
+    [event],
+  );
 
   return (
     <>
       {/* タイトル表示*/}
       <Stack direction="column" sx={{ p: 3, mt: 2 }}>
         <Stack sx={{ mx: 10 }}>
-          <Button
-            text={`${isAnswered ? "編集" : "回答"}ページへ`}
-            isPrimary={true}
-            onClick={() => {
-              router.push(`/guest/${router.query.id}`);
-            }}
-          />
+          <Link href={`/guest/${router.query.id}`}>
+            <Button
+              text={`${isAnswered ? "編集" : "回答"}ページへ`}
+              isPrimary={true}
+            />
+          </Link>
         </Stack>
         <Typography variant="h6" sx={{ textAlign: "center", my: 3 }}>
-          {eventDetail.getName()}
+          {event.name}
         </Typography>
         {/* 候補リスト */}
         <TableContainer
@@ -116,44 +78,47 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
                   <Typography variant="caption">参加可能</Typography>
                 </TableCell>
                 <TableCell>
+                  <Typography variant="caption">不明</Typography>
+                </TableCell>
+                <TableCell>
                   <Typography variant="caption">参加不可</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.keys(list).map((ts) => {
-                const val = list[ts];
-                const start = new Date(Number(ts) * 1000);
-                const end = new Date(
-                  (Number(ts) +
-                    (eventDetail.getDuration()?.getSeconds() || 0)) *
-                    1000,
+              {Object.values(participantsAvailability).map((unit) => {
+                const start = dayjs(unit.startsTime);
+                const end = dayjs(unit.startsTime).add(
+                  event.unitDuration,
+                  "seconds",
                 );
+
                 return (
                   <Tooltip
-                    key={ts}
-                    title={getParticipantsText(
-                      participantsAvailability[Number(ts)],
-                    )}
+                    key={unit.startsTime}
+                    title={getParticipantsText(unit.answers)}
                     enterTouchDelay={0}
                   >
-                    <TableRow sx={determineRowColor(val)}>
+                    <TableRow sx={determineRowColor(unit)}>
                       <TableCell>
                         <Typography variant="body1">
-                          {start.getMonth() + 1}&thinsp;/&thinsp;
-                          {start.getDate()}
-                          &emsp;
-                          {date2time(start)}〜{date2time(end)}
+                          {start.format("MM / DD[&emsp;]HH:mm")}〜
+                          {end.format("HH:mm")}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body1" sx={{ ml: 1 }}>
-                          {val.available}人
+                          {unit.counts.available}人
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body1" sx={{ ml: 1 }}>
-                          {val.unavailable}人
+                          {unit.counts.maybe}人
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1" sx={{ ml: 1 }}>
+                          {unit.counts.unavailable}人
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -168,37 +133,25 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   );
 };
 
-const determineRowColor = (val: { available: number; unavailable: number }) => {
-  const participantsNumber = val.available + val.unavailable;
-  if (participantsNumber === val.available) {
+const determineRowColor = (val: IDateAnswer) => {
+  if (val.counts.total === val.counts.available) {
     return {
-      // 参加多い
       backgroundColor: "#e2fde1",
     };
   }
 
-  if (val.unavailable <= 2) {
+  if (val.counts.unavailable <= 2) {
     return {
       // 参加少ない
       backgroundColor: "white",
     };
   }
 };
-
-function isParticipantsInfo(
-  p: { name: string; availability: boolean } | undefined,
-): p is { name: string; availability: boolean } {
-  return p !== undefined;
-}
-const getParticipantsText = (
-  participantsArray: { name: string; availability: boolean }[],
-) => {
-  const resText = participantsArray.map((p) => (
-    <span key={p.name}>
-      {`${p.name} ${p.availability ? "○" : "×"}`}
-      <br />
-    </span>
-  ));
-  return resText;
+const getParticipantsText = (answers: IDateAnswerItem[]) => {
+  let result = "";
+  for (const answer of answers) {
+    result += `${answer.name} : ${availabilityMap[answer.availability]}\n`;
+  }
+  return result;
 };
 export { DetailPageBody };

@@ -4,7 +4,7 @@ import { FC } from "react";
 type ButtonProps = {
   text: string;
   isPrimary: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 };
 export const Button: FC<ButtonProps> = ({ text, isPrimary, onClick }) => {
   return (
