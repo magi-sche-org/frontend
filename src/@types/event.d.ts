@@ -12,7 +12,7 @@ export type ScheduleResponse = {
   updated: string;
 };
 
-export type Schedule = DateTimeSchedule|DateSchedule;
+export type Schedule = DateTimeSchedule | DateSchedule;
 
 type DateTimeSchedule = {
   created: string;
@@ -39,7 +39,7 @@ type DateTimeSchedule = {
   status: string;
   summary: string;
   updated: string;
-}
+};
 
 type DateSchedule = {
   created: string;
@@ -66,12 +66,12 @@ type DateSchedule = {
   status: string;
   summary: string;
   updated: string;
-}
+};
 
 type EventDateTime = {
   dateTime: string;
   timeZone: string;
-}
+};
 type EventDate = {
   date: string;
-}
+};

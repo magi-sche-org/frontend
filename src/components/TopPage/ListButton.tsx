@@ -15,7 +15,7 @@ const ListButton: FC<ListButtonType> = (props) => {
       sx={{
         borderRadius: 2,
         borderColor: "primary.main",
-        bgcolor: "white"
+        bgcolor: "white",
       }}
     >
       <Button
@@ -24,7 +24,7 @@ const ListButton: FC<ListButtonType> = (props) => {
         }}
         sx={{ p: 2.5 }}
       >
-        <Typography variant='body1' sx={{ color: "text.primary" }}>
+        <Typography variant="body1" sx={{ color: "text.primary" }}>
           {text}
         </Typography>
       </Button>

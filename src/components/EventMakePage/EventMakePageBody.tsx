@@ -100,7 +100,7 @@ const EventMakePageBody: React.FC = () => {
       EndDay?.toDate(),
       TimePadding,
       StartTime,
-      EndTime
+      EndTime,
     );
 
     request.setProposedstarttimeList(proposedStartTimeList);

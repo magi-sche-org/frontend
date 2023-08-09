@@ -11,4 +11,4 @@ export type AuthorizationTokens = {
 export type AuthorizationError = {
   error: string;
   state: string;
-}
+};

@@ -5,7 +5,7 @@ export const createProposedStartTimeList = (
   endDate: Date | undefined,
   timePadding: string,
   startTime: number,
-  endTime: number
+  endTime: number,
 ) => {
   if (startDate === undefined || endDate === undefined) {
     return [];
@@ -25,7 +25,7 @@ export const createProposedStartTimeList = (
   const dateArray: Date[] = [];
   // 候補日の数
   const candidateDayNum = Math.floor(
-    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
   );
 
   [...Array(candidateDayNum + 1)].map((_, i) => {

@@ -8,5 +8,5 @@ export const ModalStyle = {
   borderRadius: 5,
   boxShadow: 10,
   p: 1,
-  py: 5
+  py: 5,
 };

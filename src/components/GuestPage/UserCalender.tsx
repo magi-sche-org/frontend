@@ -15,7 +15,7 @@ type userCalendar = {
 const timeList: string[] = [];
 for (let i = 0; i < 30; i++) {
   timeList.push(
-    `${dayjs().add(i, "d").format("M")}/${dayjs().add(i, "d").format("D")}`
+    `${dayjs().add(i, "d").format("M")}/${dayjs().add(i, "d").format("D")}`,
   );
 }
 

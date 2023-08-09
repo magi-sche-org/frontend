@@ -42,21 +42,27 @@ const parseToken = async () => {
   const data = location.hash
     .slice(1)
     .split("&")
-    .reduce((pv, string) => {
-      const [key, value] = string.split("=");
-      pv[key] = decodeURI(value);
-      return pv;
-    }, {} as { [key: string]: string }) as unknown;
-  if (typeGuard.AuthorizationError(data)){
+    .reduce(
+      (pv, string) => {
+        const [key, value] = string.split("=");
+        pv[key] = decodeURI(value);
+        return pv;
+      },
+      {} as { [key: string]: string },
+    ) as unknown;
+  if (typeGuard.AuthorizationError(data)) {
     throw new Error("login failed");
   }
-  if (!typeGuard.AuthorizationTokens(data) || data.state !== localStorage.getItem("gcp_state")) {
+  if (
+    !typeGuard.AuthorizationTokens(data) ||
+    data.state !== localStorage.getItem("gcp_state")
+  ) {
     throw new Error("Invalid oauth response");
   }
   localStorage.setItem("gcp_token", data.access_token);
   const userInfo = await fetchUserInfo();
   localStorage.setItem("gcp_userInfo", JSON.stringify(userInfo));
-  console.log(data,userInfo);
+  console.log(data, userInfo);
   return userInfo;
 };
 

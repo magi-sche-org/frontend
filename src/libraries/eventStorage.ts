@@ -4,10 +4,10 @@ import { Event } from "@/components/TopPage/EventList";
 const setEventStorage = (
   name: string,
   id: string,
-  answered: boolean = false
+  answered: boolean = false,
 ) => {
   const eventList: Event[] = JSON.parse(
-    localStorage.getItem("event-list") || "[]"
+    localStorage.getItem("event-list") || "[]",
   );
   const indexToChange = eventList
     .map((event) => event.id)

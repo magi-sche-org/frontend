@@ -61,7 +61,7 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
         for (const schedule of answer.getScheduleList()) {
           result[
             Math.floor(
-              (schedule.getStarttime()?.toDate().getTime() || 0) / 1000
+              (schedule.getStarttime()?.toDate().getTime() || 0) / 1000,
             )
           ] = {
             val:
@@ -83,7 +83,7 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   const isAnswered = getEventStorage().reduce(
     (pv: boolean, val) =>
       (val.answered && val.id === eventDetail.getId()) || pv,
-    false
+    false,
   );
   useEffect(() => {
     if (typeof window !== "object" || init.current) return;
@@ -91,56 +91,68 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
     (async () => {
       try {
         const raw = await getSchedules(new Date());
-        const data = raw.reduce((pv, val) => {
-          const date = new Date(
-            typeGuard.DateTimeSchedule(val)
-              ? val.start.dateTime
-              : val.start.date
-          );
-          const key = `${date.getMonth() + 1}/${date.getDate()}`;
-          if (!pv[key]) {
-            pv[key] = [];
-          }
-          pv[key].push(val);
-          return pv;
-        }, {} as { [key: string]: Schedule[] });
-        setSchedules(data);
-        const list = eventDetail.getProposedstarttimeList().reduce((pv, ts) => {
-          const start = ts.getSeconds();
-          const end =
-            ts.getSeconds() + (eventDetail.getDuration()?.getSeconds() || 0);
-          const block = raw.reduce((pv, val) => {
-            const [start_, end_] = (() => {
-              if (typeGuard.DateTimeSchedule(val)) {
-                return [
-                  Math.floor(new Date(val.start.dateTime).getTime() / 1000),
-                  new Date(val.end.dateTime).getTime() / 1000,
-                ];
-              }
-              return [
-                Math.floor(new Date(val.start.date).getTime() / 1000),
-                new Date(val.end.date).getTime() / 1000,
-              ];
-            })();
-            if (end_ < start || start_ > end) {
-              return pv;
+        const data = raw.reduce(
+          (pv, val) => {
+            const date = new Date(
+              typeGuard.DateTimeSchedule(val)
+                ? val.start.dateTime
+                : val.start.date,
+            );
+            const key = `${date.getMonth() + 1}/${date.getDate()}`;
+            if (!pv[key]) {
+              pv[key] = [];
             }
-            return true;
-          }, false);
-          pv[`${start}`] = { val: checklist[`${start}`]?.val ?? !block, block };
-          return pv;
-        }, {} as { [key: string]: { val: boolean; block: boolean } });
+            pv[key].push(val);
+            return pv;
+          },
+          {} as { [key: string]: Schedule[] },
+        );
+        setSchedules(data);
+        const list = eventDetail.getProposedstarttimeList().reduce(
+          (pv, ts) => {
+            const start = ts.getSeconds();
+            const end =
+              ts.getSeconds() + (eventDetail.getDuration()?.getSeconds() || 0);
+            const block = raw.reduce((pv, val) => {
+              const [start_, end_] = (() => {
+                if (typeGuard.DateTimeSchedule(val)) {
+                  return [
+                    Math.floor(new Date(val.start.dateTime).getTime() / 1000),
+                    new Date(val.end.dateTime).getTime() / 1000,
+                  ];
+                }
+                return [
+                  Math.floor(new Date(val.start.date).getTime() / 1000),
+                  new Date(val.end.date).getTime() / 1000,
+                ];
+              })();
+              if (end_ < start || start_ > end) {
+                return pv;
+              }
+              return true;
+            }, false);
+            pv[`${start}`] = {
+              val: checklist[`${start}`]?.val ?? !block,
+              block,
+            };
+            return pv;
+          },
+          {} as { [key: string]: { val: boolean; block: boolean } },
+        );
         setChecklist(list);
       } catch (e) {
         setSchedules(null);
-        const list = eventDetail.getProposedstarttimeList().reduce((pv, ts) => {
-          const start = ts.getSeconds();
-          pv[`${start}`] = {
-            val: checklist[`${start}`]?.val ?? true,
-            block: false,
-          };
-          return pv;
-        }, {} as { [key: string]: { val: boolean; block: boolean } });
+        const list = eventDetail.getProposedstarttimeList().reduce(
+          (pv, ts) => {
+            const start = ts.getSeconds();
+            pv[`${start}`] = {
+              val: checklist[`${start}`]?.val ?? true,
+              block: false,
+            };
+            return pv;
+          },
+          {} as { [key: string]: { val: boolean; block: boolean } },
+        );
         setChecklist(list);
       }
     })();
@@ -171,7 +183,7 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
         proposedSchedule.setAvailability(
           checklist[ts.getSeconds()].val ?? true
             ? Answer.ProposedSchedule.Availability.AVAILABLE
-            : Answer.ProposedSchedule.Availability.UNAVAILABLE
+            : Answer.ProposedSchedule.Availability.UNAVAILABLE,
         );
         return proposedSchedule;
       });
@@ -243,7 +255,7 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
                 const end = new Date(
                   (ts.getSeconds() +
                     (eventDetail.getDuration()?.getSeconds() || 0)) *
-                    1000
+                    1000,
                 );
                 const key = ts.getSeconds();
                 return (

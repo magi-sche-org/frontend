@@ -10,7 +10,7 @@ export const Button: FC<ButtonProps> = ({ text, isPrimary, onClick }) => {
   return (
     <MUIButton
       fullWidth
-      variant='outlined'
+      variant="outlined"
       sx={{
         borderRadius: 2,
         background: isPrimary ? "#006A71" : "white",
@@ -18,7 +18,7 @@ export const Button: FC<ButtonProps> = ({ text, isPrimary, onClick }) => {
         color: isPrimary ? "white" : "black",
         // ちょっとかなり微妙
         // border: "none",
-        ":hover": { background: isPrimary ? "#006A71" : "white" }
+        ":hover": { background: isPrimary ? "#006A71" : "white" },
       }}
       onClick={onClick}
     >

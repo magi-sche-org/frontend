@@ -7,7 +7,7 @@ import { getUserInfo } from "@/libraries/userInfo";
 import { login, revokeToken } from "@/libraries/authorization";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useState } from "react";
-import type {MouseEvent,FC} from "react";
+import type { MouseEvent, FC } from "react";
 import { Button, Stack } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -25,15 +25,15 @@ export const SecondaryHeader: FC = () => {
   return (
     <>
       <Head>
-        <meta name='theme-color' content='#006A71' />
+        <meta name="theme-color" content="#006A71" />
       </Head>
       <AppBar
-        position='static'
+        position="static"
         sx={{ backgroundColor: "primary.main", boxShadow: 0, px: 2, py: 0.8 }}
       >
         <Container disableGutters>
-          <Stack direction='row' justifyContent='space-around'>
-            <IconButton edge='start' size='large' disabled>
+          <Stack direction="row" justifyContent="space-around">
+            <IconButton edge="start" size="large" disabled>
               <AccountCircle sx={{ color: "primary.main" }} />
             </IconButton>
             <Button onClick={() => router.push("/")}>
@@ -45,8 +45,17 @@ export const SecondaryHeader: FC = () => {
                 style={{ objectFit: "contain" }}
               />
             </Button>
-            <IconButton edge='end' size='large' color='inherit' onClick={handleMenu}>
-              {isLogin ? <LogoutIcon /> : <AccountCircle sx={{ color: "black" }} />}
+            <IconButton
+              edge="end"
+              size="large"
+              color="inherit"
+              onClick={handleMenu}
+            >
+              {isLogin ? (
+                <LogoutIcon />
+              ) : (
+                <AccountCircle sx={{ color: "black" }} />
+              )}
             </IconButton>
           </Stack>
         </Container>

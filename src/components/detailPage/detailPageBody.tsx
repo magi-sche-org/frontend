@@ -6,10 +6,13 @@ import {
   TableHead,
   TableRow,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Answer, GetEventResponse } from "@/service/api-client/protocol/event_pb";
+import {
+  Answer,
+  GetEventResponse,
+} from "@/service/api-client/protocol/event_pb";
 import { date2time } from "@/libraries/time";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
@@ -21,28 +24,37 @@ type GuestPageBodyProps = {
 
 const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   const router = useRouter();
-  const list: { [key: string]: { available: number; unavailable: number } } = {};
+  const list: { [key: string]: { available: number; unavailable: number } } =
+    {};
   const isAnswered = getEventStorage().reduce(
-    (pv: boolean, val) => (val.answered && val.id === eventDetail.getId()) || pv,
-    false
+    (pv: boolean, val) =>
+      (val.answered && val.id === eventDetail.getId()) || pv,
+    false,
   );
   // key: timeStamp value: その時間の参加者の可否と名前
   const participantsAvailability: {
     [key: number]: { name: string; availability: boolean }[];
   } = useMemo(() => {
-    const keys = eventDetail.getProposedstarttimeList().map((startTime) => startTime);
-    const res: { [key: string]: { name: string; availability: boolean }[] } = {};
+    const keys = eventDetail
+      .getProposedstarttimeList()
+      .map((startTime) => startTime);
+    const res: { [key: string]: { name: string; availability: boolean }[] } =
+      {};
     keys.forEach((key) => {
       const participants = eventDetail.getAnswersList().map((answer) => {
         const name = answer.getName();
         const availability = answer
           .getScheduleList()
-          .filter((schedule) => schedule.getStarttime()?.getSeconds() === key.getSeconds());
+          .filter(
+            (schedule) =>
+              schedule.getStarttime()?.getSeconds() === key.getSeconds(),
+          );
         if (availability.length === 1) {
           return {
             name,
             availability:
-              availability[0].getAvailability() === Answer.ProposedSchedule.Availability.AVAILABLE
+              availability[0].getAvailability() ===
+              Answer.ProposedSchedule.Availability.AVAILABLE,
           };
         }
       });
@@ -58,7 +70,10 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
       if (!list[key]) {
         list[key] = { available: 0, unavailable: 0 };
       }
-      if (schedule.getAvailability() === Answer.ProposedSchedule.Availability.AVAILABLE) {
+      if (
+        schedule.getAvailability() ===
+        Answer.ProposedSchedule.Availability.AVAILABLE
+      ) {
         list[key].available++;
       } else {
         list[key].unavailable++;
@@ -69,7 +84,7 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   return (
     <>
       {/* タイトル表示*/}
-      <Stack direction='column' sx={{ p: 3, mt: 2 }}>
+      <Stack direction="column" sx={{ p: 3, mt: 2 }}>
         <Stack sx={{ mx: 10 }}>
           <Button
             text={`${isAnswered ? "編集" : "回答"}ページへ`}
@@ -79,7 +94,7 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
             }}
           />
         </Stack>
-        <Typography variant='h6' sx={{ textAlign: "center", my: 3 }}>
+        <Typography variant="h6" sx={{ textAlign: "center", my: 3 }}>
           {eventDetail.getName()}
         </Typography>
         {/* 候補リスト */}
@@ -88,20 +103,20 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
             border: "solid",
             borderWidth: 0.3,
             borderRadius: 5,
-            p: 1
+            p: 1,
           }}
         >
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Typography variant='caption'>日時</Typography>
+                  <Typography variant="caption">日時</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant='caption'>参加可能</Typography>
+                  <Typography variant="caption">参加可能</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant='caption'>参加不可</Typography>
+                  <Typography variant="caption">参加不可</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -110,17 +125,21 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
                 const val = list[ts];
                 const start = new Date(Number(ts) * 1000);
                 const end = new Date(
-                  (Number(ts) + (eventDetail.getDuration()?.getSeconds() || 0)) * 1000
+                  (Number(ts) +
+                    (eventDetail.getDuration()?.getSeconds() || 0)) *
+                    1000,
                 );
                 return (
                   <Tooltip
                     key={ts}
-                    title={getParticipantsText(participantsAvailability[Number(ts)])}
+                    title={getParticipantsText(
+                      participantsAvailability[Number(ts)],
+                    )}
                     enterTouchDelay={0}
                   >
                     <TableRow sx={determineRowColor(val)}>
                       <TableCell>
-                        <Typography variant='body1'>
+                        <Typography variant="body1">
                           {start.getMonth() + 1}&thinsp;/&thinsp;
                           {start.getDate()}
                           &emsp;
@@ -128,12 +147,12 @@ const DetailPageBody = ({ eventDetail }: GuestPageBodyProps) => {
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant='body1' sx={{ ml: 1 }}>
+                        <Typography variant="body1" sx={{ ml: 1 }}>
                           {val.available}人
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant='body1' sx={{ ml: 1 }}>
+                        <Typography variant="body1" sx={{ ml: 1 }}>
                           {val.unavailable}人
                         </Typography>
                       </TableCell>
@@ -154,24 +173,26 @@ const determineRowColor = (val: { available: number; unavailable: number }) => {
   if (participantsNumber === val.available) {
     return {
       // 参加多い
-      backgroundColor: "#e2fde1"
+      backgroundColor: "#e2fde1",
     };
   }
 
   if (val.unavailable <= 2) {
     return {
       // 参加少ない
-      backgroundColor: "white"
+      backgroundColor: "white",
     };
   }
 };
 
 function isParticipantsInfo(
-  p: { name: string; availability: boolean } | undefined
+  p: { name: string; availability: boolean } | undefined,
 ): p is { name: string; availability: boolean } {
   return p !== undefined;
 }
-const getParticipantsText = (participantsArray: { name: string; availability: boolean }[]) => {
+const getParticipantsText = (
+  participantsArray: { name: string; availability: boolean }[],
+) => {
   const resText = participantsArray.map((p) => (
     <span key={p.name}>
       {`${p.name} ${p.availability ? "○" : "×"}`}

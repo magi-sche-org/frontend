@@ -4,7 +4,8 @@ import { gcp_apiKey } from "@/libraries/env";
 
 import type { Schedule } from "@/@types/event";
 
-const baseUri = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+const baseUri =
+  "https://www.googleapis.com/calendar/v3/calendars/primary/events";
 const getRequestUrl = (timeMin: Date, maxResults: number) =>
   `${baseUri}?singleEvents=true&maxResults=${maxResults}&orderBy=startTime&timeMin=${timeMin.toISOString()}&showDeleted=false&key=${gcp_apiKey}`;
 
