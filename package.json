@@ -16,10 +16,9 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.8",
+    "@mui/system": "^5.14.4",
     "@mui/x-date-pickers": "^6.11.0",
     "@next/font": "13.4.13",
-    "@types/react": "^18.2.19",
-    "@types/react-dom": "^18.2.7",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.7",
     "eslint": "^8.46.0",
@@ -33,7 +32,10 @@
   },
   "devDependencies": {
     "@grpc/proto-loader": "^0.7.4",
+    "@types/crypto-js": "^4.1.1",
     "@types/node": "^20.4.8",
+    "@types/react": "^18.2.19",
+    "@types/react-dom": "^18.2.7",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
     "rome": "^12.1.3"
