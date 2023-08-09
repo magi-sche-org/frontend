@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "rome check src",
-    "lint:fix": "rome check src --fix",
+    "lint:fix": "rome check src --apply",
     "format": "rome format --write --skip-errors ./src",
     "prepare": "husky install"
   },
