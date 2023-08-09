@@ -14,7 +14,7 @@ import { date2time } from "@/libraries/time";
 import { Button } from "@/components/Button";
 import { useRouter } from "next/router";
 import { getEventStorage } from "@/libraries/eventStorage";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 type GuestPageBodyProps = {
   eventDetail: GetEventResponse;
 };

@@ -1,12 +1,9 @@
 import { Box, Container, Typography } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { Button } from "../Button";
 import { EventList } from "./EventList";
 import ListButton from "./ListButton";
 
 export const TopPage = () => {
-  const router = useRouter();
   return (
     <Box sx={{ bgcolor: "primary.main" }}>
       <Container maxWidth='sm'>

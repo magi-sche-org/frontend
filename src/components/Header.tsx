@@ -1,8 +1,5 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { login, revokeToken } from "@/libraries/authorization";
@@ -16,7 +13,6 @@ import { Stack } from "@mui/system";
 import { useRouter } from "next/router";
 
 export const Header = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(!!getUserInfo());
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -25,7 +21,6 @@ export const Header = () => {
     } else {
       login();
     }
-    setAnchorEl(event.currentTarget);
   };
   return (
     <>

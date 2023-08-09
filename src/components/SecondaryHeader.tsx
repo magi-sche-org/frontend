@@ -1,6 +1,4 @@
 import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Container } from "@mui/system";
@@ -8,24 +6,21 @@ import Head from "next/head";
 import { getUserInfo } from "@/libraries/userInfo";
 import { login, revokeToken } from "@/libraries/authorization";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { FC, useState } from "react";
+import { useState } from "react";
+import type {MouseEvent,FC} from "react";
 import { Button, Stack } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
 export const SecondaryHeader: FC = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
-  // booleanとして認識させたいためlint避ける
-  // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
-  const [isLogin, setIsLogin] = useState(getUserInfo() && true);
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const [isLogin, setIsLogin] = useState(!!getUserInfo());
+  const handleMenu = (event: MouseEvent<HTMLElement>) => {
     if (getUserInfo()) {
       revokeToken().then(() => setIsLogin(false));
     } else {
       login();
     }
-    setAnchorEl(event.currentTarget);
   };
   return (
     <>
