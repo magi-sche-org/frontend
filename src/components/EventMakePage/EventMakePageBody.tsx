@@ -21,37 +21,34 @@ import { Button } from "../Button";
 import { ModalStyle } from "../ModalStyle";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import { useRouter } from "next/router";
-import { eventClient } from "@/service/api-client/client";
-import { CreateEventRequest } from "@/service/api-client/protocol/event_pb";
-import { Duration } from "google-protobuf/google/protobuf/duration_pb";
 import { useSnackbar } from "notistack";
 import { setEventStorage } from "@/libraries/eventStorage";
-import { getToken } from "@/libraries/token";
-import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
 import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
+import { createEvent } from "@/libraries/api/events";
 
 const EventMakePageBody: React.FC = () => {
   const router = useRouter();
 
   // イベント名
   const [EventNameText, setEventNameText] = useState<string>("");
+  const [EventDescriptionText, setEventDescriptionText] = useState<string>("");
   // 時間
   const [StartTime, setStartTime] = useState<number>(10);
   const [EndTime, setEndTime] = useState<number>(17);
   // イベント時間の長さ
-  const [EventTimeRange, setEventTimeRange] = useState<string>("30min");
+  const [EventTimeDuration, setEventTimeDuration] = useState<number>(1800);
   // 1コマあたりの時間
-  const [TimePadding, setTimePadding] = useState<string>("30min");
+  const [TimePadding, setTimePadding] = useState<number>(1800);
   // 日付
-  const [StartDay, setStartDay] = useState<Dayjs | null>(dayjs());
-  const [EndDay, setEndDay] = useState<Dayjs | null>(dayjs().add(2, "h"));
+  const [StartDay, setStartDay] = useState<Dayjs | undefined>(dayjs());
+  const [EndDay, setEndDay] = useState<Dayjs | undefined>(dayjs().add(2, "h"));
   // モーダル
   const [ModalOpen, setModalOpen] = useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const [shareURL, setShareURL] = useState("");
   const handleStartDay = (newValue: Dayjs | null) => {
-    setStartDay(newValue);
+    setStartDay(newValue || undefined);
     if (newValue != null && EndDay != null) {
       // 開始日より終了日が小さければ開始日で終了日を更新
       if (newValue > EndDay) {
@@ -61,7 +58,7 @@ const EventMakePageBody: React.FC = () => {
   };
 
   const handleEndDay = (newValue: Dayjs | null) => {
-    setEndDay(newValue);
+    setEndDay(newValue || undefined);
     if (newValue != null && StartDay != null) {
       // 終了より開始日が小さければ開始日で終了日を更新
       if (newValue < StartDay) {
@@ -78,62 +75,34 @@ const EventMakePageBody: React.FC = () => {
       });
       return;
     }
-    const request = new CreateEventRequest();
-    request.setName(EventNameText);
-    const duration = new Duration();
+    (async () => {
+      try {
+        const startTimeList: string[] = createProposedStartTimeList(
+          StartDay,
+          EndDay,
+          TimePadding,
+          EventTimeDuration,
+          StartTime,
+          EndTime,
+        );
 
-    switch (EventTimeRange) {
-      case "30min":
-        duration.setSeconds(30 * 60);
-        break;
-      case "1h":
-        duration.setSeconds(60 * 60);
-        break;
-      case "1day":
-        duration.setSeconds(24 * 60 * 60);
-        break;
-    }
-    request.setDuration(duration);
-    request.setToken(getToken(localStorage));
-    const proposedStartTimeList: Timestamp[] = createProposedStartTimeList(
-      StartDay?.toDate(),
-      EndDay?.toDate(),
-      TimePadding,
-      StartTime,
-      EndTime,
-    );
+        const response = await createEvent(
+          EventNameText,
+          EventDescriptionText,
+          EventTimeDuration,
+          startTimeList,
+        );
 
-    request.setProposedstarttimeList(proposedStartTimeList);
-    const padding = new Duration();
-    switch (TimePadding) {
-      case "30min":
-        padding.setSeconds(30 * 60);
-        break;
-      case "1h":
-        padding.setSeconds(60 * 60);
-        break;
-      case "1day":
-        padding.setSeconds(24 * 60 * 60);
-        break;
-    }
-    request.setTimeunit(padding);
-
-    eventClient
-      .createEvent(request, null)
-      .then((res) => {
-        const id = res.getEventid();
-        // TODO: 環境変数
-        // イベント入れる
-        setEventStorage(EventNameText, id);
-        setShareURL(`https://${location.hostname}/guest/${id}`);
+        setEventStorage(response);
+        setShareURL(`https://${location.hostname}/guest/${response.id}`);
         setModalOpen(true);
-      })
-      .catch((e) => {
+      } catch (_) {
         enqueueSnackbar("イベントの作成に失敗しました", {
           autoHideDuration: 2000,
           variant: "error",
         });
-      });
+      }
+    })();
   };
 
   const timeList = [
@@ -171,6 +140,15 @@ const EventMakePageBody: React.FC = () => {
           value={EventNameText}
           onChange={(e) => {
             setEventNameText(e.target.value);
+          }}
+        />
+        <TextField
+          variant="outlined"
+          label="概要"
+          sx={{ mx: 3, mb: 5 }}
+          value={EventDescriptionText}
+          onChange={(e) => {
+            setEventDescriptionText(e.target.value);
           }}
         />
         {/* 時間帯設定 */}
@@ -224,19 +202,19 @@ const EventMakePageBody: React.FC = () => {
             <Select
               defaultValue="30min"
               label="イベント時間"
-              value={EventTimeRange}
+              value={`${EventTimeDuration}`}
               onChange={(e) => {
-                setEventTimeRange(e.target.value);
+                setEventTimeDuration(Number(e.target.value));
               }}
             >
               <ListSubheader>MIN</ListSubheader>
-              <MenuItem value={"15min"}>15min</MenuItem>
-              <MenuItem value={"30min"}>30min</MenuItem>
+              <MenuItem value={"900"}>15min</MenuItem>
+              <MenuItem value={"1800"}>30min</MenuItem>
               <ListSubheader>Hour</ListSubheader>
-              <MenuItem value={"1h"}>1h</MenuItem>
-              <MenuItem value={"2h"}>2h</MenuItem>
-              <MenuItem value={"3h"}>3h</MenuItem>
-              <MenuItem value={"4h"}>4h</MenuItem>
+              <MenuItem value={"3600"}>1h</MenuItem>
+              <MenuItem value={"7200"}>2h</MenuItem>
+              <MenuItem value={"10800"}>3h</MenuItem>
+              <MenuItem value={"14400"}>4h</MenuItem>
             </Select>
           </FormControl>
         </Stack>
@@ -250,13 +228,13 @@ const EventMakePageBody: React.FC = () => {
             value={TimePadding}
             exclusive
             onChange={(e, newAlignment: string) => {
-              setTimePadding(newAlignment);
+              setTimePadding(Number(newAlignment));
             }}
             aria-label="Platform"
           >
-            <ToggleButton value="30min">30min</ToggleButton>
-            <ToggleButton value="1h">　1h　</ToggleButton>
-            <ToggleButton value="1day">1day</ToggleButton>
+            <ToggleButton value="1800">30min</ToggleButton>
+            <ToggleButton value="3600">　1h　</ToggleButton>
+            <ToggleButton value="86400">1day</ToggleButton>
           </ToggleButtonGroup>
         </Stack>
         <Typography variant="caption" sx={{ textAlign: "center", mb: 3 }}>
@@ -278,19 +256,17 @@ const EventMakePageBody: React.FC = () => {
             <Stack direction="column" sx={{ mb: 2 }}>
               <Typography variant="body1">開始日</Typography>
               <MobileDatePicker
-                inputFormat="YYYY/MM/DD"
+                format="YYYY/MM/DD"
                 value={StartDay}
                 onChange={handleStartDay}
-                renderInput={(params) => <TextField {...params} />}
               />
             </Stack>
             <Stack direction="column" sx={{ mb: 2 }}>
               <Typography variant="body1">終了日</Typography>
               <MobileDatePicker
-                inputFormat="YYYY/MM/DD"
+                format="YYYY/MM/DD"
                 value={EndDay}
                 onChange={handleEndDay}
-                renderInput={(params) => <TextField {...params} />}
               />
             </Stack>
           </LocalizationProvider>
