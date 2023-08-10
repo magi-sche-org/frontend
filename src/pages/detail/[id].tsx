@@ -31,7 +31,7 @@ const DetailPage = () => {
       <Head>
         <title>{eventDetail.name} - Magi-Sche</title>
       </Head>
-      <DetailPageBody eventDetail={eventDetail} />
+      <DetailPageBody event={eventDetail} />
     </>
   );
 };

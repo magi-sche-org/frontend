@@ -1,15 +1,11 @@
 import { Stack, Typography } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ListButton from "./ListButton";
 import { getEventStorage } from "@/libraries/eventStorage";
-export type Event = {
-  id: string;
-  name: string;
-  answered: boolean;
-};
+import { IEvent } from "@/@types/api/event";
 
 export const EventList = () => {
-  const [eventList, setEventList] = useState<Event[]>([]);
+  const [eventList, setEventList] = useState<IEvent[]>([]);
   useEffect(() => {
     if (typeof window !== "object") return;
     setEventList(getEventStorage());
@@ -25,12 +21,14 @@ export const EventList = () => {
         </Typography>
       )}
       {eventList.map((event) => {
-        return <EventCard key={event.id} {...event} />;
+        return (
+          <EventCard key={event.id} name={event.name} eventId={event.id} />
+        );
       })}
     </Stack>
   );
 };
 
-const EventCard: FC<Event> = ({ name, id }) => {
-  return <ListButton text={name} page={`/detail/${id}`} />;
+const EventCard = ({ name, eventId }: { name: string; eventId: string }) => {
+  return <ListButton text={name} page={`/detail/${eventId}`} />;
 };

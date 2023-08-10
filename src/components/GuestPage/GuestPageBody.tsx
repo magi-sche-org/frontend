@@ -1,6 +1,9 @@
 import {
   Box,
   Checkbox,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
   Table,
   TableBody,
   TableCell,
@@ -17,63 +20,58 @@ import { Button } from "../Button";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { UserCalender } from "./UserCalender";
-import {
-  Answer,
-  GetEventResponse,
-  RegisterAnswerRequest,
-} from "@/service/api-client/protocol/event_pb";
-import { eventClient } from "@/service/api-client/client";
 import { getEventStorage, setEventStorage } from "@/libraries/eventStorage";
-import { getToken } from "@/libraries/token";
 import { Schedule } from "@/@types/event";
 import { getSchedules } from "@/libraries/calendar";
 import { typeGuard } from "@/libraries/typeGuard";
 import { date2time } from "@/libraries/time";
 import Styles from "./GuestPageBody.module.scss";
 import crypto from "crypto-js";
+import { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
+import dayjs from "dayjs";
+import { createAnswer } from "@/libraries/api/events";
 
-type GuestPageBodyProps = {
-  eventDetail: GetEventResponse;
+type props = {
+  event: IEvent;
+};
+
+type IAnswerList = {
+  [key: string]: {
+    val: IAvailability;
+    block: boolean;
+    startsAt: string;
+    id: string;
+  };
 };
 
 const hashToken = (hash: string): string => {
   return crypto.SHA256(hash).toString(crypto.enc.Base64);
 };
 
-const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
+const GuestPageBody = ({ event }: props) => {
   const router = useRouter();
-  const [NameText, setNameText] = useState<string>(() => {
-    const answers = eventDetail.getAnswersList();
-    for (const answer of answers) {
-      if (answer.getNote() === hashToken(getToken(localStorage))) {
-        return answer.getName();
-      }
+  const [NameText, setNameText] = useState<string>(getDefaultName(event));
+  const [note, setNote] = useState<string>(getMyAnswer(event)?.note || "");
+  const [checklist, setChecklist] = useState<IAnswerList>(() => {
+    const answer = getMyAnswer(event)?.units.map((answer) => {
+      return {
+        startsAt: event.units.find((unit) => unit.id === answer.eventTimeUnitId)
+          ?.startsAt,
+        ...answer,
+      };
+    });
+    if (!answer) return {};
+    const result: IAnswerList = {};
+    for (const unit of answer) {
+      if (!unit.startsAt) throw new Error("invalid answer");
+      result[unit.eventTimeUnitId] = {
+        id: unit.eventTimeUnitId,
+        startsAt: unit.startsAt,
+        val: unit.availability,
+        block: false,
+      };
     }
-    return "";
-  });
-  const [checklist, setChecklist] = useState<{
-    [key: string]: { val: boolean; block: boolean };
-  }>(() => {
-    const answers = eventDetail.getAnswersList();
-    for (const answer of answers) {
-      if (answer.getNote() === hashToken(getToken(localStorage))) {
-        const result: { [key: number]: { val: boolean; block: boolean } } = {};
-        for (const schedule of answer.getScheduleList()) {
-          result[
-            Math.floor(
-              (schedule.getStarttime()?.toDate().getTime() || 0) / 1000,
-            )
-          ] = {
-            val:
-              schedule.getAvailability() ===
-              Answer.ProposedSchedule.Availability.AVAILABLE,
-            block: false,
-          };
-        }
-        return result;
-      }
-    }
-    return {};
+    return result;
   });
   const { enqueueSnackbar } = useSnackbar();
   const [schedules, setSchedules] = useState<
@@ -81,8 +79,7 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
   >(undefined);
   const init = useRef(false);
   const isAnswered = getEventStorage().reduce(
-    (pv: boolean, val) =>
-      (val.answered && val.id === eventDetail.getId()) || pv,
+    (pv: boolean, val) => (val.yourAnswerId && val.id === event.id) || pv,
     false,
   );
   useEffect(() => {
@@ -108,51 +105,42 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
           {} as { [key: string]: Schedule[] },
         );
         setSchedules(data);
-        const list = eventDetail.getProposedstarttimeList().reduce(
-          (pv, ts) => {
-            const start = ts.getSeconds();
-            const end =
-              ts.getSeconds() + (eventDetail.getDuration()?.getSeconds() || 0);
-            const block = raw.reduce((pv, val) => {
-              const [start_, end_] = (() => {
-                if (typeGuard.DateTimeSchedule(val)) {
-                  return [
-                    Math.floor(new Date(val.start.dateTime).getTime() / 1000),
-                    new Date(val.end.dateTime).getTime() / 1000,
-                  ];
-                }
-                return [
-                  Math.floor(new Date(val.start.date).getTime() / 1000),
-                  new Date(val.end.date).getTime() / 1000,
-                ];
-              })();
-              if (end_ < start || start_ > end) {
-                return pv;
+        const list = event.units.reduce((pv, unit) => {
+          const start = dayjs(unit.startsAt);
+          const end = dayjs(unit.startsAt).add(event.unitDuration, "seconds");
+          const block = raw.reduce((pv, val) => {
+            const [start_, end_] = (() => {
+              if (typeGuard.DateTimeSchedule(val)) {
+                return [dayjs(val.start.dateTime), dayjs(val.end.dateTime)];
               }
-              return true;
-            }, false);
-            pv[`${start}`] = {
-              val: checklist[`${start}`]?.val ?? !block,
-              block,
-            };
-            return pv;
-          },
-          {} as { [key: string]: { val: boolean; block: boolean } },
-        );
+              return [dayjs(val.start.date), dayjs(val.end.date)];
+            })();
+            if (start.isAfter(end_) || start_.isAfter(end)) {
+              return pv;
+            }
+            return true;
+          }, false);
+          const current = checklist[unit.id];
+          pv[unit.id] = {
+            id: unit.id,
+            startsAt: unit.startsAt,
+            val: current?.val ?? (block ? "unavailable" : "available"),
+            block,
+          };
+          return pv;
+        }, {} as IAnswerList);
         setChecklist(list);
       } catch (e) {
         setSchedules(null);
-        const list = eventDetail.getProposedstarttimeList().reduce(
-          (pv, ts) => {
-            const start = ts.getSeconds();
-            pv[`${start}`] = {
-              val: checklist[`${start}`]?.val ?? true,
-              block: false,
-            };
-            return pv;
-          },
-          {} as { [key: string]: { val: boolean; block: boolean } },
-        );
+        const list = event.units.reduce((pv, ts) => {
+          pv[ts.id] = {
+            id: ts.id,
+            startsAt: ts.startsAt,
+            val: checklist[ts.id]?.val ?? true,
+            block: false,
+          };
+          return pv;
+        }, {} as IAnswerList);
         setChecklist(list);
       }
     })();
@@ -170,34 +158,23 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
       });
       return;
     }
-    const request = new RegisterAnswerRequest();
-    request.setEventid(eventDetail.getId());
-    request.setToken(getToken(localStorage));
-    const answer = new Answer();
-    answer.setName(NameText);
-    const proposedScheduleList = eventDetail
-      .getProposedstarttimeList()
-      .map((ts) => {
-        const proposedSchedule = new Answer.ProposedSchedule();
-        proposedSchedule.setStarttime(ts);
-        proposedSchedule.setAvailability(
-          checklist[ts.getSeconds()].val ?? true
-            ? Answer.ProposedSchedule.Availability.AVAILABLE
-            : Answer.ProposedSchedule.Availability.UNAVAILABLE,
-        );
-        return proposedSchedule;
-      });
-    answer.setScheduleList(proposedScheduleList);
-    answer.setNote(hashToken(getToken(localStorage)));
-    request.setAnswer(answer);
-    eventClient.registerAnswer(request, null).then(() => {
-      enqueueSnackbar("回答を記録しました。", {
-        autoHideDuration: 2000,
-        variant: "success",
-      });
-      setEventStorage(eventDetail.getName(), eventDetail.getId(), true);
-      router.push("/");
+    await createAnswer(
+      event.id,
+      NameText,
+      note,
+      Object.values(checklist).map((val) => {
+        return {
+          eventTimeUnitId: val.id,
+          availability: val.val,
+        };
+      }),
+    );
+    enqueueSnackbar("回答を記録しました。", {
+      autoHideDuration: 2000,
+      variant: "success",
     });
+    setEventStorage(event);
+    router.push("/");
   };
 
   return (
@@ -217,7 +194,7 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
           )}
         </Stack>
         <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
-          {eventDetail.getName()}
+          {event.name}
         </Typography>
         <TextField
           label="表示名"
@@ -250,37 +227,51 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {eventDetail.getProposedstarttimeList().map((ts) => {
-                const start = new Date(ts.getSeconds() * 1000);
-                const end = new Date(
-                  (ts.getSeconds() +
-                    (eventDetail.getDuration()?.getSeconds() || 0)) *
-                    1000,
+              {event.units.map((unit) => {
+                const start = dayjs(unit.startsAt);
+                const end = dayjs(unit.startsAt).add(
+                  event.unitDuration,
+                  "seconds",
                 );
-                const key = ts.getSeconds();
                 return (
-                  <TableRow key={ts.getSeconds()}>
+                  <TableRow key={unit.id}>
                     <TableCell>
                       <Typography variant="body1">
-                        {start.getMonth() + 1}/{start.getDate()}{" "}
-                        {date2time(start)}〜{date2time(end)}
+                        {start.format("MM / DD[&emsp;]HH:mm")}〜
+                        {end.format("HH:mm")}
                       </Typography>
                     </TableCell>
                     <TableCell className={`${Styles.wrapper}`}>
-                      <Checkbox
+                      <RadioGroup
                         onChange={(e) => {
-                          const value = checklist[key];
+                          const value = checklist[unit.id];
                           setChecklist({
                             ...checklist,
-                            [key]: {
-                              val: e.target.checked,
+                            [unit.id]: {
+                              ...value,
+                              val: e.target.value as IAvailability,
                               block: value.block,
                             },
                           });
                         }}
-                        checked={checklist[ts.getSeconds()]?.val ?? true}
-                      />
-                      {checklist[key]?.val && checklist[key]?.block && (
+                      >
+                        <FormControlLabel
+                          value="available"
+                          control={<Radio />}
+                          label="参加可能"
+                        />
+                        <FormControlLabel
+                          value="maybe"
+                          control={<Radio />}
+                          label="不明"
+                        />
+                        <FormControlLabel
+                          value="unavailable"
+                          control={<Radio />}
+                          label="参加不可"
+                        />
+                      </RadioGroup>
+                      {checklist[unit.id]?.val && checklist[unit.id]?.block && (
                         <span className={Styles.info}>
                           <Typography variant="caption">重複</Typography>
                         </span>
@@ -305,6 +296,16 @@ const GuestPageBody = ({ eventDetail }: GuestPageBodyProps) => {
       </Stack>
     </>
   );
+};
+
+const getDefaultName = (event: IEvent) => {
+  const answer = getMyAnswer(event);
+  if (!event.yourAnswerId || !answer) return "";
+  return answer?.userNickname ?? "";
+};
+
+const getMyAnswer = (event: IEvent): IUserAnswer | undefined => {
+  return event.userAnswers.find((a) => a.id === event.yourAnswerId);
 };
 
 export default GuestPageBody;

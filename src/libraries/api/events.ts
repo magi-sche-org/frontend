@@ -1,6 +1,6 @@
 import { requests } from "@/libraries/requests";
 import { IRequestResult } from "@/@types/api/request";
-import { IEvent } from "@/@types/api/event";
+import { IEvent, IUserAnswerUnit } from "@/@types/api/event";
 
 const createEvent = async (
   name: string,
@@ -31,4 +31,29 @@ const getEvent = async (id: string) => {
   return res.data;
 };
 
-export { createEvent, getEvent };
+const createAnswer = async (
+  eventId: string,
+  name: string,
+  note: string,
+  units: IUserAnswerUnit[],
+) => {
+  const body = {
+    userNickname: name,
+    note,
+    units,
+  };
+  const res = await requests<IRequestResult<IEvent>>(
+    `/events/${eventId}/user/answer`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    },
+  );
+  if (res.statusCode !== 200) throw new Error(res.message);
+  return res.data;
+};
+
+export { createEvent, getEvent, createAnswer };
