@@ -1,12 +1,13 @@
 import { Header } from "@/components/Header";
 import { SecondaryHeader } from "@/components/SecondaryHeader";
 import "@/styles/globals.css";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
 import { useEffect, useRef } from "react";
 import Head from "next/head";
+import { theme } from "@/theme/theme";
 
 export default function App({ Component, pageProps }: AppProps) {
   const init = useRef(false);
@@ -14,20 +15,6 @@ export default function App({ Component, pageProps }: AppProps) {
     if (typeof window !== "object" || init.current) return;
     init.current = true;
   }, []);
-  const mainTheme = createTheme({
-    typography: {
-      fontFamily: ['"Noto Sans"', '"Helvetica"', "Arial"].join(","),
-    },
-    palette: {
-      primary: {
-        main: "#006A71",
-        light: "#46989F",
-      },
-      secondary: {
-        main: "#FFFFDD",
-      },
-    },
-  });
 
   const router = useRouter();
 
@@ -42,7 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/png" sizes="64x64" href="/favicon.ico" />
       </Head>
-      <ThemeProvider theme={mainTheme}>
+      <ThemeProvider theme={theme}>
         <SnackbarProvider>
           {router.asPath === "/" && <Header />}
           {(router.asPath.indexOf("guest") === 1 ||
