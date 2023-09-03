@@ -1,3 +1,4 @@
+import { EventTimeDuration, HourOfDay } from "../../constants/event";
 export type IEvent = {
   id: string;
   ownerId: string;
@@ -44,3 +45,6 @@ export type IDateAnswerItem = {
   name: string;
   availability: IAvailability;
 };
+export type IEventTimeDuration = (typeof EventTimeDuration)[number];
+
+export type IHourOfDay = (typeof HourOfDay)[number];

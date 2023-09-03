@@ -5,13 +5,13 @@ import type {
 import type {
   DateSchedule,
   DateTimeSchedule,
-  EventDate,
-  EventDateTime,
   Schedule,
   ScheduleResponse,
 } from "@/@types/event";
 import type { userInfo } from "@/@types/userInfo";
 import { ApiError } from "@/@types/error";
+import type { IEventTimeDuration, IHourOfDay } from "../@types/api/event";
+import { EventTimeDuration, HourOfDay } from "../constants/event";
 
 const typeGuard = {
   AuthorizationTokens: (i: unknown): i is AuthorizationTokens =>
@@ -50,6 +50,11 @@ const typeGuard = {
     objectVerify((i as Schedule).start, ["dateTime", "timeZone"]),
   DateSchedule: (i: unknown): i is DateSchedule =>
     typeof i === "object" && objectVerify((i as Schedule).start, ["date"]),
+  HourOfDay: (v: number): v is IHourOfDay =>
+    // TODO: これどーすんの
+    (HourOfDay as unknown as number[]).includes(v),
+  EventTimeDuration: (v: number): v is IEventTimeDuration =>
+    (EventTimeDuration as unknown as number[]).includes(v),
 };
 
 const objectVerify = (item: unknown, keys: string[]): boolean => {
