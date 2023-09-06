@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Checkbox, Input, TextField } from "@mui/material";
 import { CheckBox } from "@mui/icons-material";
+import { useSchedule } from "@/hooks/useSchedule";
+import { UserCalender } from "@/components/GuestPage/UserCalender";
 
 export type IAnswerList = {
   // key: Dayjsをstring化したもの
@@ -15,7 +17,7 @@ export type IAnswerList = {
 //http://localhost:3000/preview?startday=2023-09-01&endday=2023-09-03&starttime=11&endtime=13&eventtimeduration=1800
 export default function Home() {
   const searchParams = useSearchParams();
-
+  const { schedules } = useSchedule();
   // searchParamsが変わった時にのみ再取得
   const { startDay, endDay, startTime, endTime, eventTimeDuration } =
     useMemo(() => {
@@ -52,6 +54,7 @@ export default function Home() {
   }
   return (
     <>
+      {schedules && <UserCalender schedules={schedules} />}
       <TextField
         label="イベント名"
         variant="outlined"
