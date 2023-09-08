@@ -41,7 +41,6 @@ type Props = {
 export const DistinguishHeader: FC<Props> = ({ path }) => {
   const distinguishHeader = () => {
     const headerObj = headerList.find((headerObj) => {
-      console.log(path.indexOf(headerObj.path));
       return path.indexOf(headerObj.path) !== -1;
     });
     return headerObj?.header ?? <></>;
