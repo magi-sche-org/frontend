@@ -54,7 +54,7 @@ export const SecondaryHeader: FC = () => {
               {isLogin ? (
                 <LogoutIcon />
               ) : (
-                <AccountCircle sx={{ color: "black" }} />
+                <AccountCircle sx={{ color: "white" }} />
               )}
             </IconButton>
           </Stack>
