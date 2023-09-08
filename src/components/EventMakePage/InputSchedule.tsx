@@ -29,14 +29,7 @@ export const InputSchedule: FC<Props> = ({
 }) => {
   console.log(checkList);
   return (
-    <TableContainer
-      sx={{
-        border: "solid",
-        borderWidth: 0.3,
-        borderRadius: 5,
-        p: 1,
-      }}
-    >
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
@@ -57,8 +50,9 @@ export const InputSchedule: FC<Props> = ({
               <TableRow key={unitStartTime}>
                 <TableCell>
                   <Typography variant="body1">
-                    {start.format("MM / DD[&emsp;]HH:mm")}〜
-                    {end.format("HH:mm")}
+                    {start.format("MM/DD")}
+                    &emsp;
+                    {start.format("HH:mm")}〜{end.format("HH:mm")}
                   </Typography>
                 </TableCell>
                 <TableCell className={`${Styles.wrapper}`}>

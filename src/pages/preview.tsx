@@ -4,10 +4,23 @@ import { CandidateDatePreview } from "@/components/EventMakePage/CandidateDatePr
 import { typeGuard } from "@/libraries/typeGuard";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import { Checkbox, Input, TextField } from "@mui/material";
-import { CheckBox } from "@mui/icons-material";
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useSchedule } from "@/hooks/useSchedule";
 import { UserCalender } from "@/components/GuestPage/UserCalender";
+import { Stack } from "@mui/system";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 export type IAnswerList = {
   // key: Dayjsをstring化したもの
@@ -55,60 +68,98 @@ export default function Home() {
   return (
     <>
       {schedules && <UserCalender schedules={schedules} />}
-      <TextField
-        label="イベント名"
-        variant="outlined"
-        value={eventName}
-        onChange={(e) => {
-          setEventName(e.target.value);
+      <Stack
+        sx={{
+          p: 3,
+          mb: 3,
         }}
-      />
-      <CandidateDatePreview
-        startDay={startDay}
-        endDay={endDay}
-        startTime={startTime}
-        endTime={endTime}
-        eventTimeDuration={eventTimeDuration}
-      />
-      <TextField
-        label="イベント名"
-        variant="outlined"
-        value={eventName}
-        onChange={(e) => {
-          setEventName(e.target.value);
-        }}
-      />
-      <Checkbox
-        size="medium"
-        onChange={(_, checked) => {
-          setIsConfirmNotice(checked);
-        }}
-        checked={isConfirmNotice}
-      />
-      <div>確定通知をする</div>
-      <div>
-        参加人数
-        <TextField
-          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-          value={participantsCount}
-          onChange={(e) => {
-            const v = Number(e.target.value);
-            if (!v) {
-              return;
+        spacing={5}
+      >
+        <Typography variant="h5" sx={{ textAlign: "center" }}>
+          作成プレビュー
+        </Typography>
+        <FormControl variant="outlined">
+          <InputLabel>イベント名</InputLabel>
+          <OutlinedInput
+            type="text"
+            autoFocus
+            value={eventName}
+            onChange={(e) => {
+              setEventName(e.target.value);
+            }}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => {
+                    setEventName("");
+                  }}
+                >
+                  <HighlightOffIcon />
+                </IconButton>
+              </InputAdornment>
             }
-            setParticipantsCount(v);
-          }}
+          />
+        </FormControl>
+        <CandidateDatePreview
+          startDay={startDay}
+          endDay={endDay}
+          startTime={startTime}
+          endTime={endTime}
+          eventTimeDuration={eventTimeDuration}
         />
-        人
-      </div>
-      <TextField
-        label="確定通知用メールアドレス"
-        variant="outlined"
-        value={emailAddress}
-        onChange={(e) => {
-          setEmailAddress(e.target.value);
-        }}
-      />
+        <Stack spacing={2}>
+          <Stack spacing={1}>
+            <Typography variant="h5">日付確定通知</Typography>
+            <Typography>
+              指定人数以上の回答があった場合に、メールに日付の確定通知を行います。
+            </Typography>
+          </Stack>
+          <FormGroup>
+            <FormControlLabel
+              label="日程確定通知をする"
+              control={
+                <Checkbox
+                  size="medium"
+                  checked={isConfirmNotice}
+                  onChange={(_, checked) => {
+                    setIsConfirmNotice(checked);
+                  }}
+                />
+              }
+              sx={{ mb: 1 }}
+            />
+            <FormControl>
+              <InputLabel>参加人数</InputLabel>
+              <OutlinedInput
+                type="number"
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*|" }}
+                endAdornment={
+                  <InputAdornment position="end">人</InputAdornment>
+                }
+                value={participantsCount}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (!v) {
+                    return;
+                  }
+                  setParticipantsCount(v);
+                }}
+                sx={{ ml: 0, mb: 2 }}
+              />
+            </FormControl>
+            <TextField
+              type="email"
+              label="確定通知用メールアドレス"
+              variant="outlined"
+              value={emailAddress}
+              onChange={(e) => {
+                setEmailAddress(e.target.value);
+              }}
+            />
+          </FormGroup>
+        </Stack>
+        <Button variant="contained">作成する</Button>
+      </Stack>
     </>
   );
 }
