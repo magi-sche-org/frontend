@@ -53,7 +53,7 @@ export default function Home() {
   // 確定通知
   const [isConfirmNotice, setIsConfirmNotice] = useState(false);
   // 参加人数
-  const [participantsCount, setParticipantsCount] = useState<number>();
+  const [participantsCount, setParticipantsCount] = useState<string>("");
   // 確定通知用メールアドレス
   const [emailAddress, setEmailAddress] = useState("");
   if (
@@ -131,15 +131,20 @@ export default function Home() {
             <FormControl>
               <InputLabel>参加人数</InputLabel>
               <OutlinedInput
+                placeholder="3"
                 type="number"
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*|" }}
+                inputProps={{
+                  inputMode: "numeric",
+                  pattern: "[0-9]*|",
+                }}
                 endAdornment={
                   <InputAdornment position="end">人</InputAdornment>
                 }
                 value={participantsCount}
                 onChange={(e) => {
-                  const v = Number(e.target.value);
-                  if (!v) {
+                  const v = e.target.value;
+                  if (!v || isNaN(Number(v))) {
+                    setParticipantsCount("");
                     return;
                   }
                   setParticipantsCount(v);
