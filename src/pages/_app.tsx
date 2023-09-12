@@ -1,5 +1,4 @@
-import { Header } from "@/components/Header";
-import { SecondaryHeader } from "@/components/SecondaryHeader";
+import { DistinguishHeader } from "@/components/Header/DistinguishHeader";
 import "@/styles/globals.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
@@ -31,9 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <SnackbarProvider>
-          {router.asPath === "/" && <Header />}
-          {(router.asPath.indexOf("guest") === 1 ||
-            router.asPath.indexOf("detail") === 1) && <SecondaryHeader />}
+          <DistinguishHeader path={router.asPath} />
           <Component {...pageProps} />
           <CssBaseline />
         </SnackbarProvider>

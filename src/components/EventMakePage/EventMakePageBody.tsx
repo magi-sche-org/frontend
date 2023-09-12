@@ -232,9 +232,9 @@ const EventMakePageBody: React.FC = () => {
             }}
             aria-label="Platform"
           >
-            <ToggleButton value="1800">30min</ToggleButton>
-            <ToggleButton value="3600">　1h　</ToggleButton>
-            <ToggleButton value="86400">1day</ToggleButton>
+            <ToggleButton value={1800}>30min</ToggleButton>
+            <ToggleButton value={3600}>　1h　</ToggleButton>
+            <ToggleButton value={86400}>1day</ToggleButton>
           </ToggleButtonGroup>
         </Stack>
         <Typography variant="caption" sx={{ textAlign: "center", mb: 3 }}>
