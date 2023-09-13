@@ -3,13 +3,42 @@ import { useEffect, useState } from "react";
 import ListButton from "./ListButton";
 import { getEventStorage } from "@/libraries/eventStorage";
 import { IEvent } from "@/@types/api/event";
+import { VerticalCard } from "./VerticalCard";
+
+const FOLDING_EVENT_LIMIT = 3;
 
 export const EventList = () => {
   const [eventList, setEventList] = useState<IEvent[]>([]);
+  const [listPosition, setListPosition] = useState(0);
+
   useEffect(() => {
     if (typeof window !== "object") return;
     setEventList(getEventStorage());
   }, []);
+
+  /**
+   * イベントリストの位置の上下
+   * @param isUp
+   */
+  const handleChangeListPosition = (isUp: boolean) => {
+    isUp
+      ? setListPosition(listPosition - 1)
+      : setListPosition(listPosition + 1);
+  };
+
+  // 一定数以上のイベントがある場合は折りたたむ
+  const isNeedsFolding = eventList.length > FOLDING_EVENT_LIMIT;
+
+  // スタート・エンド位置
+  const startPosition = listPosition * FOLDING_EVENT_LIMIT;
+  const endPosition = startPosition + FOLDING_EVENT_LIMIT;
+
+  // スクロールアップ可能・スクロールダウン可能
+  const isScrollUp = isNeedsFolding && listPosition > 0;
+  const isScrollDown =
+    isNeedsFolding &&
+    (listPosition + 1) * FOLDING_EVENT_LIMIT < eventList.length;
+
   return (
     <Stack spacing={1.5}>
       {eventList.length === 0 && (
@@ -20,7 +49,10 @@ export const EventList = () => {
           ここにはまだなにもありません
         </Typography>
       )}
-      {eventList.map((event) => {
+      {isScrollUp ? (
+        <VerticalCard isUp onClick={handleChangeListPosition} />
+      ) : null}
+      {eventList.slice(startPosition, endPosition).map((event) => {
         return (
           <EventCard
             key={event.id + event.name}
@@ -29,6 +61,9 @@ export const EventList = () => {
           />
         );
       })}
+      {isScrollDown ? (
+        <VerticalCard isUp={false} onClick={handleChangeListPosition} />
+      ) : null}
     </Stack>
   );
 };
