@@ -22,7 +22,11 @@ export const EventList = () => {
       )}
       {eventList.map((event) => {
         return (
-          <EventCard key={event.id} name={event.name} eventId={event.id} />
+          <EventCard
+            key={event.id + event.name}
+            name={event.name}
+            eventId={event.id}
+          />
         );
       })}
     </Stack>
