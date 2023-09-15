@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import { FC } from "react";
 import Styles from "../GuestPage/GuestPageBody.module.scss";
 import { IAnswerList } from "./CandidateDatePreview";
+import "dayjs/locale/ja";
 
 type Props = {
   eventTimeDuration: IEventTimeDuration;
@@ -27,6 +28,7 @@ export const InputSchedule: FC<Props> = ({
   setCheckList,
   eventTimeDuration,
 }) => {
+  dayjs.locale("ja");
   console.log(checkList);
   return (
     <TableContainer>
@@ -50,8 +52,7 @@ export const InputSchedule: FC<Props> = ({
               <TableRow key={unitStartTime}>
                 <TableCell>
                   <Typography variant="body1">
-                    {start.format("MM/DD")}
-                    &emsp;
+                    {`${start.format("MM/DD")}(${start.format("ddd")}) `}
                     {start.format("HH:mm")}〜{end.format("HH:mm")}
                   </Typography>
                 </TableCell>
