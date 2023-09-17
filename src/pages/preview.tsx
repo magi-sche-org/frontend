@@ -338,7 +338,7 @@ const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
               text="イベントを確認"
               isPrimary={false}
               onClick={() => {
-                router.push("/");
+                router.push(shareURL.replace("guest", "detail"));
               }}
             />
           </Stack>
