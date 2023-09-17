@@ -1,5 +1,4 @@
 import { Header } from "@/components/Header";
-import { SecondaryHeader } from "@/components/SecondaryHeader";
 import "@/styles/globals.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
@@ -18,6 +17,19 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const router = useRouter();
 
+  const headerType = (() => {
+    if (router.asPath === "/") {
+      return "secondary";
+    }
+    if (
+      router.asPath.indexOf("guest") === 1 ||
+      router.asPath.indexOf("detail") === 1
+    ) {
+      return "primary";
+    }
+    return undefined;
+  })();
+
   return (
     <>
       <Head>
@@ -31,9 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <SnackbarProvider>
-          {router.asPath === "/" && <Header />}
-          {(router.asPath.indexOf("guest") === 1 ||
-            router.asPath.indexOf("detail") === 1) && <SecondaryHeader />}
+          {headerType && <Header type={headerType} />}
           <Component {...pageProps} />
           <CssBaseline />
         </SnackbarProvider>

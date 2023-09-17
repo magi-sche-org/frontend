@@ -12,7 +12,11 @@ import Image from "next/image";
 import { Stack } from "@mui/system";
 import { useRouter } from "next/router";
 
-export const Header = () => {
+type props = {
+  type?: "primary" | "secondary";
+};
+
+export const Header = ({ type = "primary" }: props) => {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(!!getUserInfo());
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -29,12 +33,12 @@ export const Header = () => {
       </Head>
       <AppBar
         position="static"
-        sx={{ backgroundColor: "secondary.main", boxShadow: 0, px: 2, py: 0.8 }}
+        sx={{ backgroundColor: `${type}.main`, boxShadow: 0, px: 2, py: 0.8 }}
       >
         <Container disableGutters>
           <Stack direction="row" justifyContent="space-around">
             <IconButton edge="start" size="large" disabled>
-              <AccountCircle sx={{ color: "secondary.main" }} />
+              <AccountCircle sx={{ color: `${type}.main` }} />
             </IconButton>
             <Button onClick={() => router.push("/")}>
               <Image
@@ -52,9 +56,7 @@ export const Header = () => {
               onClick={handleMenu}
             >
               {isLogin ? (
-                <>
-                  <LogoutIcon sx={{ color: "black" }} />
-                </>
+                <LogoutIcon sx={{ color: "black" }} />
               ) : (
                 <AccountCircle sx={{ color: "black" }} />
               )}
