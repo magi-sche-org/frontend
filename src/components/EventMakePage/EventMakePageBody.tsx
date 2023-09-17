@@ -26,9 +26,10 @@ import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
 import { createEvent } from "@/libraries/api/events";
 import { PageTitle } from "../common/PageTitle";
 import { TimeSelect } from "./TimeSelect";
+import { IEventTimeDuration } from "@/@types/api/event";
 
 type EventTimeLengthType = {
-  value: number;
+  value: IEventTimeDuration;
   label: string;
 };
 
@@ -136,10 +137,6 @@ const EventMakePageBody: React.FC = () => {
     {
       value: 3600,
       label: "1時間",
-    },
-    {
-      value: 7200,
-      label: "2時間",
     },
     {
       value: 86400,
