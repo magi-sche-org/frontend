@@ -36,16 +36,11 @@ type EventTimeLengthType = {
 const EventMakePageBody: React.FC = () => {
   const router = useRouter();
 
-  // // イベント名
-  // const [EventNameText, setEventNameText] = useState<string>("");
-  // const [EventDescriptionText, setEventDescriptionText] = useState<string>("");
   // 時間
   const [StartTime, setStartTime] = useState<number>(10);
   const [EndTime, setEndTime] = useState<number>(17);
   // イベント時間の長さ
   const [EventTimeDuration, setEventTimeDuration] = useState<number>(1800);
-  // 1コマあたりの時間
-  const [TimePadding, setTimePadding] = useState<number>(1800);
   // 日付
   const [StartDay, setStartDay] = useState<Dayjs | undefined>(dayjs());
   const [EndDay, setEndDay] = useState<Dayjs | undefined>(dayjs().add(2, "h"));
@@ -75,41 +70,9 @@ const EventMakePageBody: React.FC = () => {
   };
 
   const Submit = () => {
-    // if (!EventNameText) {
-    //   enqueueSnackbar("イベント名を入力してください", {
-    //     autoHideDuration: 2000,
-    //     variant: "error",
-    //   });
-    //   return;
-    // }
-    (async () => {
-      try {
-        const startTimeList: string[] = createProposedStartTimeList(
-          StartDay,
-          EndDay,
-          TimePadding,
-          EventTimeDuration,
-          StartTime,
-          EndTime,
-        );
-
-        const response = await createEvent(
-          // EventNameText,
-          // EventDescriptionText,
-          EventTimeDuration,
-          startTimeList,
-        );
-
-        setEventStorage(response);
-        setShareURL(`https://${location.hostname}/guest/${response.id}`);
-        setModalOpen(true);
-      } catch (_) {
-        enqueueSnackbar("イベントの作成に失敗しました", {
-          autoHideDuration: 2000,
-          variant: "error",
-        });
-      }
-    })();
+    router.push(
+      "http://localhost:3000/preview?startday=2023-09-01&endday=2023-09-03&starttime=11&endtime=13&eventtimeduration=1800",
+    );
   };
 
   const copyTextToClipboard = (text: string) => {
@@ -165,7 +128,13 @@ const EventMakePageBody: React.FC = () => {
           {/* イベントの長さ */}
           <FormControl>
             <FormLabel>イベントの長さ</FormLabel>
-            <RadioGroup row>
+            <RadioGroup
+              row
+              value={EventTimeDuration}
+              onChange={(e) => {
+                setEventTimeDuration(Number(e.target.value));
+              }}
+            >
               {eventTimeLengthList.map((item) => {
                 return (
                   <FormControlLabel
