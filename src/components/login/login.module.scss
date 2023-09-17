@@ -1,0 +1,51 @@
+.wrapper {
+  position: fixed;
+  z-index: 99999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  .background {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    .services {
+      .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        line-height: 24px;
+        .icon {
+          width: 24px;
+          height: 24px;
+        }
+        .name {
+          height: 24px;
+          line-height: 24px;
+        }
+      }
+    }
+  }
+}

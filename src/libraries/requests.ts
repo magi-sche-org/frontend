@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from "@/libraries/config";
+import { API_ENDPOINT } from "@/libraries/env";
 
 const requests = async <T = unknown>(
   url: string,

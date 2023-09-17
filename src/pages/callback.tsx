@@ -1,7 +1,7 @@
-import { parseToken } from "@/libraries/authorization";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import { CALLBACK_URL_KEY } from "@/libraries/env";
 
 const Callback = () => {
   const router = useRouter();
@@ -11,14 +11,11 @@ const Callback = () => {
     (async () => {
       if (typeof window === "object") {
         try {
-          const user = await parseToken();
-          const url = localStorage.getItem("redirect_url") || "/";
-          localStorage.removeItem("redirect_url");
-          enqueueSnackbar(`${user.email}でログインしました`, {
+          //todo: temporary codeをバックエンドに投げる
+          enqueueSnackbar(`ログインしました`, {
             autoHideDuration: 5000,
             variant: "success",
           });
-          await router.replace(url);
         } catch (e) {
           if (e === "Error: login failed") {
             enqueueSnackbar(`ログインに失敗しました`, {
@@ -31,8 +28,8 @@ const Callback = () => {
               variant: "error",
             });
           }
-          const url = localStorage.getItem("redirect_url") || "/";
-          localStorage.removeItem("redirect_url");
+          const url = localStorage.getItem(CALLBACK_URL_KEY) ?? "/";
+          localStorage.removeItem(CALLBACK_URL_KEY);
           await router.replace(url);
         }
       }
