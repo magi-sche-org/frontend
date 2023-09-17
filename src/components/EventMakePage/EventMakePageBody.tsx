@@ -200,7 +200,7 @@ const EventMakePageBody: React.FC = () => {
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Stack>
-              <Typography variant="body1">開始日</Typography>
+              <Typography>開始日</Typography>
               <MobileDatePicker
                 format="YYYY/MM/DD"
                 value={StartDay}
@@ -208,7 +208,7 @@ const EventMakePageBody: React.FC = () => {
               />
             </Stack>
             <Stack>
-              <Typography variant="body1">終了日</Typography>
+              <Typography>終了日</Typography>
               <MobileDatePicker
                 format="YYYY/MM/DD"
                 value={EndDay}
@@ -253,14 +253,13 @@ const EventMakePageBody: React.FC = () => {
               value={shareURL}
             />
             <Stack spacing={2} sx={{ mb: 2 }}>
-              {" "}
               <Button
                 text="トップに戻る"
                 isPrimary={true}
                 onClick={() => {
                   router.push("/");
                 }}
-              />{" "}
+              />
               <Button
                 text="イベントを確認"
                 isPrimary={false}
