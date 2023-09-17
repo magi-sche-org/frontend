@@ -3,14 +3,14 @@ import { IRequestResult } from "@/@types/api/request";
 import { IEvent, IUserAnswerUnit } from "@/@types/api/event";
 
 const createEvent = async (
-  name: string,
-  description: string,
+  // name: string,
+  // description: string,
   duration: number,
   units: string[],
 ) => {
   const body = {
-    name,
-    description,
+    // name,
+    // description,
     unitSeconds: duration,
     units: units.map((unit) => ({ startsAt: unit })),
   };
