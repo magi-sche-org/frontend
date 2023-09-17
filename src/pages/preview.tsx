@@ -25,6 +25,7 @@ import { useSchedule } from "@/hooks/useSchedule";
 import { UserCalender } from "@/components/GuestPage/UserCalender";
 import { Stack } from "@mui/system";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { PageTitle } from "@/components/common/PageTitle";
 import { createEvent } from "@/libraries/api/events";
 import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
 import { InputSchedule } from "@/components/EventMakePage/InputSchedule";
@@ -130,9 +131,7 @@ export default function Home() {
         }}
         spacing={5}
       >
-        <Typography variant="h5" sx={{ textAlign: "center" }}>
-          作成プレビュー
-        </Typography>
+        <PageTitle>作成プレビュー</PageTitle>
         <FormControl variant="outlined">
           <InputLabel>イベント名</InputLabel>
           <OutlinedInput
