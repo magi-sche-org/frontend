@@ -14,12 +14,13 @@ import {
 import dayjs from "dayjs";
 import { FC } from "react";
 import Styles from "../GuestPage/GuestPageBody.module.scss";
-import { IAnswerList } from "./CandidateDatePreview";
+import "dayjs/locale/ja";
+import Checkbox from "@mui/material/Checkbox";
 
 type Props = {
   eventTimeDuration: IEventTimeDuration;
-  checkList: IAnswerList;
-  setCheckList: (checkList: IAnswerList) => void;
+  checkList: Record<string, boolean>;
+  setCheckList: (checkList: Record<string, boolean>) => void;
 };
 
 export const InputSchedule: FC<Props> = ({
@@ -27,7 +28,7 @@ export const InputSchedule: FC<Props> = ({
   setCheckList,
   eventTimeDuration,
 }) => {
-  console.log(checkList);
+  dayjs.locale("ja");
   return (
     <TableContainer>
       <Table>
@@ -43,51 +44,26 @@ export const InputSchedule: FC<Props> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.entries(checkList).map(([unitStartTime, availability]) => {
+          {Object.entries(checkList).map(([unitStartTime, checked]) => {
             const start = dayjs(unitStartTime);
             const end = dayjs(unitStartTime).add(eventTimeDuration, "seconds");
             return (
               <TableRow key={unitStartTime}>
                 <TableCell>
                   <Typography variant="body1">
-                    {start.format("MM/DD")}
-                    &emsp;
+                    {`${start.format("MM/DD")}(${start.format("ddd")}) `}
                     {start.format("HH:mm")}〜{end.format("HH:mm")}
                   </Typography>
                 </TableCell>
                 <TableCell className={`${Styles.wrapper}`}>
-                  <RadioGroup
-                    value={availability}
-                    onChange={(e) => {
+                  <Checkbox
+                    checked={checked}
+                    onChange={(_, value) => {
                       const newCheckList = { ...checkList };
-                      console.log(e.target.value, unitStartTime);
-                      newCheckList[unitStartTime] = e.target
-                        .value as IAvailability;
-                      console.log("set: ", newCheckList);
+                      newCheckList[unitStartTime] = value;
                       setCheckList(newCheckList);
                     }}
-                  >
-                    <FormControlLabel
-                      value="available"
-                      control={<Radio />}
-                      label="参加可能"
-                    />
-                    <FormControlLabel
-                      value="maybe"
-                      control={<Radio />}
-                      label="不明"
-                    />
-                    <FormControlLabel
-                      value="unavailable"
-                      control={<Radio />}
-                      label="参加不可"
-                    />
-                  </RadioGroup>
-                  {/* {checkList[unit.id]?.val && checkList[unit.id]?.block && (
-                    <span className={Styles.info}>
-                      <Typography variant="caption">重複</Typography>
-                    </span>
-                  )} */}
+                  />
                 </TableCell>
               </TableRow>
             );
