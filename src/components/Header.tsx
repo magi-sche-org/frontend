@@ -2,8 +2,6 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { login, revokeToken } from "@/libraries/authorization";
-import { getUserInfo } from "@/libraries/userInfo";
 import { Button, Container } from "@mui/material";
 import Head from "next/head";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -11,6 +9,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Stack } from "@mui/system";
 import { useRouter } from "next/router";
+import { Login } from "@/components/login";
 
 type props = {
   type?: "primary" | "secondary";
@@ -18,12 +17,13 @@ type props = {
 
 export const Header = ({ type = "primary" }: props) => {
   const router = useRouter();
-  const [isLogin, setIsLogin] = useState(!!getUserInfo());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginModalActive, setLoginModalActive] = useState(false);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    if (getUserInfo()) {
-      revokeToken().then(() => setIsLogin(false));
+    if (isLoggedIn) {
+      setIsLoggedIn(false);
     } else {
-      login();
+      setLoginModalActive(true);
     }
   };
   return (
@@ -55,7 +55,7 @@ export const Header = ({ type = "primary" }: props) => {
               color="inherit"
               onClick={handleMenu}
             >
-              {isLogin ? (
+              {isLoggedIn ? (
                 <LogoutIcon sx={{ color: "black" }} />
               ) : (
                 <AccountCircle sx={{ color: "black" }} />
@@ -64,6 +64,7 @@ export const Header = ({ type = "primary" }: props) => {
           </Stack>
         </Container>
       </AppBar>
+      {loginModalActive && <Login onClose={() => setLoginModalActive(false)} />}
     </>
   );
 };
