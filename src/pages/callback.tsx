@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import { CALLBACK_URL_KEY } from "@/libraries/env";
 
 const Callback = () => {
   const router = useRouter();
@@ -27,8 +28,8 @@ const Callback = () => {
               variant: "error",
             });
           }
-          const url = localStorage.getItem("redirect_url") ?? "/";
-          localStorage.removeItem("redirect_url");
+          const url = localStorage.getItem(CALLBACK_URL_KEY) ?? "/";
+          localStorage.removeItem(CALLBACK_URL_KEY);
           await router.replace(url);
         }
       }
