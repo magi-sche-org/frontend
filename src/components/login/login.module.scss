@@ -1,11 +1,18 @@
 .wrapper {
   position: fixed;
-  background: rgba(0, 0, 0, 0.5);
   z-index: 99999;
   left: 0;
   top: 0;
   width: 100vw;
   height: 100vh;
+  .background {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+  }
   .container {
     position: absolute;
     top: 50%;
