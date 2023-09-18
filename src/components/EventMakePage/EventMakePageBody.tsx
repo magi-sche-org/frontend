@@ -27,6 +27,7 @@ import { createEvent } from "@/libraries/api/events";
 import { PageTitle } from "../common/PageTitle";
 import { TimeSelect } from "./TimeSelect";
 import { IEventTimeDuration } from "@/@types/api/event";
+import { DateRangePicker } from "./DateRangePicker";
 
 type EventTimeLengthType = {
   value: IEventTimeDuration;
@@ -168,6 +169,7 @@ const EventMakePageBody: React.FC = () => {
           <Divider />
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateRangePicker />
             <Stack>
               <Typography>開始日</Typography>
               <MobileDatePicker
