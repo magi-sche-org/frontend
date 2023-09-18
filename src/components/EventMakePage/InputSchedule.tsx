@@ -16,6 +16,7 @@ import { FC } from "react";
 import Styles from "../GuestPage/GuestPageBody.module.scss";
 import "dayjs/locale/ja";
 import Checkbox from "@mui/material/Checkbox";
+import { Stack } from "@mui/system";
 
 type Props = {
   eventTimeDuration: IEventTimeDuration;
@@ -31,6 +32,10 @@ export const InputSchedule: FC<Props> = ({
   dayjs.locale("ja");
   return (
     <TableContainer>
+      <Stack spacing={1}>
+        <Typography variant="h5">候補編集</Typography>
+        <Typography>チェックを外すとその候補が無効になります</Typography>
+      </Stack>
       <Table>
         <TableHead>
           <TableRow>

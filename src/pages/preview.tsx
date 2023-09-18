@@ -64,6 +64,8 @@ export default function Home() {
   const [shareURL, setShareURL] = useState("");
   // イベント名
   const [eventName, setEventName] = useState("");
+  // イベント説明
+  const [eventDescription, setEventDescription] = useState("");
   // 確定通知
   const [isConfirmNotice, setIsConfirmNotice] = useState(false);
   // 参加人数
@@ -112,7 +114,7 @@ export default function Home() {
     console.log("submit: ", filteringStartTimeList);
     const response = await createEvent(
       eventName,
-      "",
+      eventDescription,
       eventTimeDuration,
       filteringStartTimeList,
     );
@@ -132,28 +134,41 @@ export default function Home() {
         spacing={5}
       >
         <PageTitle>作成プレビュー</PageTitle>
-        <FormControl variant="outlined">
-          <InputLabel>イベント名</InputLabel>
-          <OutlinedInput
-            type="text"
-            autoFocus
-            value={eventName}
+        <Stack spacing={2}>
+          <Typography variant="h5">イベント情報</Typography>
+          <FormControl variant="outlined">
+            <InputLabel>イベント名</InputLabel>
+            <OutlinedInput
+              type="text"
+              autoFocus
+              value={eventName}
+              onChange={(e) => {
+                setEventName(e.target.value);
+              }}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => {
+                      setEventName("");
+                    }}
+                  >
+                    <HighlightOffIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+          <TextField
+            value={eventDescription}
             onChange={(e) => {
-              setEventName(e.target.value);
+              setEventDescription(e.target.value);
             }}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => {
-                    setEventName("");
-                  }}
-                >
-                  <HighlightOffIcon />
-                </IconButton>
-              </InputAdornment>
-            }
+            rows={2}
+            label="イベントの説明"
+            variant="outlined"
+            multiline
           />
-        </FormControl>
+        </Stack>
         <InputSchedule
           eventTimeDuration={eventTimeDuration}
           checkList={startTimeList}
@@ -163,7 +178,7 @@ export default function Home() {
           <Stack spacing={1}>
             <Typography variant="h5">日付確定通知</Typography>
             <Typography>
-              指定人数以上の回答があった場合に、メールに日付の確定通知を行います。
+              指定人数以上の回答があった場合に、メールに日付の確定通知を行います
             </Typography>
           </Stack>
           <FormGroup>
