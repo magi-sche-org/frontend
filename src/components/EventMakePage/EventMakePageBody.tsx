@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useState } from "react";
-import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Button } from "../Button";
@@ -21,12 +21,10 @@ import { ModalStyle } from "../ModalStyle";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { setEventStorage } from "@/libraries/eventStorage";
-import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
-import { createEvent } from "@/libraries/api/events";
 import { PageTitle } from "../common/PageTitle";
 import { TimeSelect } from "./TimeSelect";
 import { IEventTimeDuration } from "@/@types/api/event";
+import { DateRangePicker } from "./DateRangePicker/DateRangePicker";
 
 type EventTimeLengthType = {
   value: IEventTimeDuration;
@@ -43,15 +41,17 @@ const EventMakePageBody: React.FC = () => {
   const [EventTimeDuration, setEventTimeDuration] = useState<number>(1800);
   // 日付
   const [StartDay, setStartDay] = useState<Dayjs | undefined>(dayjs());
-  const [EndDay, setEndDay] = useState<Dayjs | undefined>(dayjs().add(2, "h"));
+  const [EndDay, setEndDay] = useState<Dayjs | undefined>(
+    dayjs().add(3, "day"),
+  );
   // モーダル
   const [ModalOpen, setModalOpen] = useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const [shareURL, setShareURL] = useState("");
-  const handleStartDay = (newValue: Dayjs | null) => {
+  const handleStartDay = (newValue: Dayjs | undefined) => {
     setStartDay(newValue || undefined);
-    if (newValue != null && EndDay != null) {
+    if (newValue != undefined && EndDay != undefined) {
       // 開始日より終了日が小さければ開始日で終了日を更新
       if (newValue > EndDay) {
         setEndDay(newValue);
@@ -59,9 +59,9 @@ const EventMakePageBody: React.FC = () => {
     }
   };
 
-  const handleEndDay = (newValue: Dayjs | null) => {
+  const handleEndDay = (newValue: Dayjs | undefined) => {
     setEndDay(newValue || undefined);
-    if (newValue != null && StartDay != null) {
+    if (newValue != undefined && StartDay != undefined) {
       // 終了より開始日が小さければ開始日で終了日を更新
       if (newValue < StartDay) {
         setStartDay(newValue);
@@ -166,24 +166,13 @@ const EventMakePageBody: React.FC = () => {
         {/* 日付ピッカー */}
         <Stack spacing={3}>
           <Divider />
-
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Stack>
-              <Typography>開始日</Typography>
-              <MobileDatePicker
-                format="YYYY/MM/DD"
-                value={StartDay}
-                onChange={handleStartDay}
-              />
-            </Stack>
-            <Stack>
-              <Typography>終了日</Typography>
-              <MobileDatePicker
-                format="YYYY/MM/DD"
-                value={EndDay}
-                onChange={handleEndDay}
-              />
-            </Stack>
+            <DateRangePicker
+              startDay={StartDay}
+              endDay={EndDay}
+              setStartDay={handleStartDay}
+              setEndDay={handleEndDay}
+            />
           </LocalizationProvider>
         </Stack>
         <Divider />
