@@ -82,6 +82,7 @@ export const DayCell: FC<Props> = ({
   };
 
   const stylesObj: SxProps<Theme> = {
+    minWidth: "50px",
     ...styles,
     "&:hover": {
       ...styles,

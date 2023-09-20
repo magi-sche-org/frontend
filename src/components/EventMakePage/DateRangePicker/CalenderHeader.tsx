@@ -14,7 +14,9 @@ export const CalenderHeader: FC = () => {
         return (
           <Grid key={item} item xs={1}>
             <Stack alignItems="center">
-              <Button sx={{ color: "black" }}>{item}</Button>
+              <Button size="small" sx={{ color: "black" }}>
+                {item}
+              </Button>
             </Stack>
           </Grid>
         );
