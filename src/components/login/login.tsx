@@ -12,7 +12,7 @@ type props = {
 const Login = ({ onClose }: props) => {
   const onClick = (service: AuthorizationService) => {
     localStorage.setItem(CALLBACK_URL_KEY, location.pathname);
-    location.href = `${API_ENDPOINT}/oatuh/${service.id}`;
+    location.href = `${API_ENDPOINT}/oauth2/${service.id}`;
   };
   return (
     <div className={Styles.wrapper}>
