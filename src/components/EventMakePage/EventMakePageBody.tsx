@@ -8,11 +8,12 @@ import {
   Modal,
   Radio,
   RadioGroup,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -49,6 +50,17 @@ const EventMakePageBody: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [shareURL, setShareURL] = useState("");
+
+  const handleStartTime = (time: number) => {
+    localStorage.setItem("magiScheStartTime", String(time));
+    setStartTime(time);
+  };
+
+  const handleEndTime = (time: number) => {
+    localStorage.setItem("magiScheEndTime", String(time));
+    setEndTime(time);
+  };
+
   const handleStartDay = (newValue: Dayjs | undefined) => {
     setStartDay(newValue || undefined);
     if (newValue != undefined && endDay != undefined) {
@@ -70,13 +82,11 @@ const EventMakePageBody: React.FC = () => {
   };
 
   const submit = () => {
+    const startDayStr = startDay?.format("YYYY-MM-DD");
+    const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
     // TODO:
     router.push(
-      `http://localhost:3000/preview?startday=${startDay?.format(
-        "YYYY-MM-DD",
-      )}&endday=${endDay?.format(
-        "YYYY-MM-DD",
-      )}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
+      `http://localhost:3000/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
   };
 
@@ -96,6 +106,16 @@ const EventMakePageBody: React.FC = () => {
         });
       });
   };
+
+  /**
+   * 過去選択した時間があればそれを反映
+   */
+  useEffect(() => {
+    const startTimeStr = localStorage.getItem("magiScheStartTime");
+    const endTimeStr = localStorage.getItem("magiScheEndTime");
+    if (startTimeStr) setStartTime(Number(startTimeStr));
+    if (endTimeStr) setEndTime(Number(endTimeStr));
+  }, []);
 
   const eventTimeLengthList: EventTimeLengthType[] = [
     {
@@ -121,11 +141,11 @@ const EventMakePageBody: React.FC = () => {
           <Stack spacing={0.5}>
             <FormLabel>時間帯</FormLabel>
             <Stack direction="row" spacing={4}>
-              <TimeSelect time={startTime} setTime={setStartTime} />
+              <TimeSelect time={startTime} handleTime={handleStartTime} />
               <Typography variant="h6">〜</Typography>
               <TimeSelect
                 time={endTime}
-                setTime={setEndTime}
+                handleTime={handleEndTime}
                 underTime={startTime}
               />
             </Stack>
