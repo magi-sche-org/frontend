@@ -35,13 +35,13 @@ const EventMakePageBody: React.FC = () => {
   const router = useRouter();
 
   // 時間
-  const [StartTime, setStartTime] = useState<number>(10);
-  const [EndTime, setEndTime] = useState<number>(17);
+  const [startTime, setStartTime] = useState<number>(10);
+  const [endTime, setEndTime] = useState<number>(17);
   // イベント時間の長さ
-  const [EventTimeDuration, setEventTimeDuration] = useState<number>(1800);
+  const [eventTimeDuration, setEventTimeDuration] = useState<number>(1800);
   // 日付
-  const [StartDay, setStartDay] = useState<Dayjs | undefined>(dayjs());
-  const [EndDay, setEndDay] = useState<Dayjs | undefined>(
+  const [startDay, setStartDay] = useState<Dayjs | undefined>(dayjs());
+  const [endDay, setEndDay] = useState<Dayjs | undefined>(
     dayjs().add(3, "day"),
   );
   // モーダル
@@ -51,9 +51,9 @@ const EventMakePageBody: React.FC = () => {
   const [shareURL, setShareURL] = useState("");
   const handleStartDay = (newValue: Dayjs | undefined) => {
     setStartDay(newValue || undefined);
-    if (newValue != undefined && EndDay != undefined) {
+    if (newValue != undefined && endDay != undefined) {
       // 開始日より終了日が小さければ開始日で終了日を更新
-      if (newValue > EndDay) {
+      if (newValue > endDay) {
         setEndDay(newValue);
       }
     }
@@ -61,17 +61,22 @@ const EventMakePageBody: React.FC = () => {
 
   const handleEndDay = (newValue: Dayjs | undefined) => {
     setEndDay(newValue || undefined);
-    if (newValue != undefined && StartDay != undefined) {
+    if (newValue != undefined && startDay != undefined) {
       // 終了より開始日が小さければ開始日で終了日を更新
-      if (newValue < StartDay) {
+      if (newValue < startDay) {
         setStartDay(newValue);
       }
     }
   };
 
-  const Submit = () => {
+  const submit = () => {
+    // TODO:
     router.push(
-      "http://localhost:3000/preview?startday=2023-09-01&endday=2023-09-03&starttime=11&endtime=13&eventtimeduration=1800",
+      `http://localhost:3000/preview?startday=${startDay?.format(
+        "YYYY-MM-DD",
+      )}&endday=${endDay?.format(
+        "YYYY-MM-DD",
+      )}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
   };
 
@@ -116,12 +121,12 @@ const EventMakePageBody: React.FC = () => {
           <Stack spacing={0.5}>
             <FormLabel>時間帯</FormLabel>
             <Stack direction="row" spacing={4}>
-              <TimeSelect time={StartTime} setTime={setStartTime} />
+              <TimeSelect time={startTime} setTime={setStartTime} />
               <Typography variant="h6">〜</Typography>
               <TimeSelect
-                time={EndTime}
+                time={endTime}
                 setTime={setEndTime}
-                underTime={StartTime}
+                underTime={startTime}
               />
             </Stack>
           </Stack>
@@ -130,7 +135,7 @@ const EventMakePageBody: React.FC = () => {
             <FormLabel>イベントの長さ</FormLabel>
             <RadioGroup
               row
-              value={EventTimeDuration}
+              value={eventTimeDuration}
               onChange={(e) => {
                 setEventTimeDuration(Number(e.target.value));
               }}
@@ -168,8 +173,8 @@ const EventMakePageBody: React.FC = () => {
           <Divider />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateRangePicker
-              startDay={StartDay}
-              endDay={EndDay}
+              startDay={startDay}
+              endDay={endDay}
               setStartDay={handleStartDay}
               setEndDay={handleEndDay}
             />
@@ -177,7 +182,7 @@ const EventMakePageBody: React.FC = () => {
         </Stack>
         <Divider />
         <Stack direction="row">
-          <Button text="決定" isPrimary={true} onClick={Submit} />
+          <Button text="決定" isPrimary={true} onClick={submit} />
         </Stack>
       </Stack>
 
