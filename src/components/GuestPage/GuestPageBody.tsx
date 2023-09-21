@@ -35,7 +35,7 @@ type props = {
   event: IEvent;
 };
 
-type IAnswerList = {
+export type IAnswerList = {
   [key: string]: {
     val: IAvailability;
     block: boolean;
