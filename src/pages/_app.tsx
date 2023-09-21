@@ -1,21 +1,27 @@
-import { DistinguishHeader } from "@/components/Header/DistinguishHeader";
+import { Header } from "@/components/Header/Header";
 import "@/styles/globals.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
-import { useEffect, useRef } from "react";
 import Head from "next/head";
 import { theme } from "@/theme/theme";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const init = useRef(false);
-  useEffect(() => {
-    if (typeof window !== "object" || init.current) return;
-    init.current = true;
-  }, []);
-
   const router = useRouter();
+
+  const headerType = (() => {
+    if (router.asPath === "/") {
+      return "secondary";
+    }
+    if (
+      router.asPath.indexOf("guest") === 1 ||
+      router.asPath.indexOf("detail") === 1
+    ) {
+      return "primary";
+    }
+    return undefined;
+  })();
 
   return (
     <>
@@ -30,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <SnackbarProvider>
-          <DistinguishHeader path={router.asPath} />
+          {headerType && <Header type={headerType} />}
           <Component {...pageProps} />
           <CssBaseline />
         </SnackbarProvider>

@@ -2,8 +2,6 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { login, revokeToken } from "@/libraries/authorization";
-import { getUserInfo } from "@/libraries/userInfo";
 import { Button, Container } from "@mui/material";
 import Head from "next/head";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -11,15 +9,21 @@ import { useState } from "react";
 import Image from "next/image";
 import { Stack } from "@mui/system";
 import { useRouter } from "next/router";
+import { Login } from "@/components/login";
 
-export const Header = () => {
+type props = {
+  type?: "primary" | "secondary";
+};
+
+export const Header = ({ type = "primary" }: props) => {
   const router = useRouter();
-  const [isLogin, setIsLogin] = useState(!!getUserInfo());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginModalActive, setLoginModalActive] = useState(false);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    if (getUserInfo()) {
-      revokeToken().then(() => setIsLogin(false));
+    if (isLoggedIn) {
+      setIsLoggedIn(false);
     } else {
-      login();
+      setLoginModalActive(true);
     }
   };
   return (
@@ -29,12 +33,12 @@ export const Header = () => {
       </Head>
       <AppBar
         position="static"
-        sx={{ backgroundColor: "secondary.main", boxShadow: 0, px: 2, py: 0.8 }}
+        sx={{ backgroundColor: `${type}.main`, boxShadow: 0, px: 2, py: 0.8 }}
       >
         <Container disableGutters>
           <Stack direction="row" justifyContent="space-around">
             <IconButton edge="start" size="large" disabled>
-              <AccountCircle sx={{ color: "secondary.main" }} />
+              <AccountCircle sx={{ color: `${type}.main` }} />
             </IconButton>
             <Button onClick={() => router.push("/")}>
               <Image
@@ -51,10 +55,8 @@ export const Header = () => {
               color="inherit"
               onClick={handleMenu}
             >
-              {isLogin ? (
-                <>
-                  <LogoutIcon sx={{ color: "black" }} />
-                </>
+              {isLoggedIn ? (
+                <LogoutIcon sx={{ color: "black" }} />
               ) : (
                 <AccountCircle sx={{ color: "black" }} />
               )}
@@ -62,6 +64,7 @@ export const Header = () => {
           </Stack>
         </Container>
       </AppBar>
+      {loginModalActive && <Login onClose={() => setLoginModalActive(false)} />}
     </>
   );
 };

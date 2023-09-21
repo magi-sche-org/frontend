@@ -1,7 +1,7 @@
 import type {
   AuthorizationError,
   AuthorizationTokens,
-} from "@/@types/authorization";
+} from "@/@types/legacy-authorization";
 import type {
   DateSchedule,
   DateTimeSchedule,
