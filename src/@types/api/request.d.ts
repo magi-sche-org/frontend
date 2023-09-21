@@ -1,6 +1,6 @@
 export type IRequestResult<T> =
   | {
-      statusCode: 200;
+      statusCode: 200 | 201;
       data: T;
     }
   | {

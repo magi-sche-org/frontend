@@ -22,13 +22,17 @@ const createEvent = async (
     },
     body: JSON.stringify(body),
   });
-  if (res.statusCode !== 200) throw new Error(res.message);
+  if (res.statusCode !== 200 && res.statusCode !== 201)
+    // @ts-ignore
+    throw new Error(res.message);
   return res.data;
 };
 
 const getEvent = async (id: string) => {
   const res = await requests<IRequestResult<IEvent>>(`/events/${id}`);
-  if (res.statusCode !== 200) throw new Error(res.message);
+  if (res.statusCode !== 200 && res.statusCode !== 201)
+    // @ts-ignore
+    throw new Error(res.message);
   return res.data;
 };
 
@@ -53,7 +57,9 @@ const createAnswer = async (
       body: JSON.stringify(body),
     },
   );
-  if (res.statusCode !== 200) throw new Error(res.message);
+  if (res.statusCode !== 200 && res.statusCode !== 201)
+    // @ts-ignore
+    throw new Error(res.message);
   return res.data;
 };
 
