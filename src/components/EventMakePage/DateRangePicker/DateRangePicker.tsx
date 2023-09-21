@@ -34,6 +34,8 @@ export const DateRangePicker: FC<Props> = ({
 
   // startDay・endDayがどちらか一方が存在しない
   const isUndefinedSelectedDay = startDay === undefined || endDay === undefined;
+  // startDay・endDayが同じ日付
+  const isSameDay = startDay?.isSame(endDay) ?? false;
 
   /**
    * startDayとendDayの選択handler
@@ -101,6 +103,7 @@ export const DateRangePicker: FC<Props> = ({
         calenderArray={calenderArray}
         handleSelectDay={handleSelectDay}
         isUndefinedSelectedDay={isUndefinedSelectedDay}
+        isSameDay={isSameDay}
       />
     </Stack>
   );

@@ -9,6 +9,7 @@ type Props = {
   calenderArray: CalenderItemType[][];
   handleSelectDay: (day: Dayjs) => void;
   isUndefinedSelectedDay: boolean;
+  isSameDay: boolean;
 };
 
 /**
@@ -22,6 +23,7 @@ export const CalenderBody: FC<Props> = ({
   calenderArray,
   handleSelectDay,
   isUndefinedSelectedDay,
+  isSameDay,
 }) => {
   return (
     <Stack>
@@ -37,6 +39,7 @@ export const CalenderBody: FC<Props> = ({
                     calenderItem={day}
                     handleSelectDay={handleSelectDay}
                     isUndefinedSelectedDay={isUndefinedSelectedDay}
+                    isSameDay={isSameDay}
                   />
                 </Grid>
               );
