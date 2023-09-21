@@ -70,13 +70,11 @@ const EventMakePageBody: React.FC = () => {
   };
 
   const submit = () => {
+    const startDayStr = startDay?.format("YYYY-MM-DD");
+    const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
     // TODO:
     router.push(
-      `http://localhost:3000/preview?startday=${startDay?.format(
-        "YYYY-MM-DD",
-      )}&endday=${endDay?.format(
-        "YYYY-MM-DD",
-      )}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
+      `http://localhost:3000/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
   };
 
