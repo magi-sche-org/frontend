@@ -102,8 +102,7 @@ const DetailPageBody = ({ event }: props) => {
                     <TableRow sx={determineRowColor(unit)}>
                       <TableCell>
                         <Typography variant="body1">
-                          {start.format("MM / DD[&emsp;]HH:mm")}〜
-                          {end.format("HH:mm")}
+                          {start.format("MM / DD HH:mm")}〜{end.format("HH:mm")}
                         </Typography>
                       </TableCell>
                       <TableCell>

@@ -237,8 +237,7 @@ const GuestPageBody = ({ event }: props) => {
                   <TableRow key={unit.id}>
                     <TableCell>
                       <Typography variant="body1">
-                        {start.format("MM / DD[&emsp;]HH:mm")}〜
-                        {end.format("HH:mm")}
+                        {start.format("MM / DD HH:mm")}〜{end.format("HH:mm")}
                       </Typography>
                     </TableCell>
                     <TableCell className={`${Styles.wrapper}`}>
