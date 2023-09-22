@@ -57,9 +57,13 @@ export const Header = ({ type = "primary" }: props) => {
               onClick={handleMenu}
             >
               {user?.isRegistered ? (
-                <LogoutIcon sx={{ color: "black" }} />
+                <LogoutIcon
+                  sx={{ color: type === "primary" ? "white" : "black" }}
+                />
               ) : (
-                <AccountCircle sx={{ color: "black" }} />
+                <AccountCircle
+                  sx={{ color: type === "primary" ? "white" : "black" }}
+                />
               )}
             </IconButton>
           </Stack>
