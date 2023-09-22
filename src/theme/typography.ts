@@ -1,6 +1,9 @@
 import { TypographyOptions } from "@mui/material/styles/createTypography";
-import { Quicksand } from "@next/font/google";
 
 export const typography: TypographyOptions = {
-  fontFamily: ["Quicksand", "sans-serif"].join(","),
+  fontFamily: ["Noto Sans JP ", "sans-serif"].join(","),
+  fontWeightLight: 300,
+  fontWeightRegular: 400,
+  fontWeightMedium: 500,
+  fontWeightBold: 700,
 };
