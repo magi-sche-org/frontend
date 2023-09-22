@@ -28,10 +28,10 @@ const Callback = () => {
               variant: "error",
             });
           }
-          const url = localStorage.getItem(CALLBACK_URL_KEY) ?? "/";
-          localStorage.removeItem(CALLBACK_URL_KEY);
-          await router.replace(url);
         }
+        const url = localStorage.getItem(CALLBACK_URL_KEY) ?? "/";
+        localStorage.removeItem(CALLBACK_URL_KEY);
+        await router.replace(url);
       }
     })();
   }, [setMessage, router]);
