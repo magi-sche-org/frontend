@@ -21,15 +21,14 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { UserCalender } from "./UserCalender";
 import { getEventStorage, setEventStorage } from "@/libraries/eventStorage";
-import { Schedule } from "@/@types/event";
-import { getSchedules } from "@/libraries/calendar";
-import { typeGuard } from "@/libraries/typeGuard";
-import { date2time } from "@/libraries/time";
 import Styles from "./GuestPageBody.module.scss";
 import crypto from "crypto-js";
 import { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
 import dayjs from "dayjs";
 import { createAnswer } from "@/libraries/api/events";
+import { useCalendars } from "@/hooks/calendars";
+import { useUser } from "@/hooks/user";
+import { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
 
 type props = {
   event: IEvent;
@@ -50,6 +49,9 @@ const hashToken = (hash: string): string => {
 
 const GuestPageBody = ({ event }: props) => {
   const router = useRouter();
+  const user = useUser();
+  const { calendars } = useCalendars();
+  console.log(user, calendars);
   const [NameText, setNameText] = useState<string>(getDefaultName(event));
   const [note, setNote] = useState<string>(getMyAnswer(event)?.note || "");
   const [checklist, setChecklist] = useState<IAnswerList>(() => {
@@ -74,80 +76,38 @@ const GuestPageBody = ({ event }: props) => {
     return result;
   });
   const { enqueueSnackbar } = useSnackbar();
-  const [schedules, setSchedules] = useState<
-    { [key: string]: Schedule[] } | undefined | null
-  >(undefined);
   const init = useRef(false);
   const isAnswered = getEventStorage().reduce(
     (pv: boolean, val) => (val.yourAnswerId && val.id === event.id) || pv,
     false,
   );
   useEffect(() => {
-    if (typeof window !== "object" || init.current) return;
+    if (typeof window !== "object" || init.current || !calendars) return;
     init.current = true;
-    (async () => {
-      try {
-        const raw = await getSchedules(new Date());
-        const data = raw.reduce(
-          (pv, val) => {
-            const date = new Date(
-              typeGuard.DateTimeSchedule(val)
-                ? val.start.dateTime
-                : val.start.date,
-            );
-            const key = `${date.getMonth() + 1}/${date.getDate()}`;
-            if (!pv[key]) {
-              pv[key] = [];
-            }
-            pv[key].push(val);
+    const list = event.units.reduce((pv, unit) => {
+      const start = dayjs(unit.startsAt);
+      const end = dayjs(unit.startsAt).add(event.unitDuration, "seconds");
+      const block = calendars.reduce((pv, provider) => {
+        if (pv) return true;
+        return provider.events.reduce((pv, schedule) => {
+          if (pv) return true;
+          if (start.isAfter(schedule.end) || schedule.start.isAfter(end)) {
             return pv;
-          },
-          {} as { [key: string]: Schedule[] },
-        );
-        setSchedules(data);
-        const list = event.units.reduce((pv, unit) => {
-          const start = dayjs(unit.startsAt);
-          const end = dayjs(unit.startsAt).add(event.unitDuration, "seconds");
-          const block = raw.reduce((pv, val) => {
-            const [start_, end_] = (() => {
-              if (typeGuard.DateTimeSchedule(val)) {
-                return [dayjs(val.start.dateTime), dayjs(val.end.dateTime)];
-              }
-              return [dayjs(val.start.date), dayjs(val.end.date)];
-            })();
-            if (start.isAfter(end_) || start_.isAfter(end)) {
-              return pv;
-            }
-            return true;
-          }, false);
-          const current = checklist[unit.id];
-          pv[unit.id] = {
-            id: unit.id,
-            startsAt: unit.startsAt,
-            val: current?.val ?? (block ? "unavailable" : "available"),
-            block,
-          };
-          return pv;
-        }, {} as IAnswerList);
-        setChecklist(list);
-      } catch (e) {
-        setSchedules(null);
-        const list = event.units.reduce((pv, ts) => {
-          pv[ts.id] = {
-            id: ts.id,
-            startsAt: ts.startsAt,
-            val: checklist[ts.id]?.val ?? true,
-            block: false,
-          };
-          return pv;
-        }, {} as IAnswerList);
-        setChecklist(list);
-      }
-    })();
-  }, [setSchedules]);
-  if (schedules === undefined) {
-    return <></>;
-  }
+          }
+          return true;
+        }, false);
+      }, false);
+      const current = checklist[unit.id];
+      pv[unit.id] = {
+        id: unit.id,
+        startsAt: unit.startsAt,
+        val: current?.val ?? (block ? "unavailable" : "available"),
+        block,
+      };
+      return pv;
+    }, {} as IAnswerList);
+    setChecklist(list);
+  }, [calendars]);
 
   const Submit = async () => {
     // Submit validation
@@ -179,7 +139,7 @@ const GuestPageBody = ({ event }: props) => {
 
   return (
     <>
-      {schedules && <UserCalender schedules={schedules} />}
+      {calendars && <UserCalender calendars={calendars} />}
       {/* タイトル・名前入力 */}
       <Stack direction="column" sx={{ p: 3 }}>
         <Stack sx={{ mx: 10, mb: 5, mt: 1 }}>
