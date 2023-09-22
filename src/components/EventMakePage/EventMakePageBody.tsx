@@ -74,11 +74,7 @@ const EventMakePageBody: React.FC = () => {
     const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
     // TODO:
     router.push(
-      `/preview?startday=${startDay?.format(
-        "YYYY-MM-DD",
-      )}&endday=${endDay?.format(
-        "YYYY-MM-DD",
-      )}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
+      `/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
   };
 
