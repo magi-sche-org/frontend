@@ -120,7 +120,7 @@ export default function Home() {
     );
 
     setEventStorage(response);
-    setShareURL(`https://${location.hostname}/guest/${response.id}`);
+    setShareURL(`${location.origin}/guest/${response.id}`);
     setShowModal(true);
   };
   return (
