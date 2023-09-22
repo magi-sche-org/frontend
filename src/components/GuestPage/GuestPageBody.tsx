@@ -139,7 +139,9 @@ const GuestPageBody = ({ event }: props) => {
 
   return (
     <>
-      {calendars && <UserCalender calendars={calendars} />}
+      {user?.isRegistered && calendars && (
+        <UserCalender calendars={calendars} />
+      )}
       {/* タイトル・名前入力 */}
       <Stack direction="column" sx={{ p: 3 }}>
         <Stack sx={{ mx: 10, mb: 5, mt: 1 }}>

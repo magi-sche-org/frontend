@@ -32,6 +32,7 @@ import { setEventStorage } from "@/libraries/eventStorage";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useCalendars } from "@/hooks/calendars";
+import { useUser } from "@/hooks/user";
 
 export type IAnswerList = {
   // key: Dayjsをstring化したもの
@@ -58,6 +59,7 @@ export default function Home() {
       };
     }, [searchParams]);
   const { calendars } = useCalendars();
+  const { user } = useUser();
   // モーダル
   const [showModal, setShowModal] = useState<boolean>(false);
   // 共有用URL
@@ -125,7 +127,9 @@ export default function Home() {
   };
   return (
     <>
-      {calendars && <UserCalender calendars={calendars} />}
+      {user?.isRegistered && calendars && (
+        <UserCalender calendars={calendars} />
+      )}
       <Stack
         sx={{
           p: 3,
