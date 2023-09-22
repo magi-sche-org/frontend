@@ -72,7 +72,7 @@ const EventMakePageBody: React.FC = () => {
   const submit = () => {
     // TODO:
     router.push(
-      `http://localhost:3000/preview?startday=${startDay?.format(
+      `/preview?startday=${startDay?.format(
         "YYYY-MM-DD",
       )}&endday=${endDay?.format(
         "YYYY-MM-DD",
