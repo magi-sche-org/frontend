@@ -8,7 +8,7 @@ const timeList = [
 
 type Props = {
   time: number;
-  setTime: Dispatch<SetStateAction<number>>;
+  handleTime: (time: number) => void;
   underTime?: number;
 };
 
@@ -16,10 +16,10 @@ type Props = {
  *  時間選択コンポーネント
  *
  *  @param time 選択されている時間
- *  @param setTime セットする時間
+ *  @param handleTime 時間を更新するhandler
  *  @param underTime 以下の時間を選択できないようにする
  */
-export const TimeSelect: FC<Props> = ({ time, setTime, underTime }) => {
+export const TimeSelect: FC<Props> = ({ time, handleTime, underTime }) => {
   // 開始時間よりも前の時間を選択できないようにする
   const editTimeList = underTime
     ? timeList.filter((item) => {
@@ -32,7 +32,7 @@ export const TimeSelect: FC<Props> = ({ time, setTime, underTime }) => {
   // 開始時間よりも前の時間を選択を選択した場合、開始時間+1に合わせる
   useEffect(() => {
     if (underTime && time < underTime) {
-      setTime(isNonItem ? underTime : underTime + 1);
+      handleTime(isNonItem ? underTime : underTime + 1);
     }
   }, [underTime]);
 
@@ -41,7 +41,7 @@ export const TimeSelect: FC<Props> = ({ time, setTime, underTime }) => {
       value={String(time)}
       variant="standard"
       onChange={(e: SelectChangeEvent) => {
-        setTime(Number(e.target.value));
+        handleTime(Number(e.target.value));
       }}
       sx={{
         minWidth: 80,
