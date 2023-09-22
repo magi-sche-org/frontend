@@ -131,9 +131,18 @@ const groupScheduleByDate = (
   const result: { [key: string]: UserCalendarItem[] } = {};
   for (const provider of calendars) {
     for (const schedule of provider.events) {
-      const key = schedule.start.format("M/D");
-      result[key] ??= [];
-      result[key].push(schedule);
+      if (schedule.isAllDay) {
+        const duration = Math.abs(schedule.end.diff(schedule.start, "day")) - 1;
+        for (let i = 0; i < duration; i++) {
+          const key = schedule.start.add(i, "day").format("M/D");
+          result[key] ??= [];
+          result[key].push(schedule);
+        }
+      } else {
+        const key = schedule.start.format("M/D");
+        result[key] ??= [];
+        result[key].push(schedule);
+      }
     }
   }
   return result;
