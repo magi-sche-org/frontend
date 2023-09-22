@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User } from "@/@types/user";
 import { requests } from "@/libraries/requests";
 import { IRequestResult } from "@/@types/api/request";
 
 const useUser = () => {
   const [user, setUser] = useState<User | undefined>();
+  const ref = useRef(false);
   useEffect(() => {
+    if (ref.current) return;
+    ref.current = true;
     void (async () => {
       setUser(await getUser());
     })();
