@@ -11,7 +11,7 @@ const createEvent = async (
   const body = {
     name,
     description,
-    unitSeconds: duration,
+    unitDuration: duration,
     units: units.map((unit) => ({ startsAt: unit })),
   };
   console.log(body);
