@@ -2,12 +2,6 @@ import type {
   AuthorizationError,
   AuthorizationTokens,
 } from "@/@types/legacy-authorization";
-import type {
-  DateSchedule,
-  DateTimeSchedule,
-  Schedule,
-  ScheduleResponse,
-} from "@/@types/event";
 import type { userInfo } from "@/@types/userInfo";
 import { ApiError } from "@/@types/error";
 import type { IEventTimeDuration, IHourOfDay } from "../@types/api/event";
@@ -28,28 +22,11 @@ const typeGuard = {
     (i as AuthorizationTokens).token_type === "Bearer",
   AuthorizationError: (i: unknown): i is AuthorizationError =>
     typeof i === "object" && objectVerify(i, ["error", "state"]),
-  ScheduleResponse: (i: unknown): i is ScheduleResponse =>
-    typeof i === "object" &&
-    objectVerify(i, [
-      "accessRole",
-      "defaultReminders",
-      "etag",
-      "items",
-      "kind",
-      "summary",
-      "timeZone",
-      "updated",
-    ]),
   userInfo: (i: unknown): i is userInfo =>
     typeof i === "object" &&
     objectVerify(i, ["id", "email", "verified_email", "picture"]),
   errorResponse: (i: unknown): i is ApiError =>
     typeof i === "object" && objectVerify(i, ["error"]),
-  DateTimeSchedule: (i: unknown): i is DateTimeSchedule =>
-    typeof i === "object" &&
-    objectVerify((i as Schedule).start, ["dateTime", "timeZone"]),
-  DateSchedule: (i: unknown): i is DateSchedule =>
-    typeof i === "object" && objectVerify((i as Schedule).start, ["date"]),
   HourOfDay: (v: number): v is IHourOfDay =>
     // TODO: これどーすんの
     (HourOfDay as unknown as number[]).includes(v),

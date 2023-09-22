@@ -26,6 +26,9 @@
     flex-direction: column;
     gap: 16px;
     .services {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
       .button {
         display: flex;
         justify-content: center;
@@ -37,6 +40,7 @@
         background: white;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
         line-height: 24px;
+        gap: 8px;
         .icon {
           width: 24px;
           height: 24px;

@@ -8,6 +8,11 @@ const services: AuthorizationService[] = [
     name: "Google",
     icon: "/images/google.svg",
   },
+  {
+    id: "microsoft",
+    name: "Sign in with Microsoft",
+    icon: "/images/microsoft.svg",
+  },
 ];
 
 export { services };

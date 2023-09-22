@@ -3,13 +3,12 @@ import { Stack } from "@mui/system";
 import { useState } from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Schedule } from "@/@types/event";
-import { typeGuard } from "@/libraries/typeGuard";
 import { date2time } from "@/libraries/time";
 import dayjs from "dayjs";
+import { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
 
 type userCalendar = {
-  schedules: { [key: string]: Schedule[] };
+  calendars: UserCalendarProvider[];
 };
 
 const timeList: string[] = [];
@@ -19,7 +18,8 @@ for (let i = 0; i < 30; i++) {
   );
 }
 
-export const UserCalender = ({ schedules }: userCalendar) => {
+export const UserCalender = ({ calendars }: userCalendar) => {
+  const schedules = groupScheduleByDate(calendars);
   const [CalenderBarOpen, setCalenderBarOpen] = useState<boolean>(true);
   return (
     <>
@@ -52,12 +52,11 @@ export const UserCalender = ({ schedules }: userCalendar) => {
                 {schedules[dayNum] !== undefined ? (
                   schedules[dayNum].map((schedule) => {
                     const duration = (() => {
-                      if (typeGuard.DateTimeSchedule(schedule)) {
-                        const start = new Date(schedule.start.dateTime);
-                        const end = new Date(schedule.end.dateTime);
+                      if (!schedule.isAllDay) {
                         return (
                           <>
-                            {date2time(start)}~{date2time(end)}
+                            {date2time(schedule.start.toDate())}~
+                            {date2time(schedule.end.toDate())}
                           </>
                         );
                       }
@@ -81,7 +80,7 @@ export const UserCalender = ({ schedules }: userCalendar) => {
                         >
                           {duration}
                           <br />
-                          {schedule.summary}
+                          {schedule.name}
                         </Typography>
                       </Stack>
                     );
@@ -124,4 +123,27 @@ export const UserCalender = ({ schedules }: userCalendar) => {
       </Stack>
     </>
   );
+};
+
+const groupScheduleByDate = (
+  calendars: UserCalendarProvider[],
+): { [key: string]: UserCalendarItem[] } => {
+  const result: { [key: string]: UserCalendarItem[] } = {};
+  for (const provider of calendars) {
+    for (const schedule of provider.events) {
+      if (schedule.isAllDay) {
+        const duration = Math.abs(schedule.end.diff(schedule.start, "day"));
+        for (let i = 0; i < duration; i++) {
+          const key = schedule.start.add(i, "day").format("M/D");
+          result[key] ??= [];
+          result[key].push(schedule);
+        }
+      } else {
+        const key = schedule.start.format("M/D");
+        result[key] ??= [];
+        result[key].push(schedule);
+      }
+    }
+  }
+  return result;
 };
