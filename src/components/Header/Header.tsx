@@ -19,10 +19,12 @@ type props = {
 export const Header = ({ type = "primary" }: props) => {
   const router = useRouter();
   const [loginModalActive, setLoginModalActive] = useState(false);
-  const user = useUser();
+  const { user, logout } = useUser();
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (!user?.isRegistered) {
       setLoginModalActive(true);
+    } else {
+      logout();
     }
   };
   return (

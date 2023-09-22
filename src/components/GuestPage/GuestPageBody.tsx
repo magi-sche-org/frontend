@@ -49,9 +49,8 @@ const hashToken = (hash: string): string => {
 
 const GuestPageBody = ({ event }: props) => {
   const router = useRouter();
-  const user = useUser();
+  const { user } = useUser();
   const { calendars } = useCalendars();
-  console.log(user, calendars);
   const [NameText, setNameText] = useState<string>(getDefaultName(event));
   const [note, setNote] = useState<string>(getMyAnswer(event)?.note || "");
   const [checklist, setChecklist] = useState<IAnswerList>(() => {

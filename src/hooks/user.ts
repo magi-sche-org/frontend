@@ -3,17 +3,25 @@ import { User } from "@/@types/user";
 import { requests } from "@/libraries/requests";
 import { IRequestResult } from "@/@types/api/request";
 
-const useUser = () => {
+const useUser = (): { user?: User; logout: () => void; update: () => void } => {
   const [user, setUser] = useState<User | undefined>();
   const ref = useRef(false);
-  useEffect(() => {
-    if (ref.current) return;
-    ref.current = true;
+  const update = () => {
     void (async () => {
       setUser(await getUser());
     })();
+  };
+  useEffect(() => {
+    if (ref.current) return;
+    ref.current = true;
+    update();
   }, []);
-  return user;
+  const logout = () => {
+    requests("/logout", { method: "POST" }).then(() => {
+      update();
+    });
+  };
+  return { user, logout, update };
 };
 
 const getUser = async (count = 0): Promise<User> => {

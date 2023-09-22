@@ -5,7 +5,7 @@ import {
   UserCalendarProvider,
   UserCalendarResponseProvider,
 } from "@/@types/calender";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import { generateUuid } from "@/libraries/uuid";
 
@@ -14,6 +14,7 @@ const useCalendars = (): {
   refresh: () => void;
 } => {
   const user = useUser();
+  const ref = useRef(false);
   const [calendars, setCalendars] = useState<
     UserCalendarResponseProvider[] | undefined
   >(undefined);
@@ -29,9 +30,10 @@ const useCalendars = (): {
   };
 
   useEffect(() => {
-    if (!user) {
+    if (!user || ref.current) {
       return;
     }
+    ref.current = true;
     updateCalendars();
   }, [user]);
 
