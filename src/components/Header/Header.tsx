@@ -10,6 +10,7 @@ import Image from "next/image";
 import { Stack } from "@mui/system";
 import { useRouter } from "next/router";
 import { Login } from "@/components/login";
+import { useUser } from "@/hooks/user";
 
 type props = {
   type?: "primary" | "secondary";
@@ -17,13 +18,13 @@ type props = {
 
 export const Header = ({ type = "primary" }: props) => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginModalActive, setLoginModalActive] = useState(false);
+  const { user, logout } = useUser();
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    if (isLoggedIn) {
-      setIsLoggedIn(false);
-    } else {
+    if (!user?.isRegistered) {
       setLoginModalActive(true);
+    } else {
+      logout();
     }
   };
   return (
@@ -55,7 +56,7 @@ export const Header = ({ type = "primary" }: props) => {
               color="inherit"
               onClick={handleMenu}
             >
-              {isLoggedIn ? (
+              {user?.isRegistered ? (
                 <LogoutIcon sx={{ color: "black" }} />
               ) : (
                 <AccountCircle sx={{ color: "black" }} />

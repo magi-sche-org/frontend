@@ -21,7 +21,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSchedule } from "@/hooks/useSchedule";
 import { UserCalender } from "@/components/GuestPage/UserCalender";
 import { Stack } from "@mui/system";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -32,6 +31,8 @@ import { InputSchedule } from "@/components/EventMakePage/InputSchedule";
 import { setEventStorage } from "@/libraries/eventStorage";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import { useCalendars } from "@/hooks/calendars";
+import { useUser } from "@/hooks/user";
 
 export type IAnswerList = {
   // key: Dayjsをstring化したもの
@@ -57,7 +58,8 @@ export default function Home() {
         eventTimeDuration,
       };
     }, [searchParams]);
-  const { schedules } = useSchedule();
+  const { calendars } = useCalendars();
+  const { user } = useUser();
   // モーダル
   const [showModal, setShowModal] = useState<boolean>(false);
   // 共有用URL
@@ -120,12 +122,14 @@ export default function Home() {
     );
 
     setEventStorage(response);
-    setShareURL(`https://${location.hostname}/guest/${response.id}`);
+    setShareURL(`${location.origin}/guest/${response.id}`);
     setShowModal(true);
   };
   return (
     <>
-      {schedules && <UserCalender schedules={schedules} />}
+      {user?.isRegistered && calendars && (
+        <UserCalender calendars={calendars} />
+      )}
       <Stack
         sx={{
           p: 3,
