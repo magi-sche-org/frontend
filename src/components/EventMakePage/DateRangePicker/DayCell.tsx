@@ -11,6 +11,7 @@ type Props = {
   calenderItem: CalenderItemType;
   handleSelectDay: (day: Dayjs) => void;
   isUndefinedSelectedDay: boolean;
+  isSameDay: boolean;
 };
 
 /**
@@ -24,6 +25,7 @@ export const DayCell: FC<Props> = ({
   calenderItem,
   handleSelectDay,
   isUndefinedSelectedDay,
+  isSameDay,
 }) => {
   const { day, isThisMonthDay, isStarted, isEnded, isBetween } = calenderItem;
   const isSelected = isStarted || isEnded;
@@ -43,20 +45,8 @@ export const DayCell: FC<Props> = ({
     }
     return "";
   })();
-  const borderRadius = (() => {
-    if (isUndefinedSelectedDay) {
-      return "100%";
-    }
-    if (isStarted) {
-      return "100%";
-    }
-    if (isEnded) {
-      return "100%";
-    }
-    return 0;
-  })();
   const backgroundImage = (() => {
-    if (isUndefinedSelectedDay) {
+    if (isUndefinedSelectedDay || isSameDay) {
       return "";
     }
     if (isStarted) {
@@ -67,6 +57,8 @@ export const DayCell: FC<Props> = ({
     }
     return "";
   })();
+  const borderRadius =
+    isUndefinedSelectedDay || isStarted || isEnded ? "100%" : 0;
   const color = isSelected ? "white" : "black";
   const opacity = isThisMonthDay ? 1 : 0;
   const disabled = !isThisMonthDay;
