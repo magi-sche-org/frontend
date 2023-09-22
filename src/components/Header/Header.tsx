@@ -10,7 +10,7 @@ import Image from "next/image";
 import { Stack } from "@mui/system";
 import { useRouter } from "next/router";
 import { Login } from "@/components/login";
-import {useUser} from "@/hooks/user";
+import { useUser } from "@/hooks/user";
 
 type props = {
   type?: "primary" | "secondary";
@@ -19,7 +19,7 @@ type props = {
 export const Header = ({ type = "primary" }: props) => {
   const router = useRouter();
   const [loginModalActive, setLoginModalActive] = useState(false);
-  const user =useUser();
+  const user = useUser();
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (!user?.isRegistered) {
       setLoginModalActive(true);
