@@ -1,6 +1,6 @@
 import { requests } from "@/libraries/requests";
 import { IRequestResult } from "@/@types/api/request";
-import { IEvent, IUserAnswerUnit } from "@/@types/api/event";
+import { IEvent, IEventResponse, IUserAnswerUnit } from "@/@types/api/event";
 
 const createEvent = async (
   name: string,
@@ -29,7 +29,7 @@ const createEvent = async (
 };
 
 const getEvent = async (id: string) => {
-  const res = await requests<IRequestResult<IEvent>>(`/events/${id}`);
+  const res = await requests<IRequestResult<IEventResponse>>(`/events/${id}`);
   if (res.statusCode !== 200 && res.statusCode !== 201)
     // @ts-ignore
     throw new Error(res.message);

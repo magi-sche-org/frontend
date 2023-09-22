@@ -19,6 +19,7 @@ export type IUserAnswer = {
   id: string;
   userId: string;
   userNickname: string;
+  isYourAnswer: boolean;
   note: string;
   units: IUserAnswerUnit[];
 };
@@ -26,6 +27,34 @@ export type IUserAnswer = {
 export type IUserAnswerUnit = {
   eventTimeUnitId: string;
   availability: IAvailability;
+};
+
+export type IEventResponse = {
+  userAnswers: IUserAnswerResponse[];
+} & IEvent;
+
+export type IUserAnswerResponse = {
+  id: string;
+  userId: string;
+  userNickname: string;
+  isYourAnswer: boolean;
+  note: string;
+  units: IUserAnswerUnitResponse[];
+};
+
+export type IUserAnswerUnitResponse = {
+  eventTimeUnitId: string;
+  availability: IAvailability;
+  startsAt: string;
+  endsAt: string;
+};
+
+export type IDateAnswersResponse = {
+  [startsTime: string]: {
+    startsTime: string;
+    counts: { [availability in IAvailability | "total"]: number };
+    answers: IDateAnswerItem[];
+  };
 };
 
 export type IAvailability = "available" | "unavailable" | "maybe";

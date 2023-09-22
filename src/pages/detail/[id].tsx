@@ -3,13 +3,15 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import { IEvent } from "@/@types/api/event";
+import { IEvent, IEventResponse } from "@/@types/api/event";
 import { getEvent } from "@/libraries/api/events";
 
 const DetailPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-  const [eventDetail, setEventDetail] = useState<IEvent | undefined>(undefined);
+  const [eventDetail, setEventDetail] = useState<IEventResponse | undefined>(
+    undefined,
+  );
   const { id } = router.query;
   useEffect(() => {
     if (typeof id !== "string") return;

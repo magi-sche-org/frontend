@@ -1,6 +1,6 @@
-import { IEvent } from "@/@types/api/event";
+import { IEventResponse } from "@/@types/api/event";
 
-export const mockEventList: IEvent[] = [
+export const mockEventList: IEventResponse[] = [
   {
     id: "01h74qm81vvtkbbqdmtmdwq2td",
     ownerId: "01h74qkv36jgrg7k33ys6ft7kd",
@@ -32,22 +32,31 @@ export const mockEventList: IEvent[] = [
         userId: "01h74qkv36jgrg7k33ys6ft7kd",
         userNickname: "はろ太郎",
         note: "遅れそう",
+        isYourAnswer: false,
         units: [
           {
             eventTimeUnitId: "01h74qm81y8534vv2ewg15yn3y",
             availability: "available",
+            startsAt: "1",
+            endsAt: "2",
           },
           {
             eventTimeUnitId: "01h74qm81ym6bg48ppe2a2q6b3",
             availability: "unavailable",
+            startsAt: "1",
+            endsAt: "2",
           },
           {
             eventTimeUnitId: "01h74qm81ysq1x6jn548mw15jc",
             availability: "available",
+            startsAt: "1",
+            endsAt: "2",
           },
           {
             eventTimeUnitId: "01h74qm81ywgv2pnchqgdb3vrv",
             availability: "maybe",
+            startsAt: "1",
+            endsAt: "2",
           },
         ],
       },

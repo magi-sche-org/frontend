@@ -19,12 +19,13 @@ import {
   IDateAnswerItem,
   IEvent,
   IDateAnswer,
+  IEventResponse,
 } from "@/@types/api/event";
 import { groupAnswerByStartsTime } from "@/libraries/event";
 import Link from "next/link";
 import dayjs from "dayjs";
 type props = {
-  event: IEvent;
+  event: IEventResponse;
 };
 
 const availabilityMap: { [availability in IAvailability]: string } = {
@@ -43,7 +44,7 @@ const DetailPageBody = ({ event }: props) => {
     () => groupAnswerByStartsTime(event.userAnswers),
     [event],
   );
-
+  console.log(participantsAvailability);
   return (
     <>
       {/* タイトル表示*/}
