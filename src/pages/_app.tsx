@@ -14,13 +14,10 @@ export default function App({ Component, pageProps }: AppProps) {
     if (router.asPath === "/") {
       return "secondary";
     }
-    if (
-      router.asPath.indexOf("guest") === 1 ||
-      router.asPath.indexOf("detail") === 1
-    ) {
-      return "primary";
+    if (router.asPath.match(/\/callback/)) {
+      return undefined;
     }
-    return undefined;
+    return "primary";
   })();
 
   return (
