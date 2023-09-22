@@ -45,7 +45,7 @@ const useCalendars = (): {
           return {
             ...schedule,
             start: dayjs(`${schedule.startDate}T00:00:00+09:00`),
-            end: dayjs(`${schedule.endDate}T00:00:00+09:00`).add(1, "day"),
+            end: dayjs(`${schedule.endDate}T00:00:00+09:00`),
             id: generateUuid(),
           };
         }

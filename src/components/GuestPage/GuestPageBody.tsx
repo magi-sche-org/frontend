@@ -81,6 +81,7 @@ const GuestPageBody = ({ event }: props) => {
     (pv: boolean, val) => (val.yourAnswerId && val.id === event.id) || pv,
     false,
   );
+  console.log(calendars, checklist);
   useEffect(() => {
     if (typeof window !== "object" || init.current || !calendars) return;
     init.current = true;
@@ -107,7 +108,7 @@ const GuestPageBody = ({ event }: props) => {
       return pv;
     }, {} as IAnswerList);
     setChecklist(list);
-  }, [calendars]);
+  }, [calendars, event]);
 
   const Submit = async () => {
     // Submit validation
@@ -213,6 +214,7 @@ const GuestPageBody = ({ event }: props) => {
                             },
                           });
                         }}
+                        value={checklist[unit.id]?.val ?? "available"}
                       >
                         <FormControlLabel
                           value="available"
@@ -230,11 +232,12 @@ const GuestPageBody = ({ event }: props) => {
                           label="参加不可"
                         />
                       </RadioGroup>
-                      {checklist[unit.id]?.val && checklist[unit.id]?.block && (
-                        <span className={Styles.info}>
-                          <Typography variant="caption">重複</Typography>
-                        </span>
-                      )}
+                      {checklist[unit.id]?.val === "available" &&
+                        checklist[unit.id]?.block && (
+                          <span className={Styles.info}>
+                            <Typography variant="caption">重複</Typography>
+                          </span>
+                        )}
                     </TableCell>
                   </TableRow>
                 );

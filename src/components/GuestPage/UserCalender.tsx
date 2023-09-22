@@ -132,7 +132,7 @@ const groupScheduleByDate = (
   for (const provider of calendars) {
     for (const schedule of provider.events) {
       if (schedule.isAllDay) {
-        const duration = Math.abs(schedule.end.diff(schedule.start, "day")) - 1;
+        const duration = Math.abs(schedule.end.diff(schedule.start, "day"));
         for (let i = 0; i < duration; i++) {
           const key = schedule.start.add(i, "day").format("M/D");
           result[key] ??= [];
