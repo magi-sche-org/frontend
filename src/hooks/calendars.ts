@@ -13,7 +13,7 @@ const useCalendars = (): {
   calendars?: UserCalendarProvider[];
   refresh: () => void;
 } => {
-  const user = useUser();
+  const { user } = useUser();
   const ref = useRef(false);
   const [calendars, setCalendars] = useState<
     UserCalendarResponseProvider[] | undefined

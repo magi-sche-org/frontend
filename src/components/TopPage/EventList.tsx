@@ -1,20 +1,28 @@
 import { Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ListButton from "./ListButton";
-import { getEventStorage } from "@/libraries/eventStorage";
-import { IEvent } from "@/@types/api/event";
 import { VerticalCard } from "./VerticalCard";
+import { requests } from "@/libraries/requests";
+import { IRequestResult } from "@/@types/api/request";
+import { UserEventItem } from "@/@types/user";
+import { useUser } from "@/hooks/user";
 
-const FOLDING_EVENT_LIMIT = 3;
+const FOLDING_EVENT_LIMIT = 9999;
 
 export const EventList = () => {
-  const [eventList, setEventList] = useState<IEvent[]>([]);
+  const [eventList, setEventList] = useState<UserEventItem[]>([]);
   const [listPosition, setListPosition] = useState(0);
-
+  const { user } = useUser();
   useEffect(() => {
     if (typeof window !== "object") return;
-    setEventList(getEventStorage());
-  }, []);
+    (async () => {
+      const req = await requests<IRequestResult<UserEventItem[]>>(
+        "/user/events",
+      );
+      if (req.statusCode !== 200) return;
+      setEventList(req.data);
+    })();
+  }, [user]);
 
   /**
    * イベントリストの位置の上下

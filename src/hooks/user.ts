@@ -18,7 +18,7 @@ const useUser = (): { user?: User; logout: () => void; update: () => void } => {
   }, []);
   const logout = () => {
     requests("/logout", { method: "POST" }).then(() => {
-      update();
+      location.reload();
     });
   };
   return { user, logout, update };
