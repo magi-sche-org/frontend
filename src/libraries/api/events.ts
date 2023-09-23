@@ -7,12 +7,18 @@ const createEvent = async (
   description: string,
   duration: number,
   units: string[],
+  isNotification: boolean,
+  email: string | undefined,
+  participantsNumber: number | undefined,
 ) => {
   const body = {
     name,
     description,
     unitDuration: duration,
     units: units.map((unit) => ({ startsAt: unit })),
+    enablesEmailNotification: isNotification,
+    expectedParticipantsNumber: participantsNumber || undefined,
+    notificationEmail: email || undefined,
   };
   const res = await requests<IRequestResult<IEvent>>("/events", {
     method: "POST",

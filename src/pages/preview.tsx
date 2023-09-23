@@ -69,9 +69,9 @@ export default function Home() {
   // イベント説明
   const [eventDescription, setEventDescription] = useState("");
   // 確定通知
-  const [isConfirmNotice, setIsConfirmNotice] = useState(false);
+  const [isNotification, setIsNotification] = useState(false);
   // 参加人数
-  const [participantsCount, setParticipantsCount] = useState<string>("");
+  const [participantsNumber, setParticipantsNumber] = useState<string>("");
   // 確定通知用メールアドレス
   const [emailAddress, setEmailAddress] = useState("");
   // 候補日の一覧
@@ -118,6 +118,9 @@ export default function Home() {
       eventDescription,
       eventTimeDuration,
       filteringStartTimeList,
+      isNotification,
+      emailAddress,
+      Number(participantsNumber),
     );
 
     setEventStorage(response);
@@ -190,9 +193,9 @@ export default function Home() {
               control={
                 <Checkbox
                   size="medium"
-                  checked={isConfirmNotice}
+                  checked={isNotification}
                   onChange={(_, checked) => {
-                    setIsConfirmNotice(checked);
+                    setIsNotification(checked);
                   }}
                 />
               }
@@ -210,14 +213,14 @@ export default function Home() {
                 endAdornment={
                   <InputAdornment position="end">人</InputAdornment>
                 }
-                value={participantsCount}
+                value={participantsNumber}
                 onChange={(e) => {
                   const v = e.target.value;
                   if (!v || isNaN(Number(v))) {
-                    setParticipantsCount("");
+                    setParticipantsNumber("");
                     return;
                   }
-                  setParticipantsCount(v);
+                  setParticipantsNumber(v);
                 }}
                 sx={{ ml: 0, mb: 2 }}
               />
