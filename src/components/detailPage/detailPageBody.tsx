@@ -44,7 +44,6 @@ const DetailPageBody = ({ event }: props) => {
     () => groupAnswerByStartsTime(event.userAnswers),
     [event],
   );
-  console.log(participantsAvailability);
   return (
     <>
       {/* タイトル表示*/}
@@ -61,14 +60,7 @@ const DetailPageBody = ({ event }: props) => {
           {event.name}
         </Typography>
         {/* 候補リスト */}
-        <TableContainer
-          sx={{
-            border: "solid",
-            borderWidth: 0.3,
-            borderRadius: 5,
-            p: 1,
-          }}
-        >
+        <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
@@ -76,13 +68,13 @@ const DetailPageBody = ({ event }: props) => {
                   <Typography variant="caption">日時</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="caption">参加可能</Typography>
+                  <Typography variant="caption">可</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="caption">不明</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="caption">参加不可</Typography>
+                  <Typography variant="caption">不可</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -103,21 +95,35 @@ const DetailPageBody = ({ event }: props) => {
                     <TableRow sx={determineRowColor(unit)}>
                       <TableCell>
                         <Typography variant="body1">
-                          {start.format("MM / DD HH:mm")}〜{end.format("HH:mm")}
+                          {start.format("MM / DD")}
+                          <br />
+                          {start.format("HH:mm")}〜{end.format("HH:mm")}
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1" sx={{ ml: 1 }}>
+                        <Typography
+                          variant="body1"
+                          sx={{ ml: 1 }}
+                          whiteSpace={"nowrap"}
+                        >
                           {unit.counts.available}人
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1" sx={{ ml: 1 }}>
+                        <Typography
+                          variant="body1"
+                          sx={{ ml: 1 }}
+                          whiteSpace={"nowrap"}
+                        >
                           {unit.counts.maybe}人
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1" sx={{ ml: 1 }}>
+                        <Typography
+                          variant="body1"
+                          sx={{ ml: 1 }}
+                          whiteSpace={"nowrap"}
+                        >
                           {unit.counts.unavailable}人
                         </Typography>
                       </TableCell>

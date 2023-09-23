@@ -33,7 +33,7 @@ const Callback = () => {
           }
         }
         const url = localStorage.getItem(CALLBACK_URL_KEY) ?? "/";
-        console.log("test", url);
+
         localStorage.removeItem(CALLBACK_URL_KEY);
         await router.replace(url);
       }

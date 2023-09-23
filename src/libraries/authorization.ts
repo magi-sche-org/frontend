@@ -62,7 +62,6 @@ const parseToken = async () => {
   localStorage.setItem("gcp_token", data.access_token);
   const userInfo = await fetchUserInfo();
   localStorage.setItem("gcp_userInfo", JSON.stringify(userInfo));
-  console.log(data, userInfo);
   return userInfo;
 };
 

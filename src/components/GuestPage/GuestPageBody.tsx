@@ -16,7 +16,9 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { Stack } from "@mui/system";
 import { Button } from "../Button";
-
+import ChangeHistoryIcon from "@mui/icons-material/ChangeHistory";
+import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
+import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { UserCalender } from "./UserCalender";
@@ -29,6 +31,7 @@ import { createAnswer } from "@/libraries/api/events";
 import { useCalendars } from "@/hooks/calendars";
 import { useUser } from "@/hooks/user";
 import { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
+import Brightness1Icon from "@mui/icons-material/Brightness1";
 
 type props = {
   event: IEvent;
@@ -80,7 +83,7 @@ const GuestPageBody = ({ event }: props) => {
     (pv: boolean, val) => (val.yourAnswerId && val.id === event.id) || pv,
     false,
   );
-  console.log(calendars, checklist);
+
   useEffect(() => {
     if (typeof window !== "object" || init.current || !calendars) return;
     init.current = true;
@@ -155,13 +158,14 @@ const GuestPageBody = ({ event }: props) => {
             />
           )}
         </Stack>
-        <Typography variant="h6" sx={{ textAlign: "center", mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 3 }}>
           {event.name}
         </Typography>
         <TextField
           label="表示名"
+          fullWidth
           variant="outlined"
-          sx={{ mx: 7, mb: 3 }}
+          sx={{ mb: 3 }}
           value={NameText}
           onChange={(e) => {
             setNameText(e.target.value);
@@ -169,14 +173,7 @@ const GuestPageBody = ({ event }: props) => {
           required
         />
         {/* 候補リスト */}
-        <TableContainer
-          sx={{
-            border: "solid",
-            borderWidth: 0.3,
-            borderRadius: 5,
-            p: 1,
-          }}
-        >
+        <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
@@ -184,7 +181,7 @@ const GuestPageBody = ({ event }: props) => {
                   <Typography variant="caption">日時</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="caption">参加</Typography>
+                  <Typography variant="caption">参加可否</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -199,11 +196,14 @@ const GuestPageBody = ({ event }: props) => {
                   <TableRow key={unit.id}>
                     <TableCell>
                       <Typography variant="body1">
-                        {start.format("MM / DD HH:mm")}〜{end.format("HH:mm")}
+                        {start.format("MM / DD")}
+                        <br />
+                        {start.format("HH:mm")}〜{end.format("HH:mm")}
                       </Typography>
                     </TableCell>
                     <TableCell className={`${Styles.wrapper}`}>
                       <RadioGroup
+                        sx={{ flexDirection: "row" }}
                         onChange={(e) => {
                           const value = checklist[unit.id];
                           setChecklist({
@@ -219,18 +219,83 @@ const GuestPageBody = ({ event }: props) => {
                       >
                         <FormControlLabel
                           value="available"
-                          control={<Radio />}
-                          label="参加可能"
+                          control={
+                            <Radio
+                              icon={<PanoramaFishEyeIcon />}
+                              checkedIcon={
+                                <>
+                                  <PanoramaFishEyeIcon
+                                    sx={{
+                                      color: "white",
+                                    }}
+                                  />
+                                  <Brightness1Icon
+                                    sx={{
+                                      position: "absolute",
+                                      color: "primary.main",
+                                      zIndex: -1,
+                                      fontSize: 48,
+                                    }}
+                                  />
+                                </>
+                              }
+                            />
+                          }
+                          label=""
                         />
                         <FormControlLabel
                           value="maybe"
-                          control={<Radio />}
-                          label="不明"
+                          control={
+                            <Radio
+                              icon={<ChangeHistoryIcon />}
+                              checkedIcon={
+                                <>
+                                  <ChangeHistoryIcon
+                                    sx={{
+                                      color: "white",
+                                      mb: 0.3,
+                                    }}
+                                  />
+                                  <Brightness1Icon
+                                    sx={{
+                                      position: "absolute",
+                                      color: "primary.main",
+                                      zIndex: -1,
+                                      fontSize: 48,
+                                    }}
+                                  />
+                                </>
+                              }
+                            />
+                          }
+                          label=""
                         />
                         <FormControlLabel
                           value="unavailable"
-                          control={<Radio />}
-                          label="参加不可"
+                          control={
+                            <Radio
+                              icon={<CloseIcon />}
+                              checkedIcon={
+                                <>
+                                  <CloseIcon
+                                    sx={{
+                                      color: "white",
+                                    }}
+                                  />
+                                  <Brightness1Icon
+                                    fontSize="large"
+                                    sx={{
+                                      position: "absolute",
+                                      color: "primary.main",
+                                      zIndex: -1,
+                                      fontSize: 48,
+                                    }}
+                                  />
+                                </>
+                              }
+                            />
+                          }
+                          label=""
                         />
                       </RadioGroup>
                       {checklist[unit.id]?.val === "available" &&
