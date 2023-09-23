@@ -113,7 +113,6 @@ export default function Home() {
     const filteringStartTimeList = Object.entries(startTimeList)
       .filter(([_, checked]) => checked)
       .map(([startTime, _]) => startTime);
-    console.log("submit: ", filteringStartTimeList);
     const response = await createEvent(
       eventName,
       eventDescription,

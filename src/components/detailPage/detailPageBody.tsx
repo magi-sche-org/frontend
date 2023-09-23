@@ -44,7 +44,6 @@ const DetailPageBody = ({ event }: props) => {
     () => groupAnswerByStartsTime(event.userAnswers),
     [event],
   );
-  console.log(participantsAvailability);
   return (
     <>
       {/* タイトル表示*/}

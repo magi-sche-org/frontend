@@ -26,7 +26,6 @@ export const createProposedStartTimeList = (
     .second(0)
     .millisecond(0)
     .subtract(duration, "seconds");
-  console.log(baseStartDate.toISOString(), baseEndDate.toISOString());
 
   [...Array(candidateDayNum)].forEach((_, i) => {
     let stCopy = dayjs(baseStartDate).add(i, "day");

@@ -14,7 +14,6 @@ const createEvent = async (
     unitDuration: duration,
     units: units.map((unit) => ({ startsAt: unit })),
   };
-  console.log(body);
   const res = await requests<IRequestResult<IEvent>>("/events", {
     method: "POST",
     headers: {
