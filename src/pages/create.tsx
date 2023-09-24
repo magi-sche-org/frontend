@@ -1,4 +1,4 @@
-import EventMakePageBody from "@/components/EventMakePage/EventMakePageBody";
+import { EventMakePageBody } from "@/components/EventMakePage/EventMakePageBody";
 
 const EventMakePage = () => {
   return (

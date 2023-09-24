@@ -9,7 +9,7 @@ import { SnackbarProvider } from "notistack";
 import { Header } from "@/components/Header/Header";
 import { theme } from "@/theme/theme";
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   const headerType = (() => {
@@ -49,3 +49,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+export default App;

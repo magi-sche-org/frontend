@@ -330,4 +330,4 @@ const getMyAnswer = (event: IEvent): IUserAnswer | undefined => {
   return event.userAnswers.find((a) => a.id === event.yourAnswerId);
 };
 
-export default GuestPageBody;
+export { GuestPageBody };

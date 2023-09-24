@@ -37,7 +37,7 @@ import { typeGuard } from "@/libraries/typeGuard";
 import { Button as CButton } from "../components/Button";
 
 //http://localhost:3000/preview?startday=2023-09-01&endday=2023-09-03&starttime=11&endtime=13&eventtimeduration=1800
-export default function Home() {
+function Preview() {
   const searchParams = useSearchParams();
   // searchParamsが変わった時にのみ再取得
   const { startDay, endDay, startTime, endTime, eventTimeDuration } =
@@ -364,3 +364,5 @@ const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
     </Modal>
   );
 };
+
+export default Preview;

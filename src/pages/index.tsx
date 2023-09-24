@@ -1,6 +1,6 @@
 import { TopPage } from "@/components/TopPage/TopPage";
 
-export default function Home() {
+function Home() {
   return (
     <>
       <main>
@@ -9,3 +9,5 @@ export default function Home() {
     </>
   );
 }
+
+export default Home;

@@ -4,9 +4,8 @@ type ResponseData = {
   message: string;
 };
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
-) {
+function healthz(_: NextApiRequest, res: NextApiResponse<ResponseData>) {
   res.status(200).json({ message: "OK" });
 }
+
+export default healthz;

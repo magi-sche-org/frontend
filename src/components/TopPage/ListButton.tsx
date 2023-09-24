@@ -32,4 +32,4 @@ const ListButton: FC<ListButtonType> = (props) => {
   );
 };
 
-export default ListButton;
+export { ListButton };

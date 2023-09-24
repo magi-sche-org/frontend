@@ -166,4 +166,4 @@ const EventMakePageBody: React.FC = () => {
   );
 };
 
-export default EventMakePageBody;
+export { EventMakePageBody };

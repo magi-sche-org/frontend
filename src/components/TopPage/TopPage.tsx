@@ -2,7 +2,7 @@ import { Box, Container, Typography } from "@mui/material";
 import Image from "next/image";
 
 import { EventList } from "./EventList";
-import ListButton from "./ListButton";
+import { ListButton } from "./ListButton";
 
 export const TopPage = () => {
   return (

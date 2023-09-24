@@ -6,7 +6,7 @@ import { UserEventItem } from "@/@types/user";
 import { useUser } from "@/hooks/user";
 import { requests } from "@/libraries/requests";
 
-import ListButton from "./ListButton";
+import { ListButton } from "./ListButton";
 import { VerticalCard } from "./VerticalCard";
 
 const FOLDING_EVENT_LIMIT = 9999;
