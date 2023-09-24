@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import { IEvent, IEventResponse } from "@/@types/api/event";
+import { IEventResponse } from "@/@types/api/event";
 import { getEvent } from "@/libraries/api/events";
 
 const DetailPage = () => {

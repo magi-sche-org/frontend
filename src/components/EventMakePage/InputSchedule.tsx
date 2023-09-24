@@ -1,4 +1,4 @@
-import { IAvailability, IEventTimeDuration } from "@/@types/api/event";
+import { IEventTimeDuration } from "@/@types/api/event";
 import {
   TableContainer,
   Table,
@@ -7,9 +7,6 @@ import {
   TableCell,
   Typography,
   TableBody,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
 } from "@mui/material";
 import dayjs from "dayjs";
 import { FC } from "react";

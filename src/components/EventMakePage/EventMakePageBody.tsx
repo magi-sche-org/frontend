@@ -8,7 +8,6 @@ import {
   Modal,
   Radio,
   RadioGroup,
-  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";

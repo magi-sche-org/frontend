@@ -1,6 +1,5 @@
 import {
   Box,
-  Checkbox,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -30,7 +29,6 @@ import dayjs from "dayjs";
 import { createAnswer } from "@/libraries/api/events";
 import { useCalendars } from "@/hooks/calendars";
 import { useUser } from "@/hooks/user";
-import { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
 import Brightness1Icon from "@mui/icons-material/Brightness1";
 
 type props = {

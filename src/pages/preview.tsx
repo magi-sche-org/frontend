@@ -34,11 +34,6 @@ import { useSnackbar } from "notistack";
 import { useCalendars } from "@/hooks/calendars";
 import { useUser } from "@/hooks/user";
 
-export type IAnswerList = {
-  // key: Dayjsをstring化したもの
-  [unitStartTime: string]: boolean;
-};
-
 //http://localhost:3000/preview?startday=2023-09-01&endday=2023-09-03&starttime=11&endtime=13&eventtimeduration=1800
 export default function Home() {
   const searchParams = useSearchParams();
