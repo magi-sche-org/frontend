@@ -1,15 +1,10 @@
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import {
-  Container,
   Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
-  IconButton,
-  Modal,
   Radio,
   RadioGroup,
-  TextField,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
@@ -17,14 +12,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
 import { IEventTimeDuration } from "@/@types/api/event";
 
 import { Button } from "../Button";
 import { PageTitle } from "../common/PageTitle";
-import { ModalStyle } from "../ModalStyle";
 import { DateRangePicker } from "./DateRangePicker/DateRangePicker";
 import { TimeSelect } from "./TimeSelect";
 
@@ -46,11 +39,6 @@ const EventMakePageBody: React.FC = () => {
   const [endDay, setEndDay] = useState<Dayjs | undefined>(
     dayjs().add(3, "day"),
   );
-  // モーダル
-  const [ModalOpen, setModalOpen] = useState<boolean>(false);
-  const { enqueueSnackbar } = useSnackbar();
-
-  const [shareURL, setShareURL] = useState("");
 
   const handleStartTime = (time: number) => {
     localStorage.setItem("magiScheStartTime", String(time));
@@ -86,26 +74,9 @@ const EventMakePageBody: React.FC = () => {
     const startDayStr = startDay?.format("YYYY-MM-DD");
     const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
     // TODO:
-    router.push(
+    void router.push(
       `/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
-  };
-
-  const copyTextToClipboard = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        enqueueSnackbar("URLをコピーしました", {
-          autoHideDuration: 2000,
-          variant: "success",
-        });
-      })
-      .catch(() => {
-        enqueueSnackbar("URLのコピーに失敗しました", {
-          autoHideDuration: 2000,
-          variant: "error",
-        });
-      });
   };
 
   /**
@@ -173,21 +144,6 @@ const EventMakePageBody: React.FC = () => {
               })}
             </RadioGroup>
           </FormControl>
-          {/* <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
-              <ToggleButtonGroup
-                color="primary"
-                value={TimePadding}
-                exclusive
-                onChange={(e, newAlignment: string) => {
-                  setTimePadding(Number(newAlignment));
-                }}
-                aria-label="Platform"
-              >
-                <ToggleButton value={1800}>30min</ToggleButton>
-                <ToggleButton value={3600}>　1h　</ToggleButton>
-                <ToggleButton value={86400}>1day</ToggleButton>
-              </ToggleButtonGroup>
-            </Stack> */}
         </Stack>
         {/* 日付ピッカー */}
         <Stack spacing={3}>
@@ -206,55 +162,6 @@ const EventMakePageBody: React.FC = () => {
           <Button text="決定" isPrimary={true} onClick={submit} />
         </Stack>
       </Stack>
-
-      <Modal open={ModalOpen}>
-        <Container maxWidth="xs" sx={{ ...ModalStyle }}>
-          <Stack direction="column" sx={{ mx: 8 }}>
-            <Typography
-              variant="h6"
-              noWrap={true}
-              sx={{ textAlign: "center", mb: 4 }}
-            >
-              イベントを作成しました
-            </Typography>
-            <Typography variant="body2" sx={{ textAlign: "center", mb: 1.5 }}>
-              共有URL
-            </Typography>
-            <TextField
-              variant="standard"
-              InputProps={{
-                startAdornment: (
-                  <IconButton
-                    onClick={() => {
-                      copyTextToClipboard(shareURL);
-                    }}
-                  >
-                    <ContentCopyOutlinedIcon />
-                  </IconButton>
-                ),
-              }}
-              sx={{ mb: 4 }}
-              value={shareURL}
-            />
-            <Stack spacing={2} sx={{ mb: 2 }}>
-              <Button
-                text="トップに戻る"
-                isPrimary={true}
-                onClick={() => {
-                  router.push("/");
-                }}
-              />
-              <Button
-                text="イベントを確認"
-                isPrimary={false}
-                onClick={() => {
-                  router.push("/");
-                }}
-              />
-            </Stack>
-          </Stack>
-        </Container>
-      </Modal>
     </>
   );
 };

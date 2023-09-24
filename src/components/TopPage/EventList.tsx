@@ -17,7 +17,7 @@ export const EventList = () => {
   const { user } = useUser();
   useEffect(() => {
     if (typeof window !== "object") return;
-    (async () => {
+    void (async () => {
       const req =
         await requests<IRequestResult<UserEventItem[]>>("/user/events");
       if (req.statusCode !== 200) return;

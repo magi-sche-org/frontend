@@ -12,7 +12,7 @@ const Callback = () => {
   useEffect(() => {
     if (ref.current) return;
     ref.current = true;
-    (async () => {
+    void (async () => {
       if (typeof window === "object") {
         try {
           //todo: temporary codeをバックエンドに投げる

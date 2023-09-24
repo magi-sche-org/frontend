@@ -29,13 +29,13 @@ export const useCalenderControl = (): CalenderControlType => {
   const weekCount = Math.ceil((lastDate + firstDatePosition) / 7);
 
   // その月のカレンダーの最初から最後までの日付を配列に格納
-  const dateArray = [...Array(weekCount * 7)].map((_, index) => {
+  const dateArray = [...(Array(weekCount * 7) as void[])].map((_, index) => {
     return index < firstDatePosition
       ? dayObj.subtract(firstDatePosition - index, "day")
       : dayObj.add(index - firstDatePosition, "day");
   });
   // 7日ごとに配列に格納する
-  const dateArrayByWeek = [...Array(weekCount)].map((_, index) => {
+  const dateArrayByWeek = [...(Array(weekCount) as void[])].map((_, index) => {
     return dateArray.slice(index * 7, (index + 1) * 7);
   });
 

@@ -1,6 +1,7 @@
 import { IEvent, IEventResponse, IUserAnswerUnit } from "@/@types/api/event";
 import { IRequestResult } from "@/@types/api/request";
 import { requests } from "@/libraries/requests";
+import { typeGuard } from "@/libraries/typeGuard";
 
 const createEvent = async (
   name: string,
@@ -27,17 +28,13 @@ const createEvent = async (
     },
     body: JSON.stringify(body),
   });
-  if (res.statusCode !== 200 && res.statusCode !== 201)
-    // @ts-ignore
-    throw new Error(res.message);
+  if (!typeGuard.RequestSuccess(res)) throw new Error(res.message);
   return res.data;
 };
 
 const getEvent = async (id: string) => {
   const res = await requests<IRequestResult<IEventResponse>>(`/events/${id}`);
-  if (res.statusCode !== 200 && res.statusCode !== 201)
-    // @ts-ignore
-    throw new Error(res.message);
+  if (!typeGuard.RequestSuccess(res)) throw new Error(res.message);
   return res.data;
 };
 
@@ -62,9 +59,7 @@ const createAnswer = async (
       body: JSON.stringify(body),
     },
   );
-  if (res.statusCode !== 200 && res.statusCode !== 201)
-    // @ts-ignore
-    throw new Error(res.message);
+  if (!typeGuard.RequestSuccess(res)) throw new Error(res.message);
   return res.data;
 };
 

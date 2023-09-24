@@ -1,6 +1,7 @@
+import "dayjs/plugin/isBetween";
+
 import { Stack } from "@mui/system";
 import { Dayjs } from "dayjs";
-import _isBetween from "dayjs/plugin/isBetween";
 import { FC } from "react";
 
 import { CalenderItemType } from "@/@types/calender";

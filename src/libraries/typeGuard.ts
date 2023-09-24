@@ -1,3 +1,4 @@
+import { IRequestResult, IRequestSuccess } from "@/@types/api/request";
 import { ApiError } from "@/@types/error";
 import type {
   AuthorizationError,
@@ -33,6 +34,11 @@ const typeGuard = {
     (HourOfDay as unknown as number[]).includes(v),
   EventTimeDuration: (v: number): v is IEventTimeDuration =>
     (EventTimeDuration as unknown as number[]).includes(v),
+  RequestSuccess: <T>(i: unknown): i is IRequestSuccess<T> =>
+    typeof i === "object" &&
+    objectVerify(i, ["statusCode"]) &&
+    (i as IRequestResult<unknown>).statusCode == 200 &&
+    (i as IRequestResult<unknown>).statusCode == 201,
 };
 
 const objectVerify = (item: unknown, keys: string[]): boolean => {

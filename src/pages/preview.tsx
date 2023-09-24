@@ -108,8 +108,8 @@ export default function Home() {
   const handleSubmit = async () => {
     // checkedのものだけ抽出
     const filteringStartTimeList = Object.entries(startTimeList)
-      .filter(([_, checked]) => checked)
-      .map(([startTime, _]) => startTime);
+      .filter(([, checked]) => checked)
+      .map(([startTime]) => startTime);
     const response = await createEvent(
       eventName,
       eventDescription,
@@ -233,7 +233,7 @@ export default function Home() {
             />
           </FormGroup>
         </Stack>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button variant="contained" onClick={() => void handleSubmit()}>
           作成する
         </Button>
         <DisplayShareURLModal isOpen={showModal} shareURL={shareURL} />
@@ -348,14 +348,14 @@ const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
               text="トップに戻る"
               isPrimary={true}
               onClick={() => {
-                router.push("/");
+                void router.push("/");
               }}
             />{" "}
             <CButton
               text="イベントを確認"
               isPrimary={false}
               onClick={() => {
-                router.push(shareURL.replace("guest", "detail"));
+                void router.push(shareURL.replace("guest", "detail"));
               }}
             />
           </Stack>

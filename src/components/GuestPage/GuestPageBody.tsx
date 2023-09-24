@@ -50,7 +50,6 @@ const GuestPageBody = ({ event }: props) => {
   const { user } = useUser();
   const { calendars } = useCalendars();
   const [NameText, setNameText] = useState<string>(getDefaultName(event));
-  const [note, setNote] = useState<string>(getMyAnswer(event)?.note || "");
   const [checklist, setChecklist] = useState<IAnswerList>(() => {
     const answer = getMyAnswer(event)?.units.map((answer) => {
       return {
@@ -119,7 +118,7 @@ const GuestPageBody = ({ event }: props) => {
     await createAnswer(
       event.id,
       NameText,
-      note,
+      "",
       Object.values(checklist).map((val) => {
         return {
           eventTimeUnitId: val.id,
@@ -132,7 +131,7 @@ const GuestPageBody = ({ event }: props) => {
       variant: "success",
     });
     setEventStorage(event);
-    router.push("/");
+    void router.push("/");
   };
 
   return (
@@ -148,7 +147,7 @@ const GuestPageBody = ({ event }: props) => {
               text={"閲覧ページへ"}
               isPrimary={true}
               onClick={() => {
-                router.push(`/detail/${router.query.id}`);
+                void router.push(`/detail/${router.query.id}`);
               }}
             />
           )}
@@ -313,7 +312,7 @@ const GuestPageBody = ({ event }: props) => {
           <Button
             text={isAnswered ? "更新" : "決定"}
             isPrimary={true}
-            onClick={Submit}
+            onClick={() => void Submit()}
           />
         </Stack>
       </Stack>

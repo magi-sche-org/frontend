@@ -16,7 +16,7 @@ const DetailPage = () => {
   const { id } = router.query;
   useEffect(() => {
     if (typeof id !== "string") return;
-    (async () => {
+    void (async () => {
       try {
         const event = await getEvent(id);
         setEventDetail(event);

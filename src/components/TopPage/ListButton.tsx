@@ -20,7 +20,7 @@ const ListButton: FC<ListButtonType> = (props) => {
     >
       <Button
         onClick={() => {
-          router.push(`${page}`);
+          void router.push(`${page}`);
         }}
         sx={{ p: 2.5 }}
       >

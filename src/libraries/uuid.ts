@@ -1,3 +1,5 @@
+import { UUID } from "@/@types/brands";
+
 const generateUuid = () => {
   // https://github.com/GoogleChrome/chrome-platform-analytics/blob/master/src/internal/identifier.js
   // const FORMAT: string = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
@@ -12,7 +14,7 @@ const generateUuid = () => {
         break;
     }
   }
-  return chars.join("");
+  return chars.join("") as UUID;
 };
 
 export { generateUuid };

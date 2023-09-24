@@ -21,7 +21,7 @@ export const Header = ({ type = "primary" }: props) => {
   const router = useRouter();
   const [loginModalActive, setLoginModalActive] = useState(false);
   const { user, logout } = useUser();
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenu = () => {
     if (!user?.isRegistered) {
       setLoginModalActive(true);
     } else {
@@ -42,7 +42,7 @@ export const Header = ({ type = "primary" }: props) => {
             <IconButton edge="start" size="large" disabled>
               <AccountCircle sx={{ color: `${type}.main` }} />
             </IconButton>
-            <Button onClick={() => router.push("/")}>
+            <Button onClick={() => void router.push("/")}>
               <Image
                 src={"/images/logo.png"}
                 alt={"logo"}

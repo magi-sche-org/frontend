@@ -2,9 +2,9 @@ import { IEvent } from "@/@types/api/event";
 import { mockEventList } from "@/components/TopPage/data";
 
 const setEventStorage = (event: IEvent) => {
-  const eventList: IEvent[] = JSON.parse(
+  const eventList = JSON.parse(
     localStorage.getItem("event-list") ?? "[]",
-  );
+  ) as IEvent[];
   const indexToOverwrite = eventList
     .map((event) => event.id)
     .findIndex((eid: string) => {
