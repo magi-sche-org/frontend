@@ -1,11 +1,11 @@
 import { Typography } from "@mui/material";
-import { FC } from "react";
+import { ReactNode } from "react";
 
-type Props = {
-  children: React.ReactNode;
+type props = {
+  children: ReactNode;
 };
 
-export const PageTitle: FC<Props> = ({ children }) => {
+export const PageTitle = ({ children }: props) => {
   return (
     <Typography variant="h5" sx={{ textAlign: "center" }}>
       {children}

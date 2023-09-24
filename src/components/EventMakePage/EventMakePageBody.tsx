@@ -26,7 +26,7 @@ type EventTimeLengthType = {
   label: string;
 };
 
-const EventMakePageBody: React.FC = () => {
+const EventMakePageBody = () => {
   const router = useRouter();
 
   // 時間

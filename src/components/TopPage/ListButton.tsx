@@ -1,14 +1,12 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import type { FC } from "react";
 
-type ListButtonType = {
+type props = {
   text: string;
   page: string;
 };
 
-const ListButton: FC<ListButtonType> = (props) => {
-  const { text, page } = props;
+const ListButton = ({ text, page }: props) => {
   const router = useRouter();
   return (
     <Stack

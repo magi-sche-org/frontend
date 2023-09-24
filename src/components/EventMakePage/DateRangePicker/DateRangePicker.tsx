@@ -2,7 +2,6 @@ import "dayjs/plugin/isBetween";
 
 import { Stack } from "@mui/system";
 import { Dayjs } from "dayjs";
-import { FC } from "react";
 
 import { CalenderItemType } from "@/@types/calender";
 import { useCalenderControl } from "@/hooks/useCalenderControl";
@@ -11,7 +10,7 @@ import { CalenderBody } from "./CalenderBody";
 import { CalenderControlHeader } from "./CalenderControlHeader";
 import { CalenderHeader } from "./CalenderHeader";
 
-type Props = {
+type props = {
   startDay: Dayjs | undefined;
   endDay: Dayjs | undefined;
   setStartDay: (newValue: Dayjs | undefined) => void;
@@ -26,12 +25,12 @@ type Props = {
  * @param setStartDay 開始日を更新するhandler
  * @param setEndDay 終了日を更新するhandler
  */
-export const DateRangePicker: FC<Props> = ({
+export const DateRangePicker = ({
   startDay,
   endDay,
   setStartDay,
   setEndDay,
-}) => {
+}: props) => {
   const { nowDate, dateArrayByWeek, addMonth, subtractMonth } =
     useCalenderControl();
 

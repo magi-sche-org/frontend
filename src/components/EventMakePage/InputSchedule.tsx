@@ -12,23 +12,22 @@ import {
 import Checkbox from "@mui/material/Checkbox";
 import { Stack } from "@mui/system";
 import dayjs from "dayjs";
-import { FC } from "react";
 
 import { IEventTimeDuration } from "@/@types/api/event";
 
 import Styles from "../GuestPage/GuestPageBody.module.scss";
 
-type Props = {
+type props = {
   eventTimeDuration: IEventTimeDuration;
   checkList: Record<string, boolean>;
   setCheckList: (checkList: Record<string, boolean>) => void;
 };
 
-export const InputSchedule: FC<Props> = ({
+export const InputSchedule = ({
   checkList,
   setCheckList,
   eventTimeDuration,
-}) => {
+}: props) => {
   dayjs.locale("ja");
   return (
     <TableContainer>

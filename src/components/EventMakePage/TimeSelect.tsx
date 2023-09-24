@@ -1,12 +1,12 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
 
 const timeList = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
   23, 24,
 ];
 
-type Props = {
+type props = {
   time: number;
   handleTime: (time: number) => void;
   underTime?: number;
@@ -19,7 +19,7 @@ type Props = {
  *  @param handleTime 時間を更新するhandler
  *  @param underTime 以下の時間を選択できないようにする
  */
-export const TimeSelect: FC<Props> = ({ time, handleTime, underTime }) => {
+export const TimeSelect = ({ time, handleTime, underTime }: props) => {
   // 開始時間よりも前の時間を選択できないようにする
   const editTimeList = underTime
     ? timeList.filter((item) => {

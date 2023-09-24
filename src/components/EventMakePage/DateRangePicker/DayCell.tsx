@@ -1,14 +1,13 @@
 import { Button, SxProps } from "@mui/material";
 import { Stack, Theme } from "@mui/system";
 import { Dayjs } from "dayjs";
-import { FC } from "react";
 
 import { CalenderItemType } from "@/@types/calender";
 import { theme } from "@/theme/theme";
 
 const PRIMARYLIGHT = theme.palette.primary.light;
 
-type Props = {
+type props = {
   calenderItem: CalenderItemType;
   handleSelectDay: (day: Dayjs) => void;
   isUndefinedSelectedDay: boolean;
@@ -22,12 +21,12 @@ type Props = {
  * @param handleSelectDay カレンダーの日付を選択した時のhandler
  * @param isUndefinedSelectedDay 開始日・終了日が選択されているかどうか
  */
-export const DayCell: FC<Props> = ({
+export const DayCell = ({
   calenderItem,
   handleSelectDay,
   isUndefinedSelectedDay,
   isSameDay,
-}) => {
+}: props) => {
   const { day, isThisMonthDay, isStarted, isEnded, isBetween } = calenderItem;
   const isSelected = isStarted || isEnded;
 

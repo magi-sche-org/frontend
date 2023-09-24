@@ -8,7 +8,7 @@ import { useState } from "react";
 import { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
 import { date2time } from "@/libraries/time";
 
-type userCalendar = {
+type props = {
   calendars: UserCalendarProvider[];
 };
 
@@ -19,7 +19,7 @@ for (let i = 0; i < 30; i++) {
   );
 }
 
-export const UserCalender = ({ calendars }: userCalendar) => {
+export const UserCalender = ({ calendars }: props) => {
   const schedules = groupScheduleByDate(calendars);
   const [CalenderBarOpen, setCalenderBarOpen] = useState<boolean>(true);
   return (

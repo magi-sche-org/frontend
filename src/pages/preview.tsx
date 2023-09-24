@@ -20,7 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { FC, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { IEventTimeDuration, IHourOfDay } from "@/@types/api/event";
 import { PageTitle } from "@/components/common/PageTitle";
@@ -288,10 +288,10 @@ const ModalStyle = {
 };
 
 type DisplayShareURLModalProps = { isOpen: boolean; shareURL: string };
-const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
+const DisplayShareURLModal = ({
   isOpen,
   shareURL,
-}) => {
+}: DisplayShareURLModalProps) => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
