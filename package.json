@@ -15,33 +15,33 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.11.0",
-    "@mui/material": "^5.11.8",
-    "@mui/system": "^5.14.4",
-    "@mui/x-date-pickers": "^6.11.0",
-    "@next/font": "13.4.13",
-    "dayjs": "^1.11.7",
-    "next": "^13.1.6",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.9",
+    "@mui/material": "^5.14.10",
+    "@mui/system": "^5.14.10",
+    "@mui/x-date-pickers": "^6.15.0",
+    "@next/font": "^13.5.2",
+    "dayjs": "^1.11.10",
+    "next": "^13.5.2",
     "notistack": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sass": "^1.58.0",
-    "typescript": "5.1.6"
+    "sass": "^1.68.0",
+    "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@types/node": "^20.4.8",
-    "@types/react": "^18.2.19",
+    "@types/node": "^20.6.5",
+    "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
-    "eslint": "^8.46.0",
-    "eslint-config-next": "^13.1.6",
-    "eslint-config-prettier": "^8.10.0",
+    "eslint": "^8.50.0",
+    "eslint-config-next": "^13.5.2",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.3",
-    "prettier": "^3.0.1"
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3"
   }
 }
