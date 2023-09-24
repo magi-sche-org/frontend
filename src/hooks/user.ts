@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import { IRequestResult } from "@/@types/api/request";
-import { User } from "@/@types/user";
+import type { IRequestResult } from "@/@types/api/request";
+import type { User } from "@/@types/user";
 import { requests } from "@/libraries/requests";
 
 const useUser = (): { user?: User; logout: () => void; update: () => void } => {

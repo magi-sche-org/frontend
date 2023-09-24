@@ -1,5 +1,5 @@
-import { IEvent, IUserAnswerUnit } from "@/@types/api/event";
-import { IRequestResult } from "@/@types/api/request";
+import type { IEvent, IUserAnswerUnit } from "@/@types/api/event";
+import type { IRequestResult } from "@/@types/api/request";
 import { requests } from "@/libraries/requests";
 import { typeGuard } from "@/libraries/typeGuard";
 

@@ -16,13 +16,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import dayjs, { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useMemo, useState } from "react";
 
-import { IEventTimeDuration, IHourOfDay } from "@/@types/api/event";
+import type { IEventTimeDuration, IHourOfDay } from "@/@types/api/event";
 import { PageTitle } from "@/components/common/PageTitle";
 import { InputSchedule } from "@/components/EventMakePage/InputSchedule";
 import { UserCalender } from "@/components/GuestPage/UserCalender";

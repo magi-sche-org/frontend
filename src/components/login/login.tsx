@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { AuthorizationService } from "@/@types/authorization";
+import type { AuthorizationService } from "@/@types/authorization";
 import { services } from "@/components/login/services";
 import { API_ENDPOINT, CALLBACK_URL_KEY } from "@/libraries/env";
 

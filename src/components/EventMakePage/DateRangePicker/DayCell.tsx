@@ -1,8 +1,10 @@
-import { Button, SxProps } from "@mui/material";
-import { Stack, Theme } from "@mui/system";
-import { Dayjs } from "dayjs";
+import type { SxProps } from "@mui/material";
+import { Button } from "@mui/material";
+import type { Theme } from "@mui/system";
+import { Stack } from "@mui/system";
+import type { Dayjs } from "dayjs";
 
-import { CalenderItemType } from "@/@types/calender";
+import type { CalenderItemType } from "@/@types/calender";
 import { theme } from "@/theme/theme";
 
 const PRIMARYLIGHT = theme.palette.primary.light;

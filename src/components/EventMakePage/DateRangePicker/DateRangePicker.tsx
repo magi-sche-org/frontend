@@ -1,9 +1,9 @@
 import "dayjs/plugin/isBetween";
 
 import { Stack } from "@mui/system";
-import { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
 
-import { CalenderItemType } from "@/@types/calender";
+import type { CalenderItemType } from "@/@types/calender";
 import { useCalenderControl } from "@/hooks/useCalenderControl";
 
 import { CalenderBody } from "./CalenderBody";

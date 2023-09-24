@@ -5,7 +5,7 @@ import { Stack } from "@mui/system";
 import dayjs from "dayjs";
 import { useState } from "react";
 
-import { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
+import type { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
 import { date2time } from "@/libraries/time";
 
 type props = {

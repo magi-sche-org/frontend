@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { IEventResponse } from "@/@types/api/event";
-import { IRequestError, IRequestResult } from "@/@types/api/request";
+import type { IEventResponse } from "@/@types/api/event";
+import type { IRequestError, IRequestResult } from "@/@types/api/request";
 import { requests } from "@/libraries/requests";
 import { typeGuard } from "@/libraries/typeGuard";
 

@@ -1,4 +1,4 @@
-import { UUID } from "@/@types/brands";
+import type { UUID } from "@/@types/brands";
 
 const generateUuid = () => {
   // https://github.com/GoogleChrome/chrome-platform-analytics/blob/master/src/internal/identifier.js

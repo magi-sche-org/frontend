@@ -1,4 +1,4 @@
-import { IEvent } from "@/@types/api/event";
+import type { IEvent } from "@/@types/api/event";
 import { mockEventList } from "@/components/TopPage/data";
 
 const setEventStorage = (event: IEvent) => {

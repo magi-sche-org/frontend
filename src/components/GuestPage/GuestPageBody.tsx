@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
 
-import { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
+import type { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
 import { useCalendars } from "@/hooks/calendars";
 import { useUser } from "@/hooks/user";
 import { createAnswer } from "@/libraries/api/events";

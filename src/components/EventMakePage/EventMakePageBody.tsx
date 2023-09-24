@@ -10,11 +10,12 @@ import {
 import { Stack } from "@mui/system";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-import { IEventTimeDuration } from "@/@types/api/event";
+import type { IEventTimeDuration } from "@/@types/api/event";
 
 import { Button } from "../Button";
 import { PageTitle } from "../common/PageTitle";

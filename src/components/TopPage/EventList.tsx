@@ -1,8 +1,8 @@
 import { Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { IRequestResult } from "@/@types/api/request";
-import { UserEventItem } from "@/@types/user";
+import type { IRequestResult } from "@/@types/api/request";
+import type { UserEventItem } from "@/@types/user";
 import { useUser } from "@/hooks/user";
 import { requests } from "@/libraries/requests";
 

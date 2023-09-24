@@ -1,6 +1,6 @@
 //todo: バックエンドから取得するようにする
 
-import { AuthorizationService } from "@/@types/authorization";
+import type { AuthorizationService } from "@/@types/authorization";
 
 const services: AuthorizationService[] = [
   {

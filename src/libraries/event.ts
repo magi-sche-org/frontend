@@ -1,4 +1,7 @@
-import { IDateAnswersResponse, IUserAnswerResponse } from "@/@types/api/event";
+import type {
+  IDateAnswersResponse,
+  IUserAnswerResponse,
+} from "@/@types/api/event";
 
 const groupAnswerByStartsTime = (
   answers: IUserAnswerResponse[],

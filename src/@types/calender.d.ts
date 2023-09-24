@@ -1,6 +1,6 @@
-import { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
 
-import { UUID } from "@/@types/brands";
+import type { UUID } from "@/@types/brands";
 
 /**
  * DatePicker上で使用するカレンダーの日付の型

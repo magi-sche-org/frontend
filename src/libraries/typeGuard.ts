@@ -1,5 +1,5 @@
 import type { IEventTimeDuration, IHourOfDay } from "@/@types/api/event";
-import { IRequestResult, IRequestSuccess } from "@/@types/api/request";
+import type { IRequestResult, IRequestSuccess } from "@/@types/api/request";
 import { EventTimeDuration, HourOfDay } from "@/constants/event";
 
 const typeGuard = {

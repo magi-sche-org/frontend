@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 
-import { IRequestResult } from "@/@types/api/request";
-import {
+import type { IRequestResult } from "@/@types/api/request";
+import type {
   UserCalendarProvider,
   UserCalendarResponseProvider,
 } from "@/@types/calender";

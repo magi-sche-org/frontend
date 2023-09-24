@@ -1,8 +1,8 @@
 import { Grid } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
 
-import { CalenderItemType } from "@/@types/calender";
+import type { CalenderItemType } from "@/@types/calender";
 
 import { DayCell } from "./DayCell";
 

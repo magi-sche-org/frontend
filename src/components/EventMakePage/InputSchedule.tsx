@@ -13,7 +13,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { Stack } from "@mui/system";
 import dayjs from "dayjs";
 
-import { IEventTimeDuration } from "@/@types/api/event";
+import type { IEventTimeDuration } from "@/@types/api/event";
 
 import Styles from "../GuestPage/GuestPageBody.module.scss";
 
