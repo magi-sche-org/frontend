@@ -11,8 +11,8 @@ const typeGuard = {
   RequestSuccess: <T>(i: unknown): i is IRequestSuccess<T> =>
     typeof i === "object" &&
     objectVerify(i, ["statusCode"]) &&
-    (i as IRequestResult<unknown>).statusCode == 200 &&
-    (i as IRequestResult<unknown>).statusCode == 201,
+    ((i as IRequestResult<unknown>).statusCode == 200 ||
+      (i as IRequestResult<unknown>).statusCode == 201),
 };
 
 const objectVerify = (item: unknown, keys: string[]): boolean => {
