@@ -1,10 +1,12 @@
-import { Header } from "@/components/Header/Header";
 import "@/styles/globals.css";
+
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
-import Head from "next/head";
+
+import { Header } from "@/components/Header/Header";
 import { theme } from "@/theme/theme";
 
 export default function App({ Component, pageProps }: AppProps) {

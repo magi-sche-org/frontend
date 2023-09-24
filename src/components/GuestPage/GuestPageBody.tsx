@@ -1,3 +1,7 @@
+import Brightness1Icon from "@mui/icons-material/Brightness1";
+import ChangeHistoryIcon from "@mui/icons-material/ChangeHistory";
+import CloseIcon from "@mui/icons-material/Close";
+import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import {
   Box,
   FormControlLabel,
@@ -12,23 +16,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
 import { Stack } from "@mui/system";
-import { Button } from "../Button";
-import ChangeHistoryIcon from "@mui/icons-material/ChangeHistory";
-import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
-import CloseIcon from "@mui/icons-material/Close";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { UserCalender } from "./UserCalender";
-import { getEventStorage, setEventStorage } from "@/libraries/eventStorage";
-import Styles from "./GuestPageBody.module.scss";
+import { useEffect, useRef, useState } from "react";
+
 import { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
-import dayjs from "dayjs";
-import { createAnswer } from "@/libraries/api/events";
 import { useCalendars } from "@/hooks/calendars";
 import { useUser } from "@/hooks/user";
-import Brightness1Icon from "@mui/icons-material/Brightness1";
+import { createAnswer } from "@/libraries/api/events";
+import { getEventStorage, setEventStorage } from "@/libraries/eventStorage";
+
+import { Button } from "../Button";
+import Styles from "./GuestPageBody.module.scss";
+import { UserCalender } from "./UserCalender";
 
 type props = {
   event: IEvent;

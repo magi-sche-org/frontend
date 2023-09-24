@@ -1,9 +1,10 @@
-import { services } from "@/components/login/services";
 import Image from "next/image";
 
-import Styles from "./login.module.scss";
 import { AuthorizationService } from "@/@types/authorization";
+import { services } from "@/components/login/services";
 import { API_ENDPOINT, CALLBACK_URL_KEY } from "@/libraries/env";
+
+import Styles from "./login.module.scss";
 
 type props = {
   onClose: () => void;

@@ -1,9 +1,10 @@
-import { DetailPageBody } from "@/components/detailPage/detailPageBody";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import Head from "next/head";
+
 import { IEventResponse } from "@/@types/api/event";
+import { DetailPageBody } from "@/components/detailPage/detailPageBody";
 import { getEvent } from "@/libraries/api/events";
 
 const DetailPage = () => {

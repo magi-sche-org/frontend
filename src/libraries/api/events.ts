@@ -1,6 +1,6 @@
-import { requests } from "@/libraries/requests";
-import { IRequestResult } from "@/@types/api/request";
 import { IEvent, IEventResponse, IUserAnswerUnit } from "@/@types/api/event";
+import { IRequestResult } from "@/@types/api/request";
+import { requests } from "@/libraries/requests";
 
 const createEvent = async (
   name: string,
@@ -68,4 +68,4 @@ const createAnswer = async (
   return res.data;
 };
 
-export { createEvent, getEvent, createAnswer };
+export { createAnswer, createEvent, getEvent };

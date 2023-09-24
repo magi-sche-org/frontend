@@ -29,7 +29,7 @@ export const createProposedStartTimeList = (
 
   [...Array(candidateDayNum)].forEach((_, i) => {
     let stCopy = dayjs(baseStartDate).add(i, "day");
-    let edCopy = dayjs(baseEndDate).add(i, "day");
+    const edCopy = dayjs(baseEndDate).add(i, "day");
     dateArray.push(stCopy.toISOString());
     while (stCopy.isBefore(edCopy)) {
       stCopy = stCopy.add(timePadding, "seconds");

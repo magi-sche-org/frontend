@@ -1,7 +1,7 @@
 const generateUuid = () => {
   // https://github.com/GoogleChrome/chrome-platform-analytics/blob/master/src/internal/identifier.js
   // const FORMAT: string = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
-  let chars = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".split("");
+  const chars = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".split("");
   for (let i = 0, len = chars.length; i < len; i++) {
     switch (chars[i]) {
       case "x":

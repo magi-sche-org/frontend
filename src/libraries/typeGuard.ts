@@ -1,9 +1,10 @@
+import { ApiError } from "@/@types/error";
 import type {
   AuthorizationError,
   AuthorizationTokens,
 } from "@/@types/legacy-authorization";
 import type { userInfo } from "@/@types/userInfo";
-import { ApiError } from "@/@types/error";
+
 import type { IEventTimeDuration, IHourOfDay } from "../@types/api/event";
 import { EventTimeDuration, HourOfDay } from "../constants/event";
 

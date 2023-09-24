@@ -1,11 +1,13 @@
 import { Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import ListButton from "./ListButton";
-import { VerticalCard } from "./VerticalCard";
-import { requests } from "@/libraries/requests";
+
 import { IRequestResult } from "@/@types/api/request";
 import { UserEventItem } from "@/@types/user";
 import { useUser } from "@/hooks/user";
+import { requests } from "@/libraries/requests";
+
+import ListButton from "./ListButton";
+import { VerticalCard } from "./VerticalCard";
 
 const FOLDING_EVENT_LIMIT = 9999;
 
@@ -16,9 +18,8 @@ export const EventList = () => {
   useEffect(() => {
     if (typeof window !== "object") return;
     (async () => {
-      const req = await requests<IRequestResult<UserEventItem[]>>(
-        "/user/events",
-      );
+      const req =
+        await requests<IRequestResult<UserEventItem[]>>("/user/events");
       if (req.statusCode !== 200) return;
       setEventList(req.data);
     })();

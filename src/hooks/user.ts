@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+
+import { IRequestResult } from "@/@types/api/request";
 import { User } from "@/@types/user";
 import { requests } from "@/libraries/requests";
-import { IRequestResult } from "@/@types/api/request";
 
 const useUser = (): { user?: User; logout: () => void; update: () => void } => {
   const [user, setUser] = useState<User | undefined>();

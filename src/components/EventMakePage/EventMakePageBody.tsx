@@ -1,3 +1,4 @@
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import {
   Container,
   Divider,
@@ -12,19 +13,20 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Button } from "../Button";
-import { ModalStyle } from "../ModalStyle";
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { PageTitle } from "../common/PageTitle";
-import { TimeSelect } from "./TimeSelect";
+import { useEffect, useState } from "react";
+
 import { IEventTimeDuration } from "@/@types/api/event";
+
+import { Button } from "../Button";
+import { PageTitle } from "../common/PageTitle";
+import { ModalStyle } from "../ModalStyle";
 import { DateRangePicker } from "./DateRangePicker/DateRangePicker";
+import { TimeSelect } from "./TimeSelect";
 
 type EventTimeLengthType = {
   value: IEventTimeDuration;

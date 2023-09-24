@@ -1,9 +1,10 @@
-import GuestPageBody from "@/components/GuestPage/GuestPageBody";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import Head from "next/head";
+
 import { IEvent } from "@/@types/api/event";
+import GuestPageBody from "@/components/GuestPage/GuestPageBody";
 import { getEvent } from "@/libraries/api/events";
 
 const GuestPage = () => {

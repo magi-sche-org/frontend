@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import { useEffect, useRef, useState } from "react";
+
 import { CALLBACK_URL_KEY } from "@/libraries/env";
 
 const Callback = () => {

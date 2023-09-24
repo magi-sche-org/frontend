@@ -1,5 +1,5 @@
-import { mockEventList } from "@/components/TopPage/data";
 import { IEvent } from "@/@types/api/event";
+import { mockEventList } from "@/components/TopPage/data";
 
 const setEventStorage = (event: IEvent) => {
   const eventList: IEvent[] = JSON.parse(
