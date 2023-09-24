@@ -16,8 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Dayjs } from "dayjs";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";

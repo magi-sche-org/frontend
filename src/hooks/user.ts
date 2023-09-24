@@ -29,7 +29,7 @@ const getUser = async (count = 0): Promise<User> => {
   const user = await requests<IRequestResult<User>>("/user");
   if (user.statusCode !== 200) {
     if (count > 3) {
-      throw "failed to get user data";
+      throw new Error("failed to get user data");
     }
     await requests("/token", { method: "POST" });
     return await getUser(++count);

@@ -51,7 +51,7 @@ const EventMakePageBody: React.FC = () => {
   };
 
   const handleStartDay = (newValue: Dayjs | undefined) => {
-    setStartDay(newValue || undefined);
+    setStartDay(newValue ?? undefined);
     if (newValue != undefined && endDay != undefined) {
       // 開始日より終了日が小さければ開始日で終了日を更新
       if (newValue > endDay) {
@@ -61,7 +61,7 @@ const EventMakePageBody: React.FC = () => {
   };
 
   const handleEndDay = (newValue: Dayjs | undefined) => {
-    setEndDay(newValue || undefined);
+    setEndDay(newValue ?? undefined);
     if (newValue != undefined && startDay != undefined) {
       // 終了より開始日が小さければ開始日で終了日を更新
       if (newValue < startDay) {

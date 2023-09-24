@@ -1,4 +1,4 @@
-import { EventTimeDuration, HourOfDay } from "../../constants/event";
+import { EventTimeDuration, HourOfDay } from "@/constants/event";
 export type IEvent = {
   id: string;
   ownerId: string;

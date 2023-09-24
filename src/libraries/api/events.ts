@@ -1,4 +1,4 @@
-import { IEvent, IEventResponse, IUserAnswerUnit } from "@/@types/api/event";
+import { IEvent, IUserAnswerUnit } from "@/@types/api/event";
 import { IRequestResult } from "@/@types/api/request";
 import { requests } from "@/libraries/requests";
 import { typeGuard } from "@/libraries/typeGuard";
@@ -18,8 +18,8 @@ const createEvent = async (
     unitDuration: duration,
     units: units.map((unit) => ({ startsAt: unit })),
     enablesEmailNotification: isNotification,
-    expectedParticipantsNumber: participantsNumber || undefined,
-    notificationEmail: email || undefined,
+    expectedParticipantsNumber: participantsNumber ?? undefined,
+    notificationEmail: email ?? undefined,
   };
   const res = await requests<IRequestResult<IEvent>>("/events", {
     method: "POST",
@@ -28,12 +28,6 @@ const createEvent = async (
     },
     body: JSON.stringify(body),
   });
-  if (!typeGuard.RequestSuccess(res)) throw new Error(res.message);
-  return res.data;
-};
-
-const getEvent = async (id: string) => {
-  const res = await requests<IRequestResult<IEventResponse>>(`/events/${id}`);
   if (!typeGuard.RequestSuccess(res)) throw new Error(res.message);
   return res.data;
 };
@@ -63,4 +57,4 @@ const createAnswer = async (
   return res.data;
 };
 
-export { createAnswer, createEvent, getEvent };
+export { createAnswer, createEvent };
