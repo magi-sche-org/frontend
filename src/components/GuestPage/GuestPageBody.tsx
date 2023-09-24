@@ -23,7 +23,6 @@ import { useSnackbar } from "notistack";
 import { UserCalender } from "./UserCalender";
 import { getEventStorage, setEventStorage } from "@/libraries/eventStorage";
 import Styles from "./GuestPageBody.module.scss";
-import crypto from "crypto-js";
 import { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
 import dayjs from "dayjs";
 import { createAnswer } from "@/libraries/api/events";
@@ -42,10 +41,6 @@ export type IAnswerList = {
     startsAt: string;
     id: string;
   };
-};
-
-const hashToken = (hash: string): string => {
-  return crypto.SHA256(hash).toString(crypto.enc.Base64);
 };
 
 const GuestPageBody = ({ event }: props) => {
