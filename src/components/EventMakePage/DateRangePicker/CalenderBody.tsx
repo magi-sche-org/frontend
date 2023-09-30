@@ -6,7 +6,7 @@ import type { CalenderItemType } from "@/@types/calender";
 
 import { DayCell } from "./DayCell";
 
-type props = {
+type Props = {
   calenderArray: CalenderItemType[][];
   handleSelectDay: (day: Dayjs) => void;
   isUndefinedSelectedDay: boolean;
@@ -25,7 +25,7 @@ export const CalenderBody = ({
   handleSelectDay,
   isUndefinedSelectedDay,
   isSameDay,
-}: props) => {
+}: Props) => {
   return (
     <Stack>
       {calenderArray.map((week, index) => {

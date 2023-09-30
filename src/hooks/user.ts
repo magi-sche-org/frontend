@@ -7,7 +7,7 @@ import { requests } from "@/libraries/requests";
 const useUser = (): { user?: User; logout: () => void; update: () => void } => {
   const [user, setUser] = useState<User | undefined>();
   const ref = useRef(false);
-  const update = () => {
+  const update = (): void => {
     void (async () => {
       setUser(await getUser());
     })();
@@ -17,7 +17,7 @@ const useUser = (): { user?: User; logout: () => void; update: () => void } => {
     ref.current = true;
     update();
   }, []);
-  const logout = () => {
+  const logout = (): void => {
     void requests("/logout", { method: "POST" }).then(() => {
       location.reload();
     });

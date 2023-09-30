@@ -3,12 +3,12 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Button } from "@mui/material";
 import { Stack } from "@mui/system";
 
-type props = {
+type Props = {
   isUp: boolean;
   onClick: (isUp: boolean) => void;
 };
 
-export const VerticalCard = ({ isUp, onClick }: props) => {
+export const VerticalCard = ({ isUp, onClick }: Props) => {
   return (
     <Stack
       sx={{

@@ -21,6 +21,7 @@ import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import type { FC } from "react";
 import { useEffect, useMemo, useState } from "react";
 
 import type { IEventTimeDuration, IHourOfDay } from "@/@types/api/event";
@@ -37,7 +38,7 @@ import { typeGuard } from "@/libraries/typeGuard";
 import { Button as CButton } from "../components/Button";
 
 //http://localhost:3000/preview?startday=2023-09-01&endday=2023-09-03&starttime=11&endtime=13&eventtimeduration=1800
-function Preview() {
+const Preview: FC = () => {
   const searchParams = useSearchParams();
   // searchParamsが変わった時にのみ再取得
   const { startDay, endDay, startTime, endTime, eventTimeDuration } =
@@ -105,7 +106,7 @@ function Preview() {
     return <div>不正なパラメータが送られています。</div>;
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     // checkedのものだけ抽出
     const filteringStartTimeList = Object.entries(startTimeList)
       .filter(([, checked]) => checked)
@@ -240,7 +241,7 @@ function Preview() {
       </Stack>
     </>
   );
-}
+};
 
 const initStartTimeList = (
   startDay: Dayjs,
@@ -248,7 +249,7 @@ const initStartTimeList = (
   startTime: IHourOfDay,
   endTime: IHourOfDay,
   eventTimeDuration: IEventTimeDuration,
-) => {
+): Record<string, boolean> => {
   // 与えられた情報から候補日の開始時間を決定し、checkListを初期化
   // console.log(
   //   startDay,
@@ -289,14 +290,14 @@ const ModalStyle = {
 };
 
 type DisplayShareURLModalProps = { isOpen: boolean; shareURL: string };
-const DisplayShareURLModal = ({
+const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
   isOpen,
   shareURL,
-}: DisplayShareURLModalProps) => {
+}) => {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  const copyTextToClipboard = (text: string) => {
+  const copyTextToClipboard = (text: string): void => {
     navigator.clipboard
       .writeText(text)
       .then(() => {

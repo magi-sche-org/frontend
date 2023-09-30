@@ -13,11 +13,11 @@ import { useState } from "react";
 import { Login } from "@/components/login";
 import { useUser } from "@/hooks/user";
 
-type props = {
+type Props = {
   type?: "primary" | "secondary";
 };
 
-export const Header = ({ type = "primary" }: props) => {
+export const Header = ({ type = "primary" }: Props) => {
   const router = useRouter();
   const [loginModalActive, setLoginModalActive] = useState(false);
   const { user, logout } = useUser();

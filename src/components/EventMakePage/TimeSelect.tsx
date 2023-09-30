@@ -7,7 +7,7 @@ const timeList = [
   23, 24,
 ];
 
-type props = {
+type Props = {
   time: number;
   handleTime: (time: number) => void;
   underTime?: number;
@@ -20,7 +20,7 @@ type props = {
  *  @param handleTime 時間を更新するhandler
  *  @param underTime 以下の時間を選択できないようにする
  */
-export const TimeSelect = ({ time, handleTime, underTime }: props) => {
+export const TimeSelect = ({ time, handleTime, underTime }: Props) => {
   // 開始時間よりも前の時間を選択できないようにする
   const editTimeList = underTime
     ? timeList.filter((item) => {

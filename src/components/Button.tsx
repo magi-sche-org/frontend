@@ -1,11 +1,12 @@
 import { Button as MUIButton } from "@mui/material";
+import type { FC } from "react";
 
-type props = {
+type Props = {
   text: string;
   isPrimary: boolean;
   onClick?: () => void;
 };
-export const Button = ({ text, isPrimary, onClick }: props) => {
+export const Button: FC<Props> = ({ text, isPrimary, onClick }) => {
   return (
     <MUIButton
       fullWidth

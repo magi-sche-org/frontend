@@ -1,6 +1,8 @@
+import type { FC } from "react";
+
 import { EventMakePageBody } from "@/components/EventMakePage/EventMakePageBody";
 
-const EventMakePage = () => {
+const EventMakePage: FC = () => {
   return (
     <>
       <EventMakePageBody />

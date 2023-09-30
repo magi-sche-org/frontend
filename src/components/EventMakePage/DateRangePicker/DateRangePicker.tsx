@@ -10,7 +10,7 @@ import { CalenderBody } from "./CalenderBody";
 import { CalenderControlHeader } from "./CalenderControlHeader";
 import { CalenderHeader } from "./CalenderHeader";
 
-type props = {
+type Props = {
   startDay: Dayjs | undefined;
   endDay: Dayjs | undefined;
   setStartDay: (newValue: Dayjs | undefined) => void;
@@ -30,7 +30,7 @@ export const DateRangePicker = ({
   endDay,
   setStartDay,
   setEndDay,
-}: props) => {
+}: Props) => {
   const { nowDate, dateArrayByWeek, addMonth, subtractMonth } =
     useCalenderControl();
 

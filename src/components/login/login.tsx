@@ -6,11 +6,11 @@ import { API_ENDPOINT, CALLBACK_URL_KEY } from "@/libraries/env";
 
 import Styles from "./login.module.scss";
 
-type props = {
+type Props = {
   onClose: () => void;
 };
 
-const Login = ({ onClose }: props) => {
+const Login = ({ onClose }: Props) => {
   const onClick = (service: AuthorizationService) => {
     localStorage.setItem(CALLBACK_URL_KEY, location.pathname);
     location.href = `${API_ENDPOINT}/oauth2/${service.id}`;

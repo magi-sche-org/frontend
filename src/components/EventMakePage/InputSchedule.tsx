@@ -17,7 +17,7 @@ import type { IEventTimeDuration } from "@/@types/api/event";
 
 import Styles from "../GuestPage/GuestPageBody.module.scss";
 
-type props = {
+type Props = {
   eventTimeDuration: IEventTimeDuration;
   checkList: Record<string, boolean>;
   setCheckList: (checkList: Record<string, boolean>) => void;
@@ -27,7 +27,7 @@ export const InputSchedule = ({
   checkList,
   setCheckList,
   eventTimeDuration,
-}: props) => {
+}: Props) => {
   dayjs.locale("ja");
   return (
     <TableContainer>

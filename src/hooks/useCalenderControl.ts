@@ -45,10 +45,10 @@ export const useCalenderControl = (): CalenderControlType => {
    * - addMonth: 1ヶ月後
    * - subtractMonth: 1ヶ月前
    */
-  const addMonth = () => {
+  const addMonth = (): void => {
     setMonthPosition(MonthPosition + 1);
   };
-  const subtractMonth = () => {
+  const subtractMonth = (): void => {
     setMonthPosition(MonthPosition - 1);
   };
 

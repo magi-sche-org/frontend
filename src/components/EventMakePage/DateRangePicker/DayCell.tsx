@@ -9,7 +9,7 @@ import { theme } from "@/theme/theme";
 
 const PRIMARYLIGHT = theme.palette.primary.light;
 
-type props = {
+type Props = {
   calenderItem: CalenderItemType;
   handleSelectDay: (day: Dayjs) => void;
   isUndefinedSelectedDay: boolean;
@@ -28,7 +28,7 @@ export const DayCell = ({
   handleSelectDay,
   isUndefinedSelectedDay,
   isSameDay,
-}: props) => {
+}: Props) => {
   const { day, isThisMonthDay, isStarted, isEnded, isBetween } = calenderItem;
   const isSelected = isStarted || isEnded;
 

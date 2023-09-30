@@ -5,11 +5,12 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
+import type { FC } from "react";
 
 import { Header } from "@/components/Header/Header";
 import { theme } from "@/theme/theme";
 
-function App({ Component, pageProps }: AppProps) {
+const App: FC<AppProps> = ({ Component, pageProps }) => {
   const router = useRouter();
 
   const headerType = (() => {
@@ -34,10 +35,6 @@ function App({ Component, pageProps }: AppProps) {
         <link rel="icon" type="image/png" sizes="64x64" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Quicksand&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <ThemeProvider theme={theme}>
         <SnackbarProvider>
@@ -48,6 +45,6 @@ function App({ Component, pageProps }: AppProps) {
       </ThemeProvider>
     </>
   );
-}
+};
 
 export default App;

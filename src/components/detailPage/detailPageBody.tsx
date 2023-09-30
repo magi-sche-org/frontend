@@ -24,7 +24,7 @@ import type {
 import { Button } from "@/components/Button";
 import { groupAnswerByStartsTime } from "@/libraries/event";
 import { getEventStorage } from "@/libraries/eventStorage";
-type props = {
+type Props = {
   event: IEventResponse;
 };
 
@@ -34,7 +34,7 @@ const availabilityMap: { [availability in IAvailability]: string } = {
   maybe: "不明",
 };
 
-const DetailPageBody = ({ event }: props) => {
+const DetailPageBody = ({ event }: Props) => {
   const router = useRouter();
   const isAnswered = getEventStorage().reduce(
     (pv: boolean, val) => (val.yourAnswerId && val.id === event.id) || pv,

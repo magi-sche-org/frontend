@@ -8,7 +8,7 @@ export const createProposedStartTimeList = (
   duration: number,
   startTime: number,
   endTime: number,
-) => {
+): string[] => {
   if (startDate === undefined || endDate === undefined) {
     return [];
   }

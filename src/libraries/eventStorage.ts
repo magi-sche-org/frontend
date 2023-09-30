@@ -1,7 +1,7 @@
 import type { IEvent } from "@/@types/api/event";
 import { mockEventList } from "@/components/TopPage/data";
 
-const setEventStorage = (event: IEvent) => {
+const setEventStorage = (event: IEvent): void => {
   const eventList = JSON.parse(
     localStorage.getItem("event-list") ?? "[]",
   ) as IEvent[];
@@ -20,7 +20,7 @@ const setEventStorage = (event: IEvent) => {
   localStorage.setItem("event-list", JSON.stringify(eventList));
 };
 
-const getEventStorage = () => {
+const getEventStorage = (): IEvent[] => {
   const data = localStorage.getItem("event-list");
   if (!data) {
     return process.env.NODE_ENV === "production" ? [] : mockEventList;

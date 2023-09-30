@@ -20,7 +20,7 @@ const useCalendars = (): {
     UserCalendarResponseProvider[] | undefined
   >(undefined);
 
-  const updateCalendars = () => {
+  const updateCalendars = (): void => {
     void (async () => {
       const calendars = await requests<
         IRequestResult<UserCalendarResponseProvider[]>

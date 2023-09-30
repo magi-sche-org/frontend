@@ -1,6 +1,6 @@
 import type { UUID } from "@/@types/brands";
 
-const generateUuid = () => {
+const generateUuid = (): UUID => {
   // https://github.com/GoogleChrome/chrome-platform-analytics/blob/master/src/internal/identifier.js
   // const FORMAT: string = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
   const chars = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".split("");

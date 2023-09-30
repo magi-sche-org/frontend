@@ -32,7 +32,7 @@ import { Button } from "../Button";
 import Styles from "./GuestPageBody.module.scss";
 import { UserCalender } from "./UserCalender";
 
-type props = {
+type Props = {
   event: IEvent;
 };
 
@@ -45,7 +45,7 @@ export type IAnswerList = {
   };
 };
 
-const GuestPageBody = ({ event }: props) => {
+const GuestPageBody = ({ event }: Props) => {
   const router = useRouter();
   const { user } = useUser();
   const { calendars } = useCalendars();

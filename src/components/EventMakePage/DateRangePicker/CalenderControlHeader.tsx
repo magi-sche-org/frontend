@@ -3,7 +3,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Grid, IconButton, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 
-type props = {
+type Props = {
   headerLabel: string;
   addMonth: () => void;
   subtractMonth: () => void;
@@ -20,7 +20,7 @@ export const CalenderControlHeader = ({
   headerLabel,
   addMonth,
   subtractMonth,
-}: props) => {
+}: Props) => {
   return (
     <Grid container columns={7} alignItems="center">
       <Grid item xs={3}>

@@ -1,12 +1,12 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 
-type props = {
+type Props = {
   text: string;
   page: string;
 };
 
-const ListButton = ({ text, page }: props) => {
+const ListButton = ({ text, page }: Props) => {
   const router = useRouter();
   return (
     <Stack

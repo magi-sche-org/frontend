@@ -1,11 +1,11 @@
 import { Typography } from "@mui/material";
 import type { ReactNode } from "react";
 
-type props = {
+type Props = {
   children: ReactNode;
 };
 
-export const PageTitle = ({ children }: props) => {
+export const PageTitle = ({ children }: Props) => {
   return (
     <Typography variant="h5" sx={{ textAlign: "center" }}>
       {children}
