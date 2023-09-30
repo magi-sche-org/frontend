@@ -1,38 +1,34 @@
 import {
-  Container,
   Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
-  IconButton,
-  Modal,
   Radio,
   RadioGroup,
-  SelectChangeEvent,
-  TextField,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Button } from "../Button";
-import { ModalStyle } from "../ModalStyle";
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
+
+import type { IEventTimeDuration } from "@/@types/api/event";
+
+import { Button } from "../Button";
 import { PageTitle } from "../common/PageTitle";
-import { TimeSelect } from "./TimeSelect";
-import { IEventTimeDuration } from "@/@types/api/event";
 import { DateRangePicker } from "./DateRangePicker/DateRangePicker";
+import { TimeSelect } from "./TimeSelect";
 
 type EventTimeLengthType = {
   value: IEventTimeDuration;
   label: string;
 };
 
-const EventMakePageBody: React.FC = () => {
+const EventMakePageBody: FC = () => {
   const router = useRouter();
 
   // 時間
@@ -45,24 +41,19 @@ const EventMakePageBody: React.FC = () => {
   const [endDay, setEndDay] = useState<Dayjs | undefined>(
     dayjs().add(3, "day"),
   );
-  // モーダル
-  const [ModalOpen, setModalOpen] = useState<boolean>(false);
-  const { enqueueSnackbar } = useSnackbar();
 
-  const [shareURL, setShareURL] = useState("");
-
-  const handleStartTime = (time: number) => {
+  const handleStartTime = (time: number): void => {
     localStorage.setItem("magiScheStartTime", String(time));
     setStartTime(time);
   };
 
-  const handleEndTime = (time: number) => {
+  const handleEndTime = (time: number): void => {
     localStorage.setItem("magiScheEndTime", String(time));
     setEndTime(time);
   };
 
-  const handleStartDay = (newValue: Dayjs | undefined) => {
-    setStartDay(newValue || undefined);
+  const handleStartDay = (newValue: Dayjs | undefined): void => {
+    setStartDay(newValue ?? undefined);
     if (newValue != undefined && endDay != undefined) {
       // 開始日より終了日が小さければ開始日で終了日を更新
       if (newValue > endDay) {
@@ -71,8 +62,8 @@ const EventMakePageBody: React.FC = () => {
     }
   };
 
-  const handleEndDay = (newValue: Dayjs | undefined) => {
-    setEndDay(newValue || undefined);
+  const handleEndDay = (newValue: Dayjs | undefined): void => {
+    setEndDay(newValue ?? undefined);
     if (newValue != undefined && startDay != undefined) {
       // 終了より開始日が小さければ開始日で終了日を更新
       if (newValue < startDay) {
@@ -81,30 +72,13 @@ const EventMakePageBody: React.FC = () => {
     }
   };
 
-  const submit = () => {
+  const submit = (): void => {
     const startDayStr = startDay?.format("YYYY-MM-DD");
     const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
     // TODO:
-    router.push(
+    void router.push(
       `/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
-  };
-
-  const copyTextToClipboard = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        enqueueSnackbar("URLをコピーしました", {
-          autoHideDuration: 2000,
-          variant: "success",
-        });
-      })
-      .catch(() => {
-        enqueueSnackbar("URLのコピーに失敗しました", {
-          autoHideDuration: 2000,
-          variant: "error",
-        });
-      });
   };
 
   /**
@@ -172,21 +146,6 @@ const EventMakePageBody: React.FC = () => {
               })}
             </RadioGroup>
           </FormControl>
-          {/* <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
-              <ToggleButtonGroup
-                color="primary"
-                value={TimePadding}
-                exclusive
-                onChange={(e, newAlignment: string) => {
-                  setTimePadding(Number(newAlignment));
-                }}
-                aria-label="Platform"
-              >
-                <ToggleButton value={1800}>30min</ToggleButton>
-                <ToggleButton value={3600}>　1h　</ToggleButton>
-                <ToggleButton value={86400}>1day</ToggleButton>
-              </ToggleButtonGroup>
-            </Stack> */}
         </Stack>
         {/* 日付ピッカー */}
         <Stack spacing={3}>
@@ -205,57 +164,8 @@ const EventMakePageBody: React.FC = () => {
           <Button text="決定" isPrimary={true} onClick={submit} />
         </Stack>
       </Stack>
-
-      <Modal open={ModalOpen}>
-        <Container maxWidth="xs" sx={{ ...ModalStyle }}>
-          <Stack direction="column" sx={{ mx: 8 }}>
-            <Typography
-              variant="h6"
-              noWrap={true}
-              sx={{ textAlign: "center", mb: 4 }}
-            >
-              イベントを作成しました
-            </Typography>
-            <Typography variant="body2" sx={{ textAlign: "center", mb: 1.5 }}>
-              共有URL
-            </Typography>
-            <TextField
-              variant="standard"
-              InputProps={{
-                startAdornment: (
-                  <IconButton
-                    onClick={() => {
-                      copyTextToClipboard(shareURL);
-                    }}
-                  >
-                    <ContentCopyOutlinedIcon />
-                  </IconButton>
-                ),
-              }}
-              sx={{ mb: 4 }}
-              value={shareURL}
-            />
-            <Stack spacing={2} sx={{ mb: 2 }}>
-              <Button
-                text="トップに戻る"
-                isPrimary={true}
-                onClick={() => {
-                  router.push("/");
-                }}
-              />
-              <Button
-                text="イベントを確認"
-                isPrimary={false}
-                onClick={() => {
-                  router.push("/");
-                }}
-              />
-            </Stack>
-          </Stack>
-        </Container>
-      </Modal>
     </>
   );
 };
 
-export default EventMakePageBody;
+export { EventMakePageBody };

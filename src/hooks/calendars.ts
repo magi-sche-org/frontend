@@ -1,12 +1,13 @@
-import { useUser } from "@/hooks/user";
-import { requests } from "@/libraries/requests";
-import { IRequestResult } from "@/@types/api/request";
-import {
+import dayjs from "dayjs";
+import { useEffect, useRef, useState } from "react";
+
+import type { IRequestResult } from "@/@types/api/request";
+import type {
   UserCalendarProvider,
   UserCalendarResponseProvider,
 } from "@/@types/calender";
-import { useEffect, useRef, useState } from "react";
-import dayjs from "dayjs";
+import { useUser } from "@/hooks/user";
+import { requests } from "@/libraries/requests";
 import { generateUuid } from "@/libraries/uuid";
 
 const useCalendars = (): {
@@ -19,7 +20,7 @@ const useCalendars = (): {
     UserCalendarResponseProvider[] | undefined
   >(undefined);
 
-  const updateCalendars = () => {
+  const updateCalendars = (): void => {
     void (async () => {
       const calendars = await requests<
         IRequestResult<UserCalendarResponseProvider[]>

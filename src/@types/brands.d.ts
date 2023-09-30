@@ -1,1 +1,1 @@
-export type DATE = string & { readonly Date: unique symbol };
+export type UUID = string & { readonly UUID: unique symbol };

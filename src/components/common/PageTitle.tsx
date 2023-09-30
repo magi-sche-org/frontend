@@ -1,8 +1,8 @@
 import { Typography } from "@mui/material";
-import { FC } from "react";
+import type { FC, ReactNode } from "react";
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export const PageTitle: FC<Props> = ({ children }) => {

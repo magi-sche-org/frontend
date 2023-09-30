@@ -1,16 +1,18 @@
-import { services } from "@/components/login/services";
 import Image from "next/image";
+import type { FC } from "react";
 
-import Styles from "./login.module.scss";
-import { AuthorizationService } from "@/@types/authorization";
+import type { AuthorizationService } from "@/@types/authorization";
+import { services } from "@/components/login/services";
 import { API_ENDPOINT, CALLBACK_URL_KEY } from "@/libraries/env";
 
-type props = {
+import Styles from "./login.module.scss";
+
+type Props = {
   onClose: () => void;
 };
 
-const Login = ({ onClose }: props) => {
-  const onClick = (service: AuthorizationService) => {
+const Login: FC<Props> = ({ onClose }) => {
+  const onClick = (service: AuthorizationService): void => {
     localStorage.setItem(CALLBACK_URL_KEY, location.pathname);
     location.href = `${API_ENDPOINT}/oauth2/${service.id}`;
   };

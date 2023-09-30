@@ -1,6 +1,8 @@
+import type { FC } from "react";
+
 import { TopPage } from "@/components/TopPage/TopPage";
 
-export default function Home() {
+const Home: FC = () => {
   return (
     <>
       <main>
@@ -8,4 +10,6 @@ export default function Home() {
       </main>
     </>
   );
-}
+};
+
+export default Home;

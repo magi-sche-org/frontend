@@ -9,7 +9,7 @@ const requests = async <T = unknown>(
     credentials: "include",
     ...init,
   });
-  return type === "json" ? await req.json() : await req.text();
+  return (type === "json" ? await req.json() : await req.text()) as T;
 };
 
 export { requests };

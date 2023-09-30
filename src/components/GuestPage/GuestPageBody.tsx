@@ -1,6 +1,9 @@
+import Brightness1Icon from "@mui/icons-material/Brightness1";
+import ChangeHistoryIcon from "@mui/icons-material/ChangeHistory";
+import CloseIcon from "@mui/icons-material/Close";
+import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import {
   Box,
-  Checkbox,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -13,27 +16,24 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
 import { Stack } from "@mui/system";
-import { Button } from "../Button";
-import ChangeHistoryIcon from "@mui/icons-material/ChangeHistory";
-import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
-import CloseIcon from "@mui/icons-material/Close";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { UserCalender } from "./UserCalender";
-import { getEventStorage, setEventStorage } from "@/libraries/eventStorage";
-import Styles from "./GuestPageBody.module.scss";
-import crypto from "crypto-js";
-import { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
-import dayjs from "dayjs";
-import { createAnswer } from "@/libraries/api/events";
+import type { FC } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import type { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
 import { useCalendars } from "@/hooks/calendars";
 import { useUser } from "@/hooks/user";
-import { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
-import Brightness1Icon from "@mui/icons-material/Brightness1";
+import { createAnswer } from "@/libraries/api/events";
+import { getEventStorage, setEventStorage } from "@/libraries/eventStorage";
 
-type props = {
+import { Button } from "../Button";
+import Styles from "./GuestPageBody.module.scss";
+import { UserCalender } from "./UserCalender";
+
+type Props = {
   event: IEvent;
 };
 
@@ -46,16 +46,11 @@ export type IAnswerList = {
   };
 };
 
-const hashToken = (hash: string): string => {
-  return crypto.SHA256(hash).toString(crypto.enc.Base64);
-};
-
-const GuestPageBody = ({ event }: props) => {
+const GuestPageBody: FC<Props> = ({ event }) => {
   const router = useRouter();
   const { user } = useUser();
   const { calendars } = useCalendars();
   const [NameText, setNameText] = useState<string>(getDefaultName(event));
-  const [note, setNote] = useState<string>(getMyAnswer(event)?.note || "");
   const [checklist, setChecklist] = useState<IAnswerList>(() => {
     const answer = getMyAnswer(event)?.units.map((answer) => {
       return {
@@ -112,7 +107,7 @@ const GuestPageBody = ({ event }: props) => {
     setChecklist(list);
   }, [calendars, event]);
 
-  const Submit = async () => {
+  const Submit = async (): Promise<void> => {
     // Submit validation
     if (!NameText) {
       enqueueSnackbar("表示名を入力してください", {
@@ -124,7 +119,7 @@ const GuestPageBody = ({ event }: props) => {
     await createAnswer(
       event.id,
       NameText,
-      note,
+      "",
       Object.values(checklist).map((val) => {
         return {
           eventTimeUnitId: val.id,
@@ -137,7 +132,7 @@ const GuestPageBody = ({ event }: props) => {
       variant: "success",
     });
     setEventStorage(event);
-    router.push("/");
+    void router.push("/");
   };
 
   return (
@@ -153,7 +148,7 @@ const GuestPageBody = ({ event }: props) => {
               text={"閲覧ページへ"}
               isPrimary={true}
               onClick={() => {
-                router.push(`/detail/${router.query.id}`);
+                void router.push(`/detail/${router.query.id}`);
               }}
             />
           )}
@@ -318,7 +313,7 @@ const GuestPageBody = ({ event }: props) => {
           <Button
             text={isAnswered ? "更新" : "決定"}
             isPrimary={true}
-            onClick={Submit}
+            onClick={() => void Submit()}
           />
         </Stack>
       </Stack>
@@ -326,7 +321,7 @@ const GuestPageBody = ({ event }: props) => {
   );
 };
 
-const getDefaultName = (event: IEvent) => {
+const getDefaultName = (event: IEvent): string => {
   const answer = getMyAnswer(event);
   if (!event.yourAnswerId || !answer) return "";
   return answer?.userNickname ?? "";
@@ -336,4 +331,4 @@ const getMyAnswer = (event: IEvent): IUserAnswer | undefined => {
   return event.userAnswers.find((a) => a.id === event.yourAnswerId);
 };
 
-export default GuestPageBody;
+export { GuestPageBody };

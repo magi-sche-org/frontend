@@ -2,13 +2,12 @@ import { Button, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import type { FC } from "react";
 
-type ListButtonType = {
+type Props = {
   text: string;
   page: string;
 };
 
-const ListButton: FC<ListButtonType> = (props) => {
-  const { text, page } = props;
+const ListButton: FC<Props> = ({ text, page }) => {
   const router = useRouter();
   return (
     <Stack
@@ -20,7 +19,7 @@ const ListButton: FC<ListButtonType> = (props) => {
     >
       <Button
         onClick={() => {
-          router.push(`${page}`);
+          void router.push(`${page}`);
         }}
         sx={{ p: 2.5 }}
       >
@@ -32,4 +31,4 @@ const ListButton: FC<ListButtonType> = (props) => {
   );
 };
 
-export default ListButton;
+export { ListButton };

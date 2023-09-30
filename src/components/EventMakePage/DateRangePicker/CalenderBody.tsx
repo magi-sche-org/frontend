@@ -1,9 +1,11 @@
-import { FC } from "react";
-import { DayCell } from "./DayCell";
-import { CalenderItemType } from "@/@types/calender";
 import { Grid } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
+import type { FC } from "react";
+
+import type { CalenderItemType } from "@/@types/calender";
+
+import { DayCell } from "./DayCell";
 
 type Props = {
   calenderArray: CalenderItemType[][];

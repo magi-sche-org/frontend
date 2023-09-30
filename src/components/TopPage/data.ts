@@ -1,4 +1,4 @@
-import { IEventResponse } from "@/@types/api/event";
+import type { IEventResponse } from "@/@types/api/event";
 
 export const mockEventList: IEventResponse[] = [
   {

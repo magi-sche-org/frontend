@@ -1,11 +1,5 @@
-import { Dayjs } from "dayjs";
-import { useSearchParams } from "next/navigation";
-import { typeGuard } from "@/libraries/typeGuard";
-import dayjs from "dayjs";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
-import { Button as CButton } from "../components/Button";
-import { IEventTimeDuration, IHourOfDay } from "@/@types/api/event";
-import { FC, useEffect, useMemo, useState } from "react";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
   Button,
   Checkbox,
@@ -21,26 +15,30 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { UserCalender } from "@/components/GuestPage/UserCalender";
 import { Stack } from "@mui/system";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { PageTitle } from "@/components/common/PageTitle";
-import { createEvent } from "@/libraries/api/events";
-import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
-import { InputSchedule } from "@/components/EventMakePage/InputSchedule";
-import { setEventStorage } from "@/libraries/eventStorage";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import type { FC } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import type { IEventTimeDuration, IHourOfDay } from "@/@types/api/event";
+import { PageTitle } from "@/components/common/PageTitle";
+import { InputSchedule } from "@/components/EventMakePage/InputSchedule";
+import { UserCalender } from "@/components/GuestPage/UserCalender";
 import { useCalendars } from "@/hooks/calendars";
 import { useUser } from "@/hooks/user";
+import { createEvent } from "@/libraries/api/events";
+import { setEventStorage } from "@/libraries/eventStorage";
+import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
+import { typeGuard } from "@/libraries/typeGuard";
 
-export type IAnswerList = {
-  // key: Dayjsをstring化したもの
-  [unitStartTime: string]: boolean;
-};
+import { Button as CButton } from "../components/Button";
 
 //http://localhost:3000/preview?startday=2023-09-01&endday=2023-09-03&starttime=11&endtime=13&eventtimeduration=1800
-export default function Home() {
+const Preview: FC = () => {
   const searchParams = useSearchParams();
   // searchParamsが変わった時にのみ再取得
   const { startDay, endDay, startTime, endTime, eventTimeDuration } =
@@ -108,11 +106,11 @@ export default function Home() {
     return <div>不正なパラメータが送られています。</div>;
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     // checkedのものだけ抽出
     const filteringStartTimeList = Object.entries(startTimeList)
-      .filter(([_, checked]) => checked)
-      .map(([startTime, _]) => startTime);
+      .filter(([, checked]) => checked)
+      .map(([startTime]) => startTime);
     const response = await createEvent(
       eventName,
       eventDescription,
@@ -236,14 +234,14 @@ export default function Home() {
             />
           </FormGroup>
         </Stack>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button variant="contained" onClick={() => void handleSubmit()}>
           作成する
         </Button>
         <DisplayShareURLModal isOpen={showModal} shareURL={shareURL} />
       </Stack>
     </>
   );
-}
+};
 
 const initStartTimeList = (
   startDay: Dayjs,
@@ -251,7 +249,7 @@ const initStartTimeList = (
   startTime: IHourOfDay,
   endTime: IHourOfDay,
   eventTimeDuration: IEventTimeDuration,
-) => {
+): Record<string, boolean> => {
   // 与えられた情報から候補日の開始時間を決定し、checkListを初期化
   // console.log(
   //   startDay,
@@ -279,7 +277,7 @@ const initStartTimeList = (
 };
 
 const ModalStyle = {
-  position: "absolute" as "absolute",
+  position: "absolute" as const,
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -299,7 +297,7 @@ const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  const copyTextToClipboard = (text: string) => {
+  const copyTextToClipboard = (text: string): void => {
     navigator.clipboard
       .writeText(text)
       .then(() => {
@@ -351,14 +349,14 @@ const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
               text="トップに戻る"
               isPrimary={true}
               onClick={() => {
-                router.push("/");
+                void router.push("/");
               }}
             />{" "}
             <CButton
               text="イベントを確認"
               isPrimary={false}
               onClick={() => {
-                router.push(shareURL.replace("guest", "detail"));
+                void router.push(shareURL.replace("guest", "detail"));
               }}
             />
           </Stack>
@@ -367,3 +365,5 @@ const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
     </Modal>
   );
 };
+
+export default Preview;

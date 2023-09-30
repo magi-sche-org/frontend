@@ -1,26 +1,28 @@
-import * as React from "react";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Button, Container } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import { Button, Container } from "@mui/material";
-import Head from "next/head";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { useState } from "react";
-import Image from "next/image";
 import { Stack } from "@mui/system";
+import Head from "next/head";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import type { FC } from "react";
+import * as React from "react";
+import { useState } from "react";
+
 import { Login } from "@/components/login";
 import { useUser } from "@/hooks/user";
 
-type props = {
+type Props = {
   type?: "primary" | "secondary";
 };
 
-export const Header = ({ type = "primary" }: props) => {
+export const Header: FC<Props> = ({ type = "primary" }) => {
   const router = useRouter();
   const [loginModalActive, setLoginModalActive] = useState(false);
   const { user, logout } = useUser();
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenu = (): void => {
     if (!user?.isRegistered) {
       setLoginModalActive(true);
     } else {
@@ -41,7 +43,7 @@ export const Header = ({ type = "primary" }: props) => {
             <IconButton edge="start" size="large" disabled>
               <AccountCircle sx={{ color: `${type}.main` }} />
             </IconButton>
-            <Button onClick={() => router.push("/")}>
+            <Button onClick={() => void router.push("/")}>
               <Image
                 src={"/images/logo.png"}
                 alt={"logo"}

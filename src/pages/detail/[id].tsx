@@ -1,39 +1,21 @@
-import { DetailPageBody } from "@/components/detailPage/detailPageBody";
-import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
 import Head from "next/head";
-import { IEvent, IEventResponse } from "@/@types/api/event";
-import { getEvent } from "@/libraries/api/events";
+import { useRouter } from "next/router";
+import type { FC } from "react";
 
-const DetailPage = () => {
-  const { enqueueSnackbar } = useSnackbar();
+import { DetailPageBody } from "@/components/detailPage/detailPageBody";
+import { useEvent } from "@/hooks/event";
+
+const DetailPage: FC = () => {
   const router = useRouter();
-  const [eventDetail, setEventDetail] = useState<IEventResponse | undefined>(
-    undefined,
-  );
   const { id } = router.query;
-  useEffect(() => {
-    if (typeof id !== "string") return;
-    (async () => {
-      try {
-        const event = await getEvent(id);
-        setEventDetail(event);
-      } catch (e) {
-        enqueueSnackbar("イベント情報を取得できませんでした", {
-          autoHideDuration: 2000,
-          variant: "error",
-        });
-      }
-    })();
-  }, [id]);
-  if (!eventDetail) return <></>;
+  const { event, error } = useEvent(id as string);
+  if (!event) return <>{error?.message}</>;
   return (
     <>
       <Head>
-        <title>{eventDetail.name} - Magi-Sche</title>
+        <title>{event.name} - Magi-Sche</title>
       </Head>
-      <DetailPageBody event={eventDetail} />
+      <DetailPageBody event={event} />
     </>
   );
 };

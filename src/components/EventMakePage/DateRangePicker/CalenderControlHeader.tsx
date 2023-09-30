@@ -1,8 +1,8 @@
-import { Grid, Typography, IconButton } from "@mui/material";
-import { Stack } from "@mui/system";
-import { FC } from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Grid, IconButton, Typography } from "@mui/material";
+import { Stack } from "@mui/system";
+import type { FC } from "react";
 
 type Props = {
   headerLabel: string;

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { User } from "@/@types/user";
+
+import type { IRequestResult } from "@/@types/api/request";
+import type { User } from "@/@types/user";
 import { requests } from "@/libraries/requests";
-import { IRequestResult } from "@/@types/api/request";
 
 const useUser = (): { user?: User; logout: () => void; update: () => void } => {
   const [user, setUser] = useState<User | undefined>();
   const ref = useRef(false);
-  const update = () => {
+  const update = (): void => {
     void (async () => {
       setUser(await getUser());
     })();
@@ -16,8 +17,8 @@ const useUser = (): { user?: User; logout: () => void; update: () => void } => {
     ref.current = true;
     update();
   }, []);
-  const logout = () => {
-    requests("/logout", { method: "POST" }).then(() => {
+  const logout = (): void => {
+    void requests("/logout", { method: "POST" }).then(() => {
       location.reload();
     });
   };
@@ -28,7 +29,7 @@ const getUser = async (count = 0): Promise<User> => {
   const user = await requests<IRequestResult<User>>("/user");
   if (user.statusCode !== 200) {
     if (count > 3) {
-      throw "failed to get user data";
+      throw new Error("failed to get user data");
     }
     await requests("/token", { method: "POST" });
     return await getUser(++count);

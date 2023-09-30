@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import type { FC } from "react";
+import { useEffect, useRef, useState } from "react";
+
 import { CALLBACK_URL_KEY } from "@/libraries/env";
 
-const Callback = () => {
+const Callback: FC = () => {
   const router = useRouter();
   const [message, setMessage] = useState("");
   const { enqueueSnackbar } = useSnackbar();
@@ -11,7 +13,7 @@ const Callback = () => {
   useEffect(() => {
     if (ref.current) return;
     ref.current = true;
-    (async () => {
+    void (async () => {
       if (typeof window === "object") {
         try {
           //todo: temporary codeをバックエンドに投げる

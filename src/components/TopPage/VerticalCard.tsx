@@ -1,8 +1,8 @@
-import { FC } from "react";
-import { Button } from "@mui/material";
-import { Stack } from "@mui/system";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { Button } from "@mui/material";
+import { Stack } from "@mui/system";
+import type { FC } from "react";
 
 type Props = {
   isUp: boolean;

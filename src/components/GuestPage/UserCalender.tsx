@@ -1,13 +1,15 @@
-import { IconButton, Typography } from "@mui/material";
-import { Stack } from "@mui/system";
-import { useState } from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { date2time } from "@/libraries/time";
+import { IconButton, Typography } from "@mui/material";
+import { Stack } from "@mui/system";
 import dayjs from "dayjs";
-import { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
+import type { FC } from "react";
+import { useState } from "react";
 
-type userCalendar = {
+import type { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
+import { date2time } from "@/libraries/time";
+
+type Props = {
   calendars: UserCalendarProvider[];
 };
 
@@ -18,7 +20,7 @@ for (let i = 0; i < 30; i++) {
   );
 }
 
-export const UserCalender = ({ calendars }: userCalendar) => {
+export const UserCalender: FC<Props> = ({ calendars }) => {
   const schedules = groupScheduleByDate(calendars);
   const [CalenderBarOpen, setCalenderBarOpen] = useState<boolean>(true);
   return (

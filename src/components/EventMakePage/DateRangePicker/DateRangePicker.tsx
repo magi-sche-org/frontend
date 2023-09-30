@@ -1,12 +1,15 @@
+import "dayjs/plugin/isBetween";
+
 import { Stack } from "@mui/system";
-import { Dayjs } from "dayjs";
-import { FC } from "react";
-import { CalenderHeader } from "./CalenderHeader";
-import { CalenderBody } from "./CalenderBody";
-import { CalenderItemType } from "@/@types/calender";
+import type { Dayjs } from "dayjs";
+import type { FC } from "react";
+
+import type { CalenderItemType } from "@/@types/calender";
 import { useCalenderControl } from "@/hooks/useCalenderControl";
+
+import { CalenderBody } from "./CalenderBody";
 import { CalenderControlHeader } from "./CalenderControlHeader";
-import _isBetween from "dayjs/plugin/isBetween";
+import { CalenderHeader } from "./CalenderHeader";
 
 type Props = {
   startDay: Dayjs | undefined;
@@ -45,7 +48,7 @@ export const DateRangePicker: FC<Props> = ({
    * - 開始日のみが存在する場合：終了日を設定
    * - 終了日に開始日より前の日付が設定される場合：開始日と終了日を入れ替える
    */
-  const handleSelectDay = (day: Dayjs) => {
+  const handleSelectDay = (day: Dayjs): void => {
     if (!isUndefinedSelectedDay) {
       setStartDay(day);
       setEndDay(undefined);

@@ -1,4 +1,5 @@
-import dayjs, { Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 export const createProposedStartTimeList = (
   startDate: Dayjs | undefined,
@@ -7,7 +8,7 @@ export const createProposedStartTimeList = (
   duration: number,
   startTime: number,
   endTime: number,
-) => {
+): string[] => {
   if (startDate === undefined || endDate === undefined) {
     return [];
   }
@@ -27,9 +28,9 @@ export const createProposedStartTimeList = (
     .millisecond(0)
     .subtract(duration, "seconds");
 
-  [...Array(candidateDayNum)].forEach((_, i) => {
+  [...(Array(candidateDayNum) as void[])].forEach((_, i) => {
     let stCopy = dayjs(baseStartDate).add(i, "day");
-    let edCopy = dayjs(baseEndDate).add(i, "day");
+    const edCopy = dayjs(baseEndDate).add(i, "day");
     dateArray.push(stCopy.toISOString());
     while (stCopy.isBefore(edCopy)) {
       stCopy = stCopy.add(timePadding, "seconds");

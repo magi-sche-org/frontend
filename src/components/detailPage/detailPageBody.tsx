@@ -9,22 +9,23 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Button } from "@/components/Button";
+import dayjs from "dayjs";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { getEventStorage } from "@/libraries/eventStorage";
+import type { FC } from "react";
 import { useMemo } from "react";
-import {
+
+import type {
   IAvailability,
-  IDateAnswers,
-  IDateAnswerItem,
-  IEvent,
   IDateAnswer,
+  IDateAnswerItem,
+  IDateAnswers,
   IEventResponse,
 } from "@/@types/api/event";
+import { Button } from "@/components/Button";
 import { groupAnswerByStartsTime } from "@/libraries/event";
-import Link from "next/link";
-import dayjs from "dayjs";
-type props = {
+import { getEventStorage } from "@/libraries/eventStorage";
+type Props = {
   event: IEventResponse;
 };
 
@@ -34,7 +35,7 @@ const availabilityMap: { [availability in IAvailability]: string } = {
   maybe: "不明",
 };
 
-const DetailPageBody = ({ event }: props) => {
+const DetailPageBody: FC<Props> = ({ event }) => {
   const router = useRouter();
   const isAnswered = getEventStorage().reduce(
     (pv: boolean, val) => (val.yourAnswerId && val.id === event.id) || pv,
@@ -139,7 +140,9 @@ const DetailPageBody = ({ event }: props) => {
   );
 };
 
-const determineRowColor = (val: IDateAnswer) => {
+const determineRowColor = (
+  val: IDateAnswer,
+): { backgroundColor: string } | undefined => {
   if (val.counts.total === val.counts.available) {
     return {
       backgroundColor: "#e2fde1",
@@ -153,7 +156,7 @@ const determineRowColor = (val: IDateAnswer) => {
     };
   }
 };
-const getParticipantsText = (answers: IDateAnswerItem[]) => {
+const getParticipantsText = (answers: IDateAnswerItem[]): string => {
   let result = "";
   for (const answer of answers) {
     result += `${answer.name} : ${availabilityMap[answer.availability]}\n`;

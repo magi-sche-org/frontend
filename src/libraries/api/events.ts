@@ -1,6 +1,7 @@
+import type { IEvent, IUserAnswerUnit } from "@/@types/api/event";
+import type { IRequestResult } from "@/@types/api/request";
 import { requests } from "@/libraries/requests";
-import { IRequestResult } from "@/@types/api/request";
-import { IEvent, IEventResponse, IUserAnswerUnit } from "@/@types/api/event";
+import { typeGuard } from "@/libraries/typeGuard";
 
 const createEvent = async (
   name: string,
@@ -10,15 +11,15 @@ const createEvent = async (
   isNotification: boolean,
   email: string | undefined,
   participantsNumber: number | undefined,
-) => {
+): Promise<IEvent> => {
   const body = {
     name,
     description,
     unitDuration: duration,
     units: units.map((unit) => ({ startsAt: unit })),
     enablesEmailNotification: isNotification,
-    expectedParticipantsNumber: participantsNumber || undefined,
-    notificationEmail: email || undefined,
+    expectedParticipantsNumber: participantsNumber ?? undefined,
+    notificationEmail: email ?? undefined,
   };
   const res = await requests<IRequestResult<IEvent>>("/events", {
     method: "POST",
@@ -27,17 +28,7 @@ const createEvent = async (
     },
     body: JSON.stringify(body),
   });
-  if (res.statusCode !== 200 && res.statusCode !== 201)
-    // @ts-ignore
-    throw new Error(res.message);
-  return res.data;
-};
-
-const getEvent = async (id: string) => {
-  const res = await requests<IRequestResult<IEventResponse>>(`/events/${id}`);
-  if (res.statusCode !== 200 && res.statusCode !== 201)
-    // @ts-ignore
-    throw new Error(res.message);
+  if (!typeGuard.RequestSuccess(res)) throw new Error(res.message);
   return res.data;
 };
 
@@ -46,7 +37,7 @@ const createAnswer = async (
   name: string,
   note: string,
   units: IUserAnswerUnit[],
-) => {
+): Promise<IEvent> => {
   const body = {
     userNickname: name,
     note,
@@ -62,10 +53,8 @@ const createAnswer = async (
       body: JSON.stringify(body),
     },
   );
-  if (res.statusCode !== 200 && res.statusCode !== 201)
-    // @ts-ignore
-    throw new Error(res.message);
+  if (!typeGuard.RequestSuccess(res)) throw new Error(res.message);
   return res.data;
 };
 
-export { createEvent, getEvent, createAnswer };
+export { createAnswer, createEvent };

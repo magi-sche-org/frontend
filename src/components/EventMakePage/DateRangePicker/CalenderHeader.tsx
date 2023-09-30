@@ -1,6 +1,6 @@
 import { Button, Grid } from "@mui/material";
 import { Stack } from "@mui/system";
-import { FC } from "react";
+import type { FC } from "react";
 
 const weekArray = ["日", "月", "火", "水", "木", "金", "土"];
 

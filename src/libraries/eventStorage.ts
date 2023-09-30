@@ -1,10 +1,10 @@
+import type { IEvent } from "@/@types/api/event";
 import { mockEventList } from "@/components/TopPage/data";
-import { IEvent } from "@/@types/api/event";
 
-const setEventStorage = (event: IEvent) => {
-  const eventList: IEvent[] = JSON.parse(
+const setEventStorage = (event: IEvent): void => {
+  const eventList = JSON.parse(
     localStorage.getItem("event-list") ?? "[]",
-  );
+  ) as IEvent[];
   const indexToOverwrite = eventList
     .map((event) => event.id)
     .findIndex((eid: string) => {
@@ -20,7 +20,7 @@ const setEventStorage = (event: IEvent) => {
   localStorage.setItem("event-list", JSON.stringify(eventList));
 };
 
-const getEventStorage = () => {
+const getEventStorage = (): IEvent[] => {
   const data = localStorage.getItem("event-list");
   if (!data) {
     return process.env.NODE_ENV === "production" ? [] : mockEventList;

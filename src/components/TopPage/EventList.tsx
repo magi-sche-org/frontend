@@ -1,24 +1,26 @@
 import { Stack, Typography } from "@mui/material";
+import type { FC } from "react";
 import { useEffect, useState } from "react";
-import ListButton from "./ListButton";
-import { VerticalCard } from "./VerticalCard";
-import { requests } from "@/libraries/requests";
-import { IRequestResult } from "@/@types/api/request";
-import { UserEventItem } from "@/@types/user";
+
+import type { IRequestResult } from "@/@types/api/request";
+import type { UserEventItem } from "@/@types/user";
 import { useUser } from "@/hooks/user";
+import { requests } from "@/libraries/requests";
+
+import { ListButton } from "./ListButton";
+import { VerticalCard } from "./VerticalCard";
 
 const FOLDING_EVENT_LIMIT = 9999;
 
-export const EventList = () => {
+export const EventList: FC = () => {
   const [eventList, setEventList] = useState<UserEventItem[]>([]);
   const [listPosition, setListPosition] = useState(0);
   const { user } = useUser();
   useEffect(() => {
     if (typeof window !== "object") return;
-    (async () => {
-      const req = await requests<IRequestResult<UserEventItem[]>>(
-        "/user/events",
-      );
+    void (async () => {
+      const req =
+        await requests<IRequestResult<UserEventItem[]>>("/user/events");
       if (req.statusCode !== 200) return;
       setEventList(req.data);
     })();
@@ -28,7 +30,7 @@ export const EventList = () => {
    * イベントリストの位置の上下
    * @param isUp
    */
-  const handleChangeListPosition = (isUp: boolean) => {
+  const handleChangeListPosition = (isUp: boolean): void => {
     isUp
       ? setListPosition(listPosition - 1)
       : setListPosition(listPosition + 1);
@@ -76,6 +78,8 @@ export const EventList = () => {
   );
 };
 
-const EventCard = ({ name, eventId }: { name: string; eventId: string }) => {
+type EventCardProps = { name: string; eventId: string };
+
+const EventCard: FC<EventCardProps> = ({ name, eventId }) => {
   return <ListButton text={name} page={`/detail/${eventId}`} />;
 };
