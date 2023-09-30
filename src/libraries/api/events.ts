@@ -11,7 +11,7 @@ const createEvent = async (
   isNotification: boolean,
   email: string | undefined,
   participantsNumber: number | undefined,
-) => {
+): Promise<IEvent> => {
   const body = {
     name,
     description,
@@ -37,7 +37,7 @@ const createAnswer = async (
   name: string,
   note: string,
   units: IUserAnswerUnit[],
-) => {
+): Promise<IEvent> => {
   const body = {
     userNickname: name,
     note,

@@ -1,10 +1,11 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 
 import { DetailPageBody } from "@/components/detailPage/detailPageBody";
 import { useEvent } from "@/hooks/event";
 
-const DetailPage = () => {
+const DetailPage: FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const { event, error } = useEvent(id as string);

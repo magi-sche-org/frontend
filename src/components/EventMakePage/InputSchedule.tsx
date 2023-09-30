@@ -12,6 +12,7 @@ import {
 import Checkbox from "@mui/material/Checkbox";
 import { Stack } from "@mui/system";
 import dayjs from "dayjs";
+import type { FC } from "react";
 
 import type { IEventTimeDuration } from "@/@types/api/event";
 
@@ -23,11 +24,11 @@ type Props = {
   setCheckList: (checkList: Record<string, boolean>) => void;
 };
 
-export const InputSchedule = ({
+export const InputSchedule: FC<Props> = ({
   checkList,
   setCheckList,
   eventTimeDuration,
-}: Props) => {
+}) => {
   dayjs.locale("ja");
   return (
     <TableContainer>

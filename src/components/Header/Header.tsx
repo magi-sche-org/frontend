@@ -7,6 +7,7 @@ import { Stack } from "@mui/system";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import * as React from "react";
 import { useState } from "react";
 
@@ -17,11 +18,11 @@ type Props = {
   type?: "primary" | "secondary";
 };
 
-export const Header = ({ type = "primary" }: Props) => {
+export const Header: FC<Props> = ({ type = "primary" }) => {
   const router = useRouter();
   const [loginModalActive, setLoginModalActive] = useState(false);
   const { user, logout } = useUser();
-  const handleMenu = () => {
+  const handleMenu = (): void => {
     if (!user?.isRegistered) {
       setLoginModalActive(true);
     } else {

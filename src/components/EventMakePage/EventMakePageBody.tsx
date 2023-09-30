@@ -13,6 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 import { useEffect, useState } from "react";
 
 import type { IEventTimeDuration } from "@/@types/api/event";
@@ -27,7 +28,7 @@ type EventTimeLengthType = {
   label: string;
 };
 
-const EventMakePageBody = () => {
+const EventMakePageBody: FC = () => {
   const router = useRouter();
 
   // 時間
@@ -41,17 +42,17 @@ const EventMakePageBody = () => {
     dayjs().add(3, "day"),
   );
 
-  const handleStartTime = (time: number) => {
+  const handleStartTime = (time: number): void => {
     localStorage.setItem("magiScheStartTime", String(time));
     setStartTime(time);
   };
 
-  const handleEndTime = (time: number) => {
+  const handleEndTime = (time: number): void => {
     localStorage.setItem("magiScheEndTime", String(time));
     setEndTime(time);
   };
 
-  const handleStartDay = (newValue: Dayjs | undefined) => {
+  const handleStartDay = (newValue: Dayjs | undefined): void => {
     setStartDay(newValue ?? undefined);
     if (newValue != undefined && endDay != undefined) {
       // 開始日より終了日が小さければ開始日で終了日を更新
@@ -61,7 +62,7 @@ const EventMakePageBody = () => {
     }
   };
 
-  const handleEndDay = (newValue: Dayjs | undefined) => {
+  const handleEndDay = (newValue: Dayjs | undefined): void => {
     setEndDay(newValue ?? undefined);
     if (newValue != undefined && startDay != undefined) {
       // 終了より開始日が小さければ開始日で終了日を更新
@@ -71,7 +72,7 @@ const EventMakePageBody = () => {
     }
   };
 
-  const submit = () => {
+  const submit = (): void => {
     const startDayStr = startDay?.format("YYYY-MM-DD");
     const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
     // TODO:

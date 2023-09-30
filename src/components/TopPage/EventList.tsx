@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material";
+import type { FC } from "react";
 import { useEffect, useState } from "react";
 
 import type { IRequestResult } from "@/@types/api/request";
@@ -11,7 +12,7 @@ import { VerticalCard } from "./VerticalCard";
 
 const FOLDING_EVENT_LIMIT = 9999;
 
-export const EventList = () => {
+export const EventList: FC = () => {
   const [eventList, setEventList] = useState<UserEventItem[]>([]);
   const [listPosition, setListPosition] = useState(0);
   const { user } = useUser();
@@ -29,7 +30,7 @@ export const EventList = () => {
    * イベントリストの位置の上下
    * @param isUp
    */
-  const handleChangeListPosition = (isUp: boolean) => {
+  const handleChangeListPosition = (isUp: boolean): void => {
     isUp
       ? setListPosition(listPosition - 1)
       : setListPosition(listPosition + 1);
@@ -77,6 +78,8 @@ export const EventList = () => {
   );
 };
 
-const EventCard = ({ name, eventId }: { name: string; eventId: string }) => {
+type EventCardProps = { name: string; eventId: string };
+
+const EventCard: FC<EventCardProps> = ({ name, eventId }) => {
   return <ListButton text={name} page={`/detail/${eventId}`} />;
 };

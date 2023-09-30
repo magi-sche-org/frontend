@@ -20,6 +20,7 @@ import { Stack } from "@mui/system";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
+import type { FC } from "react";
 import { useEffect, useRef, useState } from "react";
 
 import type { IAvailability, IEvent, IUserAnswer } from "@/@types/api/event";
@@ -45,7 +46,7 @@ export type IAnswerList = {
   };
 };
 
-const GuestPageBody = ({ event }: Props) => {
+const GuestPageBody: FC<Props> = ({ event }) => {
   const router = useRouter();
   const { user } = useUser();
   const { calendars } = useCalendars();
@@ -106,7 +107,7 @@ const GuestPageBody = ({ event }: Props) => {
     setChecklist(list);
   }, [calendars, event]);
 
-  const Submit = async () => {
+  const Submit = async (): Promise<void> => {
     // Submit validation
     if (!NameText) {
       enqueueSnackbar("表示名を入力してください", {
@@ -320,7 +321,7 @@ const GuestPageBody = ({ event }: Props) => {
   );
 };
 
-const getDefaultName = (event: IEvent) => {
+const getDefaultName = (event: IEvent): string => {
   const answer = getMyAnswer(event);
   if (!event.yourAnswerId || !answer) return "";
   return answer?.userNickname ?? "";

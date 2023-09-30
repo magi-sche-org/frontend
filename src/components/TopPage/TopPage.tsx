@@ -1,10 +1,11 @@
 import { Box, Container, Typography } from "@mui/material";
 import Image from "next/image";
+import type { FC } from "react";
 
 import { EventList } from "./EventList";
 import { ListButton } from "./ListButton";
 
-export const TopPage = () => {
+export const TopPage: FC = () => {
   return (
     <Box sx={{ bgcolor: "primary.main" }}>
       <Container maxWidth="sm">

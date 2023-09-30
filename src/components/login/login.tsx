@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { FC } from "react";
 
 import type { AuthorizationService } from "@/@types/authorization";
 import { services } from "@/components/login/services";
@@ -10,8 +11,8 @@ type Props = {
   onClose: () => void;
 };
 
-const Login = ({ onClose }: Props) => {
-  const onClick = (service: AuthorizationService) => {
+const Login: FC<Props> = ({ onClose }) => {
+  const onClick = (service: AuthorizationService): void => {
     localStorage.setItem(CALLBACK_URL_KEY, location.pathname);
     location.href = `${API_ENDPOINT}/oauth2/${service.id}`;
   };

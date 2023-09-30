@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import type { Theme } from "@mui/system";
 import { Stack } from "@mui/system";
 import type { Dayjs } from "dayjs";
+import type { FC } from "react";
 
 import type { CalenderItemType } from "@/@types/calender";
 import { theme } from "@/theme/theme";
@@ -23,12 +24,12 @@ type Props = {
  * @param handleSelectDay カレンダーの日付を選択した時のhandler
  * @param isUndefinedSelectedDay 開始日・終了日が選択されているかどうか
  */
-export const DayCell = ({
+export const DayCell: FC<Props> = ({
   calenderItem,
   handleSelectDay,
   isUndefinedSelectedDay,
   isSameDay,
-}: Props) => {
+}) => {
   const { day, isThisMonthDay, isStarted, isEnded, isBetween } = calenderItem;
   const isSelected = isStarted || isEnded;
 

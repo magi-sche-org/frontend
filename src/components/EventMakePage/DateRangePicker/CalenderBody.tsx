@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import { Stack } from "@mui/system";
 import type { Dayjs } from "dayjs";
+import type { FC } from "react";
 
 import type { CalenderItemType } from "@/@types/calender";
 
@@ -20,12 +21,12 @@ type Props = {
  * @param handleSelectDay カレンダーの日付を選択した時のhandler
  * @param isUndefinedSelectedDay 開始日・終了日が選択されているかどうか
  */
-export const CalenderBody = ({
+export const CalenderBody: FC<Props> = ({
   calenderArray,
   handleSelectDay,
   isUndefinedSelectedDay,
   isSameDay,
-}: Props) => {
+}) => {
   return (
     <Stack>
       {calenderArray.map((week, index) => {

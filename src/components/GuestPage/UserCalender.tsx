@@ -3,6 +3,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IconButton, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import dayjs from "dayjs";
+import type { FC } from "react";
 import { useState } from "react";
 
 import type { UserCalendarItem, UserCalendarProvider } from "@/@types/calender";
@@ -19,7 +20,7 @@ for (let i = 0; i < 30; i++) {
   );
 }
 
-export const UserCalender = ({ calendars }: Props) => {
+export const UserCalender: FC<Props> = ({ calendars }) => {
   const schedules = groupScheduleByDate(calendars);
   const [CalenderBarOpen, setCalenderBarOpen] = useState<boolean>(true);
   return (

@@ -2,6 +2,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Grid, IconButton, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
+import type { FC } from "react";
 
 type Props = {
   headerLabel: string;
@@ -16,11 +17,11 @@ type Props = {
  * @param addMonth 月を進めるhandler
  * @param subtractMonth 月を戻すhandler
  */
-export const CalenderControlHeader = ({
+export const CalenderControlHeader: FC<Props> = ({
   headerLabel,
   addMonth,
   subtractMonth,
-}: Props) => {
+}) => {
   return (
     <Grid container columns={7} alignItems="center">
       <Grid item xs={3}>
