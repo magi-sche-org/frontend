@@ -27,4 +27,4 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/next.config.js ./next.config.js
 
 # Copy artifacts
-CMD ["./node_modules/next/dist/bin/next", "start", "-p", "3000"]
+CMD ["./node_modules/next/dist/bin/next", "start"]
