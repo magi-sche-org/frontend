@@ -107,8 +107,8 @@ jobs:
           ENV: ${{ env.ENV }}
           IMAGE_NAME: ${{ needs.build-and-push.outputs.ecr_image_name }}
           CPU: 256
-          # MEMORY: 512
+          MEMORY: 512
           # CPU: 512
-          MEMORY: 1024
+          # MEMORY: 1024
           CPU_ARCHITECTURE: ARM64
           API_ENDPOINT: https://api.dev.magi-sche.net
