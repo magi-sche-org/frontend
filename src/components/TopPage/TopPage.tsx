@@ -1,15 +1,14 @@
 import { Box, Container, Typography } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { Button } from "../Button";
-import { EventList } from "./EventList";
-import ListButton from "./ListButton";
+import type { FC } from "react";
 
-export const TopPage = () => {
-  const router = useRouter();
+import { EventList } from "./EventList";
+import { ListButton } from "./ListButton";
+
+export const TopPage: FC = () => {
   return (
     <Box sx={{ bgcolor: "primary.main" }}>
-      <Container maxWidth='sm'>
+      <Container maxWidth="sm">
         <Box
           sx={{
             backgroundColor: "primary.main",
@@ -29,12 +28,17 @@ export const TopPage = () => {
               flexFlow: "column",
             }}
           >
-            <Typography variant='body1' sx={{ color: "white", textAlign: "center" }}>
-              カレンダーを見ながら簡単にスケジュール調整出来るアプリ。
+            <Typography
+              variant="body1"
+              sx={{ color: "white", textAlign: "center" }}
+            >
+              カレンダーを見ながら簡単に
               <br />
-              マジックスケジュール
+              スケジュール調整出来るアプリ。
+              <br />
+              Magi-Sche
             </Typography>
-            <Box display="flex" justifyContent="center">
+            <Box display="flex" justifyContent="center" sx={{ mt: 1 }}>
               <Image
                 src={"/images/schedule.png"}
                 alt={"scheduleを考える女性の画像"}
@@ -44,9 +48,13 @@ export const TopPage = () => {
               />
             </Box>
           </Box>
-          <ListButton text='イベントを作成する' page='./create' />
+          <ListButton text="イベントを作成する" page="./create" />
           <Box sx={{ mt: 2 }}>
-            <Typography variant='body1' sx={{ fontWeight: "bold", color: "white" }} gutterBottom>
+            <Typography
+              variant="body1"
+              sx={{ fontWeight: "bold", color: "white" }}
+              gutterBottom
+            >
               イベント一覧
             </Typography>
             <EventList />

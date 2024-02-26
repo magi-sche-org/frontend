@@ -1,35 +1,23 @@
-import GuestPageBody from "@/components/GestPage/GestPageBody";
-import { eventClient } from "@/service/api-client/client";
-import { GetEventRequest, GetEventResponse } from "@/service/api-client/protocol/event_pb";
+import Head from "next/head";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import type { FC } from "react";
 
-const GuestPage = () => {
-  const { enqueueSnackbar } = useSnackbar();
+import { GuestPageBody } from "@/components/GuestPage/GuestPageBody";
+import { useEvent } from "@/hooks/event";
+
+const GuestPage: FC = () => {
   const router = useRouter();
-  const [eventDetail, setEventDetail] = useState<GetEventResponse.AsObject | undefined>(undefined);
   const { id } = router.query;
-  useEffect(() => {
-    const request = new GetEventRequest();
-    if (id === undefined || Array.isArray(id)) {
-      return;
-    }
-    request.setId(id);
-    request.setToken("token");
-    eventClient
-      .getEvent(request, null)
-      .then((res) => {
-        setEventDetail(res.toObject());
-      })
-      .catch((e) => {
-        enqueueSnackbar("イベント情報を取得できませんでした", {
-          autoHideDuration: 2000,
-          variant: "error"
-        });
-      });
-  }, [id]);
-  return <>{eventDetail && <GuestPageBody eventDetail={eventDetail} />}</>;
+  const { event, error } = useEvent(id as string);
+  if (!event) return <>{error?.message}</>;
+  return (
+    <>
+      <Head>
+        <title>{event.name} - Magi-Sche</title>
+      </Head>
+      <GuestPageBody event={event} />
+    </>
+  );
 };
 
 export default GuestPage;

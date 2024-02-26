@@ -1,29 +1,29 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
+import type { FC } from "react";
 
-type ListButtonType = {
+type Props = {
   text: string;
   page: string;
 };
 
-const ListButton: React.FC<ListButtonType> = (props) => {
-  const { text, page } = props;
+const ListButton: FC<Props> = ({ text, page }) => {
   const router = useRouter();
   return (
     <Stack
       sx={{
         borderRadius: 2,
         borderColor: "primary.main",
-        bgcolor: "white"
+        bgcolor: "white",
       }}
     >
       <Button
         onClick={() => {
-          router.push(`${page}`);
+          void router.push(`${page}`);
         }}
         sx={{ p: 2.5 }}
       >
-        <Typography variant='body1' sx={{ color: "text.primary" }}>
+        <Typography variant="body1" sx={{ color: "text.primary" }}>
           {text}
         </Typography>
       </Button>
@@ -31,4 +31,4 @@ const ListButton: React.FC<ListButtonType> = (props) => {
   );
 };
 
-export default ListButton;
+export { ListButton };
