@@ -23,7 +23,7 @@
       ],
       environment: [
         {
-          name: 'NEXT_PUBLIC_GO_ENDPOINT',
+          name: 'NEXT_PUBLIC_API_ENDPOINT',
           value: '{{ must_env `API_ENDPOINT` }}',
         },
       ],
