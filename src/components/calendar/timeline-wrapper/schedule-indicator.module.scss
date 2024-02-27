@@ -1,0 +1,19 @@
+.wrapper {
+  position: absolute;
+  padding: 4px;
+  border-radius: 4px;
+  &:hover .metadata {
+    display: block;
+  }
+  .metadata {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 200px;
+    height: auto;
+    word-break: break-all;
+    z-index: 100;
+    background: #eee;
+  }
+}
