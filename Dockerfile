@@ -7,6 +7,7 @@ WORKDIR /app
 # Prepare node_modules
 RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
+COPY .husky ./.husky
 
 ENV NODE_ENV=production
 RUN pnpm install --frozen-lockfile --production
