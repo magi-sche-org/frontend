@@ -21,6 +21,7 @@ const setEventStorage = (event: IEvent): void => {
 };
 
 const getEventStorage = (): IEvent[] => {
+  if (typeof window === "undefined") return [];
   const data = localStorage.getItem("event-list");
   if (!data) {
     return process.env.NODE_ENV === "production" ? [] : mockEventList;

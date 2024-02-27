@@ -95,7 +95,7 @@ export const DateRangePicker: FC<Props> = ({
   );
 
   return (
-    <Stack justifyContent="center" spacing={1}>
+    <Stack justifyContent="center" spacing={3}>
       <CalenderControlHeader
         headerLabel={nowDate.format("YYYY年MM月")}
         addMonth={addMonth}

@@ -38,7 +38,7 @@ export const Header: FC<Props> = ({ type = "primary" }) => {
         position="static"
         sx={{ backgroundColor: `${type}.main`, boxShadow: 0, px: 2, py: 0.8 }}
       >
-        <Container disableGutters>
+        <Container maxWidth="md">
           <Stack direction="row" justifyContent="space-around">
             <IconButton edge="start" size="large" disabled>
               <AccountCircle sx={{ color: `${type}.main` }} />
