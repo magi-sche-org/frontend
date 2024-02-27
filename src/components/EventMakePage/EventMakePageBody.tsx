@@ -1,4 +1,5 @@
 import {
+  Container,
   Divider,
   FormControl,
   FormControlLabel,
@@ -107,7 +108,7 @@ const EventMakePageBody: FC = () => {
   ];
 
   return (
-    <>
+    <Container maxWidth="md">
       <Stack sx={{ p: 3 }} spacing={5}>
         <PageTitle>イベント作成</PageTitle>
         <Stack spacing={6}>
@@ -164,7 +165,7 @@ const EventMakePageBody: FC = () => {
           <Button text="決定" isPrimary={true} onClick={submit} />
         </Stack>
       </Stack>
-    </>
+    </Container>
   );
 };
 

@@ -126,7 +126,7 @@ const Preview: FC = () => {
     setShowModal(true);
   };
   return (
-    <>
+    <Container maxWidth="md">
       {user?.isRegistered && calendars && (
         <UserCalender calendars={calendars} />
       )}
@@ -218,9 +218,13 @@ const Preview: FC = () => {
                     setParticipantsNumber("");
                     return;
                   }
+                  if (Number(v) < 1) {
+                    setParticipantsNumber("1");
+                    return;
+                  }
                   setParticipantsNumber(v);
                 }}
-                sx={{ ml: 0, mb: 2 }}
+                sx={{ width: "10em", ml: 0, mb: 2 }}
               />
             </FormControl>
             <TextField
@@ -239,7 +243,7 @@ const Preview: FC = () => {
         </Button>
         <DisplayShareURLModal isOpen={showModal} shareURL={shareURL} />
       </Stack>
-    </>
+    </Container>
   );
 };
 
@@ -344,14 +348,13 @@ const DisplayShareURLModal: FC<DisplayShareURLModalProps> = ({
             value={shareURL}
           />
           <Stack spacing={2} sx={{ mb: 2 }}>
-            {" "}
             <CButton
               text="トップに戻る"
               isPrimary={true}
               onClick={() => {
                 void router.push("/");
               }}
-            />{" "}
+            />
             <CButton
               text="イベントを確認"
               isPrimary={false}
