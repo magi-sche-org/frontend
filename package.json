@@ -12,7 +12,7 @@
     "format": "prettier --write \"src/**/*.{tsx,ts,js,json,css,scss}\"",
     "lint": "npm run eslint&&npm run check-types",
     "lint:fix": "npm run format&&npm run eslint:fix&&npm run check-types",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi"
+    "prepare": "node .husky/install.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
