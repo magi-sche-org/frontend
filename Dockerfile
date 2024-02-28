@@ -12,7 +12,8 @@ COPY .husky ./.husky
 ENV NODE_ENV=production
 RUN pnpm install --frozen-lockfile --production
 COPY . .
-
+ARG NEXT_PUBLIC_API_ENDPOINT
+ENV NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT
 RUN ./node_modules/next/dist/bin/next build
 
 # Run phase
