@@ -8,8 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -17,10 +15,10 @@ import type { FC } from "react";
 import { useEffect, useState } from "react";
 
 import type { IEventTimeDuration } from "@/@types/api/event";
+import { CalendarWrapper } from "@/components/calendar/timeline-wrapper";
 
 import { Button } from "../Button";
 import { PageTitle } from "../common/PageTitle";
-import { DateRangePicker } from "./DateRangePicker/DateRangePicker";
 import { TimeSelect } from "./TimeSelect";
 
 type EventTimeLengthType = {
@@ -37,10 +35,8 @@ const EventMakePageBody: FC = () => {
   // イベント時間の長さ
   const [eventTimeDuration, setEventTimeDuration] = useState<number>(1800);
   // 日付
-  const [startDay, setStartDay] = useState<Dayjs | undefined>(dayjs());
-  const [endDay, setEndDay] = useState<Dayjs | undefined>(
-    dayjs().add(3, "day"),
-  );
+  const [startDay] = useState<Dayjs | undefined>(dayjs());
+  const [endDay] = useState<Dayjs | undefined>(dayjs().add(3, "day"));
 
   const handleStartTime = (time: number): void => {
     localStorage.setItem("magiScheStartTime", String(time));
@@ -52,32 +48,12 @@ const EventMakePageBody: FC = () => {
     setEndTime(time);
   };
 
-  const handleStartDay = (newValue: Dayjs | undefined): void => {
-    setStartDay(newValue ?? undefined);
-    if (newValue != undefined && endDay != undefined) {
-      // 開始日より終了日が小さければ開始日で終了日を更新
-      if (newValue > endDay) {
-        setEndDay(newValue);
-      }
-    }
-  };
-
-  const handleEndDay = (newValue: Dayjs | undefined): void => {
-    setEndDay(newValue ?? undefined);
-    if (newValue != undefined && startDay != undefined) {
-      // 終了より開始日が小さければ開始日で終了日を更新
-      if (newValue < startDay) {
-        setStartDay(newValue);
-      }
-    }
-  };
-
   const submit = (): void => {
     const startDayStr = startDay?.format("YYYY-MM-DD");
     const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
     // TODO:
     void router.push(
-      `/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
+      `/preview?startday=${startDayStr}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
   };
 
@@ -148,17 +124,29 @@ const EventMakePageBody: FC = () => {
           </FormControl>
         </Stack>
         {/* 日付ピッカー */}
-        <Stack spacing={3}>
-          <Divider />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              startDay={startDay}
-              endDay={endDay}
-              setStartDay={handleStartDay}
-              setEndDay={handleEndDay}
-            />
-          </LocalizationProvider>
-        </Stack>
+        {/*<Stack spacing={3}>*/}
+        {/*  <Divider />*/}
+        {/*  <LocalizationProvider dateAdapter={AdapterDayjs}>*/}
+        {/*    <DateRangePicker*/}
+        {/*      startDay={startDay}*/}
+        {/*      endDay={endDay}*/}
+        {/*      setStartDay={handleStartDay}*/}
+        {/*      setEndDay={handleEndDay}*/}
+        {/*    />*/}
+        {/*  </LocalizationProvider>*/}
+        {/*</Stack>*/}
+        <div
+          style={{
+            width: "100%",
+            height: "500px",
+          }}
+        >
+          <CalendarWrapper
+            count={7}
+            startDate={dayjs()}
+            dispatchOnChange={(...e) => console.log(e)}
+          />
+        </div>
         <Divider />
         <Stack direction="row">
           <Button text="決定" isPrimary={true} onClick={submit} />

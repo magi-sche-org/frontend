@@ -1,0 +1,12 @@
+.wrapper {
+  width: 10%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  &.left {
+    left: 0;
+  }
+  &.right {
+    right: 0;
+  }
+}

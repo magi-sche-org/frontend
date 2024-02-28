@@ -8,15 +8,19 @@
     width: 100%;
     flex: 1;
     position: relative;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    .scrollWrapper {
+    .inner {
+      overflow-x: scroll;
+      position: relative;
+      scroll-snap-type: x mandatory;
       height: 100%;
-      position: absolute;
-      .scrollContainer {
+      .scrollWrapper {
         height: 100%;
-        display: flex;
-        flex-direction: row;
+        position: absolute;
+        .scrollContainer {
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+        }
       }
     }
   }
