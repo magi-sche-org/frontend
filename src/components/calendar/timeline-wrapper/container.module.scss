@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   user-select: none;
-  scroll-snap-align: center;
+  scroll-snap-align: start;
   &.weekend {
     background: rgba(0, 0, 0, 0.2);
   }
