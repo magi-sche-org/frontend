@@ -28,8 +28,8 @@ const CalendarTimelineSelectingIndicator: FC<Props> = ({
   const style = {
     width: `${cardWidth * (Math.abs(diff) + 1)}px`,
     left: `${(pos1Diff - (diff > 0 ? diff : 0)) * cardWidth}px`,
-    top: `${(minMinute / 1440) * 100}%`,
-    height: `${((maxMinute - minMinute) / 1440) * 100}%`,
+    top: `calc((100% - 32px) * ${minMinute / 1440} + 32px)`,
+    height: `calc((100% - 32px) * ${(maxMinute - minMinute) / 1440})`,
   };
 
   return <div className={Styles.background} style={style}></div>;

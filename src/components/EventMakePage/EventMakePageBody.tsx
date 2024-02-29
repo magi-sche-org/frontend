@@ -12,10 +12,13 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import type { FC } from "react";
+import { useRef } from "react";
 import { useEffect, useState } from "react";
 
 import type { IEventTimeDuration } from "@/@types/api/event";
+import type { TSelectionRange } from "@/@types/selection";
 import { CalendarWrapper } from "@/components/calendar/timeline-wrapper";
+import { DateManager } from "@/libraries/date-manager";
 
 import { Button } from "../Button";
 import { PageTitle } from "../common/PageTitle";
@@ -28,6 +31,8 @@ type EventTimeLengthType = {
 
 const EventMakePageBody: FC = () => {
   const router = useRouter();
+  const dateManager = useRef<DateManager>(new DateManager());
+  const [selectedRanges, setSelectedRanges] = useState<TSelectionRange[]>([]);
 
   // 時間
   const [startTime, setStartTime] = useState<number>(10);
@@ -144,7 +149,11 @@ const EventMakePageBody: FC = () => {
           <CalendarWrapper
             count={7}
             startDate={dayjs()}
-            dispatchOnChange={(...e) => console.log(e)}
+            selectedRanges={selectedRanges}
+            dispatchOnChange={(range) => {
+              dateManager.current.addRange(range);
+              setSelectedRanges(dateManager.current.range);
+            }}
           />
         </div>
         <Divider />
