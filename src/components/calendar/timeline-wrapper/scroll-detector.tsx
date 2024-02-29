@@ -1,8 +1,10 @@
+import { ArrowLeftIcon } from "@mui/x-date-pickers";
 import type {
   FC,
   MouseEvent as ReactMouseEvent,
   TouchEvent as ReactTouchEvent,
 } from "react";
+import { useEffect } from "react";
 import { useRef } from "react";
 
 import Styles from "./scroll-detector.module.scss";
@@ -28,6 +30,11 @@ const ScrollDetector: FC<Props> = ({
   const onLeave = (): void => {
     window.clearTimeout(timeoutRef.current);
   };
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return (
     <div
@@ -36,7 +43,9 @@ const ScrollDetector: FC<Props> = ({
       onPointerLeave={onLeave}
       onTouchStart={onTouchStart}
       onMouseDown={onMouseDown}
-    />
+    >
+      <ArrowLeftIcon className={Styles.icon} />
+    </div>
   );
 };
 

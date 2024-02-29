@@ -246,18 +246,22 @@ const CalendarWrapper: FC<Props> = ({
             );
           })}
         </div>
-        <ScrollDetector
-          type={"left"}
-          scroll={() => scroll(true)}
-          onMouseDown={onMouseDown}
-          onTouchStart={onTouchStart}
-        />
-        <ScrollDetector
-          type={"right"}
-          scroll={() => scroll(false)}
-          onMouseDown={onMouseDown}
-          onTouchStart={onTouchStart}
-        />
+        {selectingDate.pos1 && (
+          <>
+            <ScrollDetector
+              type={"left"}
+              scroll={() => scroll(true)}
+              onMouseDown={onMouseDown}
+              onTouchStart={onTouchStart}
+            />
+            <ScrollDetector
+              type={"right"}
+              scroll={() => scroll(false)}
+              onMouseDown={onMouseDown}
+              onTouchStart={onTouchStart}
+            />
+          </>
+        )}
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useEffect, useMemo, useRef,useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { IEventTimeDuration } from "@/@types/api/event";
 import type { UserCalendarProvider } from "@/@types/calender";
