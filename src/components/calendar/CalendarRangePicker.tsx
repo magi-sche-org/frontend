@@ -1,5 +1,8 @@
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
+import { IconButton } from "@mui/material";
 import dayjs from "dayjs";
-import type { FC} from "react";
+import type { FC } from "react";
 import { useState } from "react";
 
 import type { TSchedule } from "@/@types/schedule";
@@ -23,8 +26,14 @@ const CalendarRangePicker: FC<Props> = ({
   return (
     <div className={Styles.wrapper}>
       <div className={Styles.toolbar}>
-        <button onClick={() => setIsAdd(true)}>追加</button>
-        <button onClick={() => setIsAdd(false)}>削除</button>
+        <div className={`${Styles.toggle} ${isAdd && Styles.active}`}>
+          <IconButton className={Styles.on} onClick={() => setIsAdd(true)}>
+            <PlaylistAddIcon />
+          </IconButton>
+          <IconButton className={Styles.off} onClick={() => setIsAdd(false)}>
+            <PlaylistRemoveIcon />
+          </IconButton>
+        </div>
       </div>
       <CalendarWrapper
         count={7}
