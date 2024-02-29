@@ -53,7 +53,6 @@ class DateManager {
         return;
       }
     }
-    console.log(JSON.stringify(newRange));
     this.range.push(newRange);
   }
 
@@ -64,6 +63,8 @@ class DateManager {
     if (range1.pos1.isAfter(range2.pos1) && range1.pos1.isBefore(range2.pos2))
       return true;
     if (range1.pos2.isAfter(range2.pos1) && range1.pos2.isBefore(range2.pos2))
+      return true;
+    if (range1.pos1.isSame(range2.pos1) || range1.pos1.isSame(range2.pos2))
       return true;
     if (range2.pos1.isAfter(range1.pos1) && range2.pos1.isBefore(range1.pos2))
       return true;

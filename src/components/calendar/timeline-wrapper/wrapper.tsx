@@ -2,8 +2,8 @@ import type { Dayjs } from "dayjs";
 import type {
   CSSProperties,
   FC,
-  PointerEvent,
-  TouchEvent,
+  MouseEvent as ReactMouseEvent,
+  TouchEvent as ReactTouchEvent,
   UIEvent,
 } from "react";
 import { useEffect, useRef, useState } from "react";
@@ -60,49 +60,77 @@ const CalendarWrapper: FC<Props> = ({
     setScrollPosition(e.currentTarget.scrollLeft);
   };
 
-  const onMouseDown = (e: PointerEvent<HTMLDivElement>): void => {
+  useEffect(() => {
+    if (selectingDate.pos1) {
+      document.addEventListener("mouseup", onMouseUp, { once: true });
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("touchend", onTouchEnd, { once: true });
+      document.addEventListener("touchmove", onTouchMove);
+    }
+    return () => {
+      cleanUp();
+    };
+  }, [selectingDate]);
+
+  const cleanUp = (): void => {
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+    document.removeEventListener("touchmove", onTouchMove);
+    document.removeEventListener("touchend", onTouchEnd);
+  };
+
+  const onMouseDown = (e: ReactMouseEvent<HTMLDivElement>): void => {
     const pos1 = getDate(e.clientX, e.clientY);
     setSelectingDate((pv) => ({ ...pv, pos1 }));
   };
 
-  const onMouseMove = (e: PointerEvent<HTMLDivElement>): void => {
+  const onMouseMove = (
+    e: ReactMouseEvent<HTMLDivElement> | MouseEvent,
+  ): void => {
     if (!selectingDate.pos1) return;
     const pos2 = getDate(e.clientX, e.clientY);
     setSelectingDate((pv) => ({ ...pv, pos2 }));
   };
 
-  const onMouseUp = (e: PointerEvent<HTMLDivElement>): void => {
+  const onMouseUp = (e: ReactMouseEvent<HTMLDivElement> | MouseEvent): void => {
+    setSelectingDate({});
+    cleanUp();
     if (!selectingDate?.pos1) return;
     const pos2 = getDate(e.clientX, e.clientY);
     if (!pos2) return;
-    setSelectingDate({});
     dispatchOnChange({ pos1: selectingDate.pos1, pos2 });
   };
 
-  const onTouchStart = (e: TouchEvent<HTMLDivElement>): void => {
+  const onTouchStart = (e: ReactTouchEvent<HTMLDivElement>): void => {
     const touchItem = e.touches.item(0);
     if (!touchItem) return;
     const pos1 = getDate(touchItem.clientX, e.touches.item(0).clientY);
     setSelectingDate((pv) => ({ ...pv, pos1 }));
   };
 
-  const onTouchMove = (e: TouchEvent<HTMLDivElement>): void => {
+  const onTouchMove = (
+    e: ReactTouchEvent<HTMLDivElement> | TouchEvent,
+  ): void => {
     const touchItem = e.touches.item(0);
     if (!selectingDate.pos1 || !touchItem) return;
-    const pos2 = getDate(touchItem.clientX, e.touches.item(0).clientY);
+    const pos2 = getDate(touchItem.clientX, touchItem.clientY);
     setSelectingDate((pv) => ({ ...pv, pos2 }));
   };
 
-  const onTouchEnd = (e: TouchEvent<HTMLDivElement>): void => {
+  const onTouchEnd = (
+    e: ReactTouchEvent<HTMLDivElement> | TouchEvent,
+  ): void => {
+    cleanUp();
     if (!selectingDate?.pos1) return;
-    if (!e.touches.item(0) && selectingDate.pos1 && selectingDate.pos2) {
+    const touchItem = e.touches.item(0);
+    setSelectingDate({});
+    if (!touchItem) {
+      if (!selectingDate.pos1 || !selectingDate.pos2) return;
       dispatchOnChange({ pos1: selectingDate.pos1, pos2: selectingDate.pos2 });
-      setSelectingDate({});
       return;
     }
-    const pos2 = getDate(e.touches.item(0).clientX, e.touches.item(0).clientY);
+    const pos2 = getDate(touchItem.clientX, touchItem.clientY);
     if (!pos2) return;
-    setSelectingDate({});
     dispatchOnChange({ pos1: selectingDate.pos1, pos2 });
   };
 
@@ -111,7 +139,8 @@ const CalendarWrapper: FC<Props> = ({
     if (!rect) return;
     const x = clientX - rect.left + scrollPosition;
     const dateOffset = Math.floor(x / cardWidth);
-    const y = (clientY - rect.top) / rect.height;
+    const _y = (clientY - rect.top - 32) / (rect.height - 32);
+    const y = _y < 0 ? 0 : _y > 1 ? 1 : _y;
     const hour = Math.floor(y * 24);
     const minute = Math.floor((y * 24 - hour) * 2) * 30;
     return startDate

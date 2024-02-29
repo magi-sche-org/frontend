@@ -159,7 +159,6 @@ const EventMakePageBody: FC = () => {
             schedules={calendars
               ?.map((calendar) =>
                 calendar.events.map<TSchedule>((event) => {
-                  console.log(event);
                   if (event.isAllDay) {
                     return {
                       id: event.id,
