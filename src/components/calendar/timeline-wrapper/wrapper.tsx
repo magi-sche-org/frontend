@@ -54,7 +54,7 @@ const CalendarWrapper: FC<Props> = ({
   const cardWidth = clientWidth / count;
   const offset = Math.floor(scrollPosition / cardWidth);
   const leftOffset = offset * cardWidth;
-  const start = startDate.add(offset, "day");
+  const start = startDate.add(offset, "day").set("hour", 0).set("minute", 0);
 
   const onScroll = (e: UIEvent<HTMLDivElement>): void => {
     setScrollPosition(e.currentTarget.scrollLeft);

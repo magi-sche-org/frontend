@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import type { FC } from "react";
 import { useRef } from "react";
 
-import type { TSchedule } from "@/@types/schedule";
+import type { TSchedule, TTimeSchedule } from "@/@types/schedule";
 import { filterSchedules } from "@/utils/schedule";
 
 import { DayOfWeekName } from "../static/week";
@@ -19,6 +19,8 @@ type Props = {
 };
 
 const CalendarTimelineWrapper: FC<Props> = ({ date, schedules, width }) => {
+  const filteredSchedules = filterSchedules(date, schedules);
+  const dateSchedules = filteredSchedules.dateSchedule;
   const day = date.get("day");
   return (
     <div
@@ -30,16 +32,44 @@ const CalendarTimelineWrapper: FC<Props> = ({ date, schedules, width }) => {
       }}
     >
       <div className={Styles.date}>
-        {date.get("date")} ({DayOfWeekName[day]})
+        <span className={Styles.text}>
+          {date.get("date")} ({DayOfWeekName[day]})
+        </span>
+        {dateSchedules.length > 0 && (
+          <>
+            <div className={Styles.badge}>{dateSchedules.length}</div>
+            <div className={Styles.schedules}>
+              {dateSchedules.map((sche) => {
+                return (
+                  <div key={sche.url} className={Styles.schedule}>
+                    <a
+                      target={"_blank"}
+                      href={sche.url}
+                      className={Styles.link}
+                    >
+                      {sche.name}
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
-      <CalendarTimelineContainer date={date} schedules={schedules} />
+      <CalendarTimelineContainer
+        date={date}
+        schedules={filteredSchedules.timeSchedule}
+      />
     </div>
   );
 };
 
-const CalendarTimelineContainer: FC<Props> = ({ date, schedules }) => {
-  const timeSchedules =
-    schedules && filterSchedules(date, schedules).timeSchedule;
+type ContainerProps = {
+  date: Dayjs;
+  schedules: TTimeSchedule[];
+};
+
+const CalendarTimelineContainer: FC<ContainerProps> = ({ date, schedules }) => {
   const isToday = date.isSame(dayjs(), "day");
   const ref = useRef<HTMLDivElement>(null);
 
@@ -50,10 +80,10 @@ const CalendarTimelineContainer: FC<Props> = ({ date, schedules }) => {
           return <div className={Styles.item} key={i}></div>;
         })}
       </div>
-      {timeSchedules?.map((sche) => {
+      {schedules.map((sche) => {
         return (
           <CalendarTimelineScheduleIndicator
-            schedules={timeSchedules}
+            schedules={schedules}
             schedule={sche}
             key={sche.url}
           />

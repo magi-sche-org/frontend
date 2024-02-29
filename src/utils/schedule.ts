@@ -11,16 +11,24 @@ dayjs.extend(isBetween);
 
 const filterSchedules = (
   date: Dayjs,
-  schedules: TSchedule[],
+  schedules?: TSchedule[],
 ): {
   dateSchedule: TDateSchedule[];
   timeSchedule: TTimeSchedule[];
 } => {
   const dateSchedule: TDateSchedule[] = [],
     timeSchedule: TTimeSchedule[] = [];
+  if (!schedules) return { dateSchedule, timeSchedule };
   for (const schedule of schedules) {
     if (schedule.isAllDay) {
-      if (date.isBetween(schedule.startDate, schedule.endDate, "day", "[]")) {
+      if (
+        date.isBetween(
+          schedule.startDate,
+          schedule.endDate.subtract(1, "day"),
+          "day",
+          "[]",
+        )
+      ) {
         dateSchedule.push(schedule);
       }
       continue;

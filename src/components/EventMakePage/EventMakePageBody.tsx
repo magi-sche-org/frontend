@@ -16,8 +16,14 @@ import { useRef } from "react";
 import { useEffect, useState } from "react";
 
 import type { IEventTimeDuration } from "@/@types/api/event";
+import type {
+  TDateSchedule,
+  TSchedule,
+  TTimeSchedule,
+} from "@/@types/schedule";
 import type { TSelectionRange } from "@/@types/selection";
 import { CalendarWrapper } from "@/components/calendar/timeline-wrapper";
+import { useCalendars } from "@/hooks/calendars";
 import { DateManager } from "@/libraries/date-manager";
 
 import { Button } from "../Button";
@@ -30,6 +36,7 @@ type EventTimeLengthType = {
 };
 
 const EventMakePageBody: FC = () => {
+  const { calendars } = useCalendars();
   const router = useRouter();
   const dateManager = useRef<DateManager>(new DateManager());
   const [selectedRanges, setSelectedRanges] = useState<TSelectionRange[]>([]);
@@ -149,6 +156,39 @@ const EventMakePageBody: FC = () => {
           <CalendarWrapper
             count={7}
             startDate={dayjs()}
+            schedules={calendars
+              ?.map((calendar) =>
+                calendar.events.map<TSchedule>((event) => {
+                  console.log(event);
+                  if (event.isAllDay) {
+                    return {
+                      id: event.id,
+                      startDate: dayjs(event.start),
+                      endDate: dayjs(event.end),
+                      name: event.name,
+                      url: event.url,
+                      displayOnly: false,
+                      isAllDay: true,
+                      color: "red",
+                      startTime: null,
+                      endTime: null,
+                    } as TDateSchedule;
+                  }
+                  return {
+                    id: event.id,
+                    startTime: dayjs(event.start),
+                    endTime: dayjs(event.end),
+                    name: event.name,
+                    url: event.url,
+                    displayOnly: false,
+                    isAllDay: false,
+                    color: "red",
+                    startDate: null,
+                    endDate: null,
+                  } as TTimeSchedule;
+                }),
+              )
+              .flat(1)}
             selectedRanges={selectedRanges}
             dispatchOnChange={(range) => {
               dateManager.current.addRange(range);
