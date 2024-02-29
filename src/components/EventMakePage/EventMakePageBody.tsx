@@ -96,6 +96,7 @@ const EventMakePageBody: FC = () => {
 
   return (
     <>
+      <div style={{ marginTop: "1000px" }}></div>
       <Stack sx={{ p: 3 }} spacing={5}>
         <PageTitle>イベント作成</PageTitle>
         <Stack spacing={6}>

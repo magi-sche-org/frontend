@@ -13,6 +13,9 @@
       position: relative;
       scroll-snap-type: x mandatory;
       height: 100%;
+      &.scrollBlock {
+        overflow-x: hidden;
+      }
       .scrollWrapper {
         height: 100%;
         position: absolute;

@@ -31,7 +31,7 @@ const CalendarTimelineWrapper: FC<Props> = ({ date, schedules, width }) => {
         width,
       }}
     >
-      <div className={Styles.date}>
+      <div className={Styles.date} onTouchStart={(e) => e.stopPropagation()}>
         <span className={Styles.text}>
           {date.get("date")} ({DayOfWeekName[day]})
         </span>

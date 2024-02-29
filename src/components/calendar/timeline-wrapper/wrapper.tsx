@@ -26,8 +26,10 @@ type Props = {
   dispatchOnChange: (range: TSelectionRange) => void;
 };
 
+const minWidth = 90;
+
 const CalendarWrapper: FC<Props> = ({
-  count,
+  count: _count,
   startDate,
   schedules,
   selectedRanges,
@@ -40,6 +42,7 @@ const CalendarWrapper: FC<Props> = ({
   );
   const [scrollPosition, setScrollPosition] = useState(0);
   const [clientWidth, setClientWidth] = useState(1920);
+  const [scrollBlock, setScrollBlock] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -50,8 +53,9 @@ const CalendarWrapper: FC<Props> = ({
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
-
-  const cardWidth = clientWidth / count;
+  const count = Math.min(_count, Math.floor(clientWidth / minWidth));
+  const cardWidth =
+    clientWidth / Math.min(count, Math.floor(clientWidth / minWidth));
   const offset = Math.floor(scrollPosition / cardWidth);
   const leftOffset = offset * cardWidth;
   const start = startDate.add(offset, "day").set("hour", 0).set("minute", 0);
@@ -71,6 +75,10 @@ const CalendarWrapper: FC<Props> = ({
       cleanUp();
     };
   }, [selectingDate]);
+
+  useEffect(() => {
+    document.documentElement.style.overflow = scrollBlock ? "hidden" : "";
+  }, [scrollBlock]);
 
   const cleanUp = (): void => {
     document.removeEventListener("mousemove", onMouseMove);
@@ -105,7 +113,9 @@ const CalendarWrapper: FC<Props> = ({
     const touchItem = e.touches.item(0);
     if (!touchItem) return;
     const pos1 = getDate(touchItem.clientX, e.touches.item(0).clientY);
+    if (!pos1) return;
     setSelectingDate((pv) => ({ ...pv, pos1 }));
+    setScrollBlock(true);
   };
 
   const onTouchMove = (
@@ -121,6 +131,7 @@ const CalendarWrapper: FC<Props> = ({
     e: ReactTouchEvent<HTMLDivElement> | TouchEvent,
   ): void => {
     cleanUp();
+    setScrollBlock(false);
     if (!selectingDate?.pos1) return;
     const touchItem = e.touches.item(0);
     setSelectingDate({});
@@ -170,7 +181,7 @@ const CalendarWrapper: FC<Props> = ({
       <CalendarTimelineIndicator />
       <div className={Styles.container} ref={containerRef}>
         <div
-          className={Styles.inner}
+          className={`${Styles.inner} ${scrollBlock ? Styles.scrollBlock : ""}`}
           ref={innerRef}
           onScroll={onScroll}
           onMouseDown={onMouseDown}
@@ -225,8 +236,18 @@ const CalendarWrapper: FC<Props> = ({
             );
           })}
         </div>
-        <ScrollDetector type={"left"} scroll={() => scroll(true)} />
-        <ScrollDetector type={"right"} scroll={() => scroll(false)} />
+        <ScrollDetector
+          type={"left"}
+          scroll={() => scroll(true)}
+          onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
+        />
+        <ScrollDetector
+          type={"right"}
+          scroll={() => scroll(false)}
+          onMouseDown={onMouseDown}
+          onTouchStart={onTouchStart}
+        />
       </div>
     </div>
   );
