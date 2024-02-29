@@ -1,3 +1,5 @@
+import type { Dayjs } from "dayjs";
+
 import type { TSelectionRange } from "@/@types/selection";
 import { getDateDiff } from "@/utils/date";
 
@@ -7,7 +9,21 @@ class DateManager {
     this.range = [];
   }
 
-  public addRange(range: TSelectionRange): void {
+  public addRange(_range: TSelectionRange): void {
+    const ranges = this._convertToRangeArray(_range);
+    for (const range of ranges) {
+      this._addRange(range);
+    }
+  }
+
+  public removeRange(range: TSelectionRange): void {
+    const ranges = this._convertToRangeArray(range);
+    for (const r of ranges) {
+      this._removeRange(r);
+    }
+  }
+
+  private _convertToRangeArray(range: TSelectionRange): TSelectionRange[] {
     const isPos1AfterPos2 = range.pos1.isAfter(range.pos2);
     const { startHour, startMinute, endHour, endMinute } = (() => {
       const pos1Hour = range.pos1.get("hour");
@@ -33,15 +49,17 @@ class DateManager {
     const pos1 = isPos1AfterPos2 ? range.pos2 : range.pos1;
     const pos2 = isPos1AfterPos2 ? range.pos1 : range.pos2;
     const dateRange = Math.abs(getDateDiff(pos1, pos2)) + 1;
+    const result = [];
     for (let i = 0; i < dateRange; i++) {
       const date = pos1.add(i, "day");
       const start = date.set("hour", startHour).set("minute", startMinute);
       const end = date.set("hour", endHour).set("minute", endMinute);
-      this._addRange({
+      result.push({
         pos1: start,
         pos2: end,
       });
     }
+    return result;
   }
 
   private _addRange(newRange: TSelectionRange): void {
@@ -56,21 +74,59 @@ class DateManager {
     this.range.push(newRange);
   }
 
+  private _removeRange(target: TSelectionRange): void {
+    for (const range of this.range) {
+      if (this._isOverlap(range, target)) {
+        this.range = this.range.filter((r) => r !== range);
+
+        if (this.dateInRange(target.pos1, range)) {
+          this.range.push({
+            pos1: range.pos1,
+            pos2: target.pos1,
+          });
+        }
+        if (this.dateInRange(target.pos2, range)) {
+          this.range.push({
+            pos1: target.pos2,
+            pos2: range.pos2,
+          });
+        }
+      }
+    }
+  }
+
   private _isOverlap(
     range1: TSelectionRange,
     range2: TSelectionRange,
   ): boolean {
-    if (range1.pos1.isAfter(range2.pos1) && range1.pos1.isBefore(range2.pos2))
-      return true;
-    if (range1.pos2.isAfter(range2.pos1) && range1.pos2.isBefore(range2.pos2))
-      return true;
+    if (this.range1StartInRange2(range1, range2)) return true;
+    if (this.range1EndInRange2(range1, range2)) return true;
     if (range1.pos1.isSame(range2.pos1) || range1.pos1.isSame(range2.pos2))
       return true;
-    if (range2.pos1.isAfter(range1.pos1) && range2.pos1.isBefore(range1.pos2))
-      return true;
-    if (range2.pos2.isAfter(range1.pos1) && range2.pos2.isBefore(range1.pos2))
-      return true;
+    if (this.range1StartInRange2(range2, range1)) return true;
+    if (this.range1EndInRange2(range2, range1)) return true;
     return false;
+  }
+
+  private dateInRange(date: Dayjs, range: TSelectionRange): boolean {
+    return date.isAfter(range.pos1) && date.isBefore(range.pos2);
+  }
+
+  private range1StartInRange2(
+    range1: TSelectionRange,
+    range2: TSelectionRange,
+  ): boolean {
+    return (
+      range1.pos1.isAfter(range2.pos1) && range1.pos1.isBefore(range2.pos2)
+    );
+  }
+  private range1EndInRange2(
+    range1: TSelectionRange,
+    range2: TSelectionRange,
+  ): boolean {
+    return (
+      range1.pos2.isAfter(range2.pos1) && range1.pos2.isBefore(range2.pos2)
+    );
   }
 
   private _mergeRange(

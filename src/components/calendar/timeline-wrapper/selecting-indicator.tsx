@@ -11,6 +11,7 @@ type Props = {
   pos2: Dayjs;
   cardWidth: number;
   headerHeight: number;
+  color?: string;
 };
 
 const CalendarTimelineSelectingIndicator: FC<Props> = ({
@@ -18,6 +19,7 @@ const CalendarTimelineSelectingIndicator: FC<Props> = ({
   pos2,
   cardWidth,
   headerHeight,
+  color,
 }) => {
   if (!pos1 || !pos2) return null;
   const pos1Diff = getDateDiff(pos1, dayjs());
@@ -36,6 +38,7 @@ const CalendarTimelineSelectingIndicator: FC<Props> = ({
     height: `calc((100% - ${headerHeight}px) * ${
       (maxMinute - minMinute) / 1440
     })`,
+    background: color ?? "rgba(0, 255, 255, 0.2)",
   };
 
   return <div className={Styles.background} style={style}></div>;

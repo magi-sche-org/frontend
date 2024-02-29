@@ -25,6 +25,7 @@ type Props = {
   schedules?: TSchedule[];
   selectedRanges: TSelectionRange[];
   dispatchOnChange: (range: TSelectionRange) => void;
+  selectingColor?: string;
 };
 
 const minWidth = 90;
@@ -35,6 +36,7 @@ const CalendarWrapper: FC<Props> = ({
   schedules,
   selectedRanges,
   dispatchOnChange,
+  selectingColor,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -227,6 +229,7 @@ const CalendarWrapper: FC<Props> = ({
                 pos2={selectingDate.pos2}
                 cardWidth={cardWidth}
                 headerHeight={headerHeight}
+                color={selectingColor}
               />
               <ScrollBlocker />
             </>
