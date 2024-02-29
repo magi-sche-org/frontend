@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 
 import type { TSchedule } from "@/@types/schedule";
 import type { TSelectionRange } from "@/@types/selection";
+import { ScrollBlocker } from "@/components/calendar/timeline-wrapper/scroll-blocker";
 import { ScrollDetector } from "@/components/calendar/timeline-wrapper/scroll-detector";
 import { CalendarTimelineSelectingIndicator } from "@/components/calendar/timeline-wrapper/selecting-indicator";
 
@@ -175,11 +176,14 @@ const CalendarWrapper: FC<Props> = ({
             </div>
           </div>
           {selectingDate.pos1 && selectingDate.pos2 && (
-            <CalendarTimelineSelectingIndicator
-              pos1={selectingDate.pos1}
-              pos2={selectingDate.pos2}
-              cardWidth={cardWidth}
-            />
+            <>
+              <CalendarTimelineSelectingIndicator
+                pos1={selectingDate.pos1}
+                pos2={selectingDate.pos2}
+                cardWidth={cardWidth}
+              />
+              <ScrollBlocker />
+            </>
           )}
           {selectedRanges.map((range) => {
             return (
