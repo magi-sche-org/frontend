@@ -13,6 +13,7 @@ import type { TSelectionRange } from "@/@types/selection";
 import { ScrollBlocker } from "@/components/calendar/timeline-wrapper/scroll-blocker";
 import { ScrollDetector } from "@/components/calendar/timeline-wrapper/scroll-detector";
 import { CalendarTimelineSelectingIndicator } from "@/components/calendar/timeline-wrapper/selecting-indicator";
+import { isTouchDevice } from "@/libraries/isTouchDevice";
 
 import { CalendarTimelineWrapper } from "./container";
 import { CalendarTimelineIndicator } from "./indicator";
@@ -43,6 +44,7 @@ const CalendarWrapper: FC<Props> = ({
   const [scrollPosition, setScrollPosition] = useState(0);
   const [clientWidth, setClientWidth] = useState(1920);
   const [scrollBlock, setScrollBlock] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(32);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -51,6 +53,7 @@ const CalendarWrapper: FC<Props> = ({
     };
     const observer = new ResizeObserver(onResize);
     observer.observe(containerRef.current);
+    setHeaderHeight(isTouchDevice() ? 60 : 32);
     return () => observer.disconnect();
   }, []);
   const count = Math.min(_count, Math.floor(clientWidth / minWidth));
@@ -150,7 +153,8 @@ const CalendarWrapper: FC<Props> = ({
     if (!rect) return;
     const x = clientX - rect.left + scrollPosition;
     const dateOffset = Math.floor(x / cardWidth);
-    const _y = (clientY - rect.top - 32) / (rect.height - 32);
+    const _y =
+      (clientY - rect.top - headerHeight) / (rect.height - headerHeight);
     const y = _y < 0 ? 0 : _y > 1 ? 1 : _y;
     const hour = Math.floor(y * 24);
     const minute = Math.floor((y * 24 - hour) * 2) * 30;
@@ -178,7 +182,7 @@ const CalendarWrapper: FC<Props> = ({
 
   return (
     <div className={Styles.wrapper}>
-      <CalendarTimelineIndicator />
+      <CalendarTimelineIndicator headerHeight={headerHeight} />
       <div className={Styles.container} ref={containerRef}>
         <div
           className={`${Styles.inner} ${scrollBlock ? Styles.scrollBlock : ""}`}
@@ -210,6 +214,7 @@ const CalendarWrapper: FC<Props> = ({
                     key={date.toISOString()}
                     date={date}
                     schedules={schedules}
+                    headerHeight={headerHeight}
                   />
                 );
               })}
@@ -221,6 +226,7 @@ const CalendarWrapper: FC<Props> = ({
                 pos1={selectingDate.pos1}
                 pos2={selectingDate.pos2}
                 cardWidth={cardWidth}
+                headerHeight={headerHeight}
               />
               <ScrollBlocker />
             </>
@@ -232,6 +238,7 @@ const CalendarWrapper: FC<Props> = ({
                 pos1={range.pos1}
                 pos2={range.pos2}
                 cardWidth={cardWidth}
+                headerHeight={headerHeight}
               />
             );
           })}

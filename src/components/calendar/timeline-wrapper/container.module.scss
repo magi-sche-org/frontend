@@ -16,9 +16,12 @@
   .date {
     border-bottom: solid $date-border $border-color;
     text-align: center;
-    height: $date-height;
-    line-height: $date-height;
+    line-height: 100%;
+    flex-shrink: 0;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .badge {
       position: absolute;
       top: 5px;
@@ -45,6 +48,7 @@
       .link {
         display: block;
         color: #000;
+        padding: 5px;
         &:hover {
           background: #f0f0f0;
         }

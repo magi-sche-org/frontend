@@ -16,9 +16,15 @@ type Props = {
   schedules?: TSchedule[];
   date: Dayjs;
   width?: number;
+  headerHeight: number;
 };
 
-const CalendarTimelineWrapper: FC<Props> = ({ date, schedules, width }) => {
+const CalendarTimelineWrapper: FC<Props> = ({
+  date,
+  schedules,
+  width,
+  headerHeight,
+}) => {
   const filteredSchedules = filterSchedules(date, schedules);
   const dateSchedules = filteredSchedules.dateSchedule;
   const day = date.get("day");
@@ -31,7 +37,13 @@ const CalendarTimelineWrapper: FC<Props> = ({ date, schedules, width }) => {
         width,
       }}
     >
-      <div className={Styles.date} onTouchStart={(e) => e.stopPropagation()}>
+      <div
+        style={{
+          height: headerHeight,
+        }}
+        className={Styles.date}
+        onTouchStart={(e) => e.stopPropagation()}
+      >
         <span className={Styles.text}>
           {date.get("date")} ({DayOfWeekName[day]})
         </span>
