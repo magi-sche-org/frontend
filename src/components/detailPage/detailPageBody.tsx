@@ -1,4 +1,5 @@
 import {
+  Container,
   Table,
   TableBody,
   TableCell,
@@ -45,8 +46,11 @@ const DetailPageBody: FC<Props> = ({ event }) => {
     () => groupAnswerByStartsTime(event.userAnswers),
     [event],
   );
+
+  const isNoAnswer = event.userAnswers.length < 1;
+
   return (
-    <>
+    <Container maxWidth="md">
       {/* タイトル表示*/}
       <Stack direction="column" sx={{ p: 3, mt: 2 }}>
         <Stack sx={{ mx: 10 }}>
@@ -57,86 +61,96 @@ const DetailPageBody: FC<Props> = ({ event }) => {
             />
           </Link>
         </Stack>
-        <Typography variant="h6" sx={{ textAlign: "center", my: 3 }}>
-          {event.name}
-        </Typography>
+        <Stack spacing={2} sx={{ my: 3, textAlign: "center" }}>
+          <Typography variant="h6">{event.name}</Typography>
+          <Typography variant="body1">{event.description}</Typography>
+        </Stack>
         {/* 候補リスト */}
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Typography variant="caption">日時</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="caption">可</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="caption">不明</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="caption">不可</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Object.values(participantsAvailability).map((unit) => {
-                const start = dayjs(unit.startsTime);
-                const end = dayjs(unit.startsTime).add(
-                  event.unitDuration,
-                  "seconds",
-                );
+        {!isNoAnswer ? (
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Typography variant="caption">日時</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="caption">可</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="caption">不明</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="caption">不可</Typography>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Object.values(participantsAvailability).map((unit) => {
+                  const start = dayjs(unit.startsTime);
+                  const end = dayjs(unit.startsTime).add(
+                    event.unitDuration,
+                    "seconds",
+                  );
 
-                return (
-                  <Tooltip
-                    key={unit.startsTime}
-                    title={getParticipantsText(unit.answers)}
-                    enterTouchDelay={0}
-                  >
-                    <TableRow sx={determineRowColor(unit)}>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {start.format("MM / DD")}
-                          <br />
-                          {start.format("HH:mm")}〜{end.format("HH:mm")}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          sx={{ ml: 1 }}
-                          whiteSpace={"nowrap"}
-                        >
-                          {unit.counts.available}人
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          sx={{ ml: 1 }}
-                          whiteSpace={"nowrap"}
-                        >
-                          {unit.counts.maybe}人
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="body1"
-                          sx={{ ml: 1 }}
-                          whiteSpace={"nowrap"}
-                        >
-                          {unit.counts.unavailable}人
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </Tooltip>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  return (
+                    <Tooltip
+                      key={unit.startsTime}
+                      title={getParticipantsText(unit.answers)}
+                      enterTouchDelay={0}
+                    >
+                      <TableRow sx={determineRowColor(unit)}>
+                        <TableCell>
+                          <Typography variant="body1">
+                            {start.format("MM / DD")}
+                            <br />
+                            {start.format("HH:mm")}〜{end.format("HH:mm")}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            sx={{ ml: 1 }}
+                            whiteSpace={"nowrap"}
+                          >
+                            {unit.counts.available}人
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            sx={{ ml: 1 }}
+                            whiteSpace={"nowrap"}
+                          >
+                            {unit.counts.maybe}人
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            sx={{ ml: 1 }}
+                            whiteSpace={"nowrap"}
+                          >
+                            {unit.counts.unavailable}人
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </Tooltip>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Stack
+            textAlign="center"
+            sx={{ p: 3, border: "solid 0.5px", borderRadius: 2 }}
+          >
+            回答がありません
+          </Stack>
+        )}
       </Stack>
-    </>
+    </Container>
   );
 };
 

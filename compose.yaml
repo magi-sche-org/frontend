@@ -1,0 +1,11 @@
+version: '2'
+services:
+  web:
+    build:
+      target: runner
+      args:
+        - target=runner
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_GO_ENDPOINT=http://localhost:8080
