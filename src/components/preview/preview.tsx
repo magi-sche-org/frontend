@@ -14,11 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import dayjs from "dayjs";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 
-import type { TSelectionRange } from "@/@types/selection";
 import { PageTitle } from "@/components/common/PageTitle";
 import { InputSchedule } from "@/components/EventMakePage/InputSchedule";
 import { DisplayShareURLModal } from "@/components/preview/share-url";
@@ -26,11 +24,11 @@ import { createEvent } from "@/libraries/api/events";
 import { setEventStorage } from "@/libraries/eventStorage";
 
 type Props = {
-  ranges: TSelectionRange[];
+  startTimes: Record<string, boolean>;
   duration: number;
 };
 
-const Preview: FC<Props> = ({ ranges, duration }) => {
+const Preview: FC<Props> = ({ startTimes, duration }) => {
   // モーダル
   const [showModal, setShowModal] = useState<boolean>(false);
   // 共有用URL
@@ -49,34 +47,10 @@ const Preview: FC<Props> = ({ ranges, duration }) => {
   const [startTimeList, setStartTimeList] = useState<Record<string, boolean>>(
     {},
   );
+
   useEffect(() => {
-    const startTimes = ranges
-      .map((range) => {
-        let startTimestamp = range.pos1.unix();
-        const endTimestamp = range.pos2.unix();
-        if (duration === 86400) {
-          return [range.pos1.set("hour", 0).set("minute", 0).toISOString()];
-        }
-        if (endTimestamp - startTimestamp < duration) {
-          return [];
-        }
-        const result: string[] = [];
-        while (startTimestamp < endTimestamp) {
-          result.push(dayjs.unix(startTimestamp).toISOString());
-          startTimestamp += duration;
-        }
-        return result;
-      })
-      .flat(1);
-    setStartTimeList(
-      startTimes
-        .map<[string, boolean]>((v) => [v, true])
-        .reduce<Record<string, boolean>>(
-          (acc, [k, v]) => ({ ...acc, [k]: v }),
-          {},
-        ),
-    );
-  }, [ranges]);
+    setStartTimeList(startTimes);
+  }, [startTimes]);
 
   const handleSubmit = async (): Promise<void> => {
     // checkedのものだけ抽出

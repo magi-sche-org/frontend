@@ -47,7 +47,7 @@ type EventTimeLengthType = {
 };
 
 type Props = {
-  onSubmit: (range: TSelectionRange[], duration: number) => void;
+  onSubmit: (range: Record<string, boolean>, duration: number) => void;
   className?: string;
 };
 
@@ -143,7 +143,10 @@ const EventMakePageBody: FC<Props> = ({ onSubmit, className }) => {
                 setEmptyRangesError(true);
                 return;
               }
-              onSubmit(selectedRanges, eventTimeDuration);
+              onSubmit(
+                transformRange(selectedRanges, eventTimeDuration),
+                eventTimeDuration,
+              );
             }}
           />
         </Stack>
@@ -214,4 +217,32 @@ const transformSchedule = (
       )
       .flat(1) ?? []
   );
+};
+
+const transformRange = (
+  ranges: TSelectionRange[],
+  duration: number,
+): Record<string, boolean> => {
+  const startTimes = ranges
+    .map((range) => {
+      let startTimestamp = range.pos1.unix();
+      const endTimestamp = range.pos2.unix();
+      if (duration === 86400) {
+        return [range.pos1.set("hour", 0).set("minute", 0).toISOString()];
+      }
+      if (endTimestamp - startTimestamp < duration) {
+        return [];
+      }
+      const result: string[] = [];
+      while (startTimestamp < endTimestamp) {
+        result.push(dayjs.unix(startTimestamp).toISOString());
+        startTimestamp += duration;
+      }
+      return result;
+    })
+    .flat(1);
+
+  return startTimes
+    .map<[string, boolean]>((v) => [v, true])
+    .reduce<Record<string, boolean>>((acc, [k, v]) => ({ ...acc, [k]: v }), {});
 };
