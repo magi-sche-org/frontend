@@ -115,7 +115,11 @@ const EventMakePageBody: FC = () => {
           <Stack spacing={0.5}>
             <FormLabel>時間帯</FormLabel>
             <Stack direction="row" spacing={4}>
-              <TimeSelect time={startTime} handleTime={handleStartTime} />
+              <TimeSelect
+                time={startTime}
+                handleTime={handleStartTime}
+                upperTime={Math.min(24, endTime)}
+              />
               <Typography variant="h6">〜</Typography>
               <TimeSelect
                 time={endTime}
