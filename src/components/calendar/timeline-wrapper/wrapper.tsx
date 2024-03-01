@@ -211,14 +211,18 @@ const CalendarWrapper: FC<Props> = ({
             >
               {[...(Array(count + 2) as void[])].map((_, index) => {
                 const date = start.add(index, "day");
-                return (
-                  <CalendarTimelineWrapper
-                    key={date.toISOString()}
-                    date={date}
-                    schedules={schedules}
-                    headerHeight={headerHeight}
-                  />
-                );
+                try {
+                  return (
+                    <CalendarTimelineWrapper
+                      key={date.toISOString()}
+                      date={date}
+                      schedules={schedules}
+                      headerHeight={headerHeight}
+                    />
+                  );
+                } catch {
+                  return <></>;
+                }
               })}
             </div>
           </div>

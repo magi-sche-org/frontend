@@ -13,45 +13,23 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { useSearchParams } from "next/navigation";
 import type { FC } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import type { IEventTimeDuration, IHourOfDay } from "@/@types/api/event";
+import type { TSelectionRange } from "@/@types/selection";
 import { PageTitle } from "@/components/common/PageTitle";
 import { InputSchedule } from "@/components/EventMakePage/InputSchedule";
-import { UserCalender } from "@/components/GuestPage/UserCalender";
 import { DisplayShareURLModal } from "@/components/preview/share-url";
-import { useCalendars } from "@/hooks/calendars";
-import { useUser } from "@/hooks/user";
 import { createEvent } from "@/libraries/api/events";
 import { setEventStorage } from "@/libraries/eventStorage";
-import { createProposedStartTimeList } from "@/libraries/proposedStartTime";
-import { typeGuard } from "@/libraries/typeGuard";
 
-//http://localhost:3000/preview?startday=2023-09-01&endday=2023-09-03&starttime=11&endtime=13&eventtimeduration=1800
-const Preview: FC = () => {
-  const searchParams = useSearchParams();
-  // searchParamsが変わった時にのみ再取得
-  const { startDay, endDay, startTime, endTime, eventTimeDuration } =
-    useMemo(() => {
-      const startDay = dayjs(searchParams.get("startday"));
-      const endDay = dayjs(searchParams.get("endday"));
-      const startTime = Number(searchParams.get("starttime"));
-      const endTime = Number(searchParams.get("endtime"));
-      const eventTimeDuration = Number(searchParams.get("eventtimeduration"));
-      return {
-        startDay,
-        endDay,
-        startTime,
-        endTime,
-        eventTimeDuration,
-      };
-    }, [searchParams]);
-  const { calendars } = useCalendars();
-  const { user } = useUser();
+type Props = {
+  ranges: TSelectionRange[];
+  duration: number;
+};
+
+const Preview: FC<Props> = ({ ranges, duration }) => {
   // モーダル
   const [showModal, setShowModal] = useState<boolean>(false);
   // 共有用URL
@@ -71,34 +49,33 @@ const Preview: FC = () => {
     {},
   );
   useEffect(() => {
-    if (
-      !typeGuard.HourOfDay(startTime) ||
-      !typeGuard.HourOfDay(endTime) ||
-      !typeGuard.EventTimeDuration(eventTimeDuration) ||
-      !startDay ||
-      !endDay
-    ) {
-      return;
-    }
-    const newStartTimeList = initStartTimeList(
-      startDay,
-      endDay,
-      startTime,
-      endTime,
-      eventTimeDuration,
+    const startTimes = ranges
+      .map((range) => {
+        let startTimestamp = range.pos1.unix();
+        const endTimestamp = range.pos2.unix();
+        if (duration === 86400) {
+          return [range.pos1.set("hour", 0).set("minute", 0).toISOString()];
+        }
+        if (endTimestamp - startTimestamp < duration) {
+          return [];
+        }
+        const result: string[] = [];
+        while (startTimestamp < endTimestamp) {
+          result.push(dayjs.unix(startTimestamp).toISOString());
+          startTimestamp += duration;
+        }
+        return result;
+      })
+      .flat(1);
+    setStartTimeList(
+      startTimes
+        .map<[string, boolean]>((v) => [v, true])
+        .reduce<Record<string, boolean>>(
+          (acc, [k, v]) => ({ ...acc, [k]: v }),
+          {},
+        ),
     );
-    setStartTimeList(newStartTimeList);
-  }, [endDay, endTime, eventTimeDuration, startDay, startTime]);
-
-  if (
-    !typeGuard.HourOfDay(startTime) ||
-    !typeGuard.HourOfDay(endTime) ||
-    !typeGuard.EventTimeDuration(eventTimeDuration) ||
-    !startDay ||
-    !endDay
-  ) {
-    return <div>不正なパラメータが送られています。</div>;
-  }
+  }, [ranges]);
 
   const handleSubmit = async (): Promise<void> => {
     // checkedのものだけ抽出
@@ -108,7 +85,7 @@ const Preview: FC = () => {
     const response = await createEvent(
       eventName,
       eventDescription,
-      eventTimeDuration,
+      duration,
       filteringStartTimeList,
       isNotification,
       emailAddress,
@@ -121,9 +98,6 @@ const Preview: FC = () => {
   };
   return (
     <>
-      {user?.isRegistered && calendars && (
-        <UserCalender calendars={calendars} />
-      )}
       <Stack
         sx={{
           p: 3,
@@ -168,7 +142,7 @@ const Preview: FC = () => {
           />
         </Stack>
         <InputSchedule
-          eventTimeDuration={eventTimeDuration}
+          eventTimeDuration={duration}
           checkList={startTimeList}
           setCheckList={(newCheckList) => setStartTimeList(newCheckList)}
         />
@@ -237,37 +211,4 @@ const Preview: FC = () => {
   );
 };
 
-const initStartTimeList = (
-  startDay: Dayjs,
-  endDay: Dayjs,
-  startTime: IHourOfDay,
-  endTime: IHourOfDay,
-  eventTimeDuration: IEventTimeDuration,
-): Record<string, boolean> => {
-  // 与えられた情報から候補日の開始時間を決定し、checkListを初期化
-  // console.log(
-  //   startDay,
-  //   endDay,
-  //   // timePaddingではなく
-  //   eventTimeDuration,
-  //   eventTimeDuration,
-  //   startTime,
-  //   endTime,
-  // );
-  const startTimeList: string[] = createProposedStartTimeList(
-    startDay,
-    endDay,
-    // timePaddingではなく
-    eventTimeDuration,
-    eventTimeDuration,
-    startTime,
-    endTime,
-  );
-  const initCheckList: Record<string, boolean> = {};
-  startTimeList.forEach((v) => {
-    initCheckList[v] = true;
-  });
-  return initCheckList;
-};
-
-export default Preview;
+export { Preview };

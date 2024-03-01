@@ -1,18 +1,18 @@
 import {
+  Container,
   Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
+  Modal,
   Radio,
   RadioGroup,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import type { IEventTimeDuration } from "@/@types/api/event";
 import type { UserCalendarProvider } from "@/@types/calender";
@@ -26,60 +26,40 @@ import { CalendarRangePicker } from "@/components/calendar";
 import { useCalendars } from "@/hooks/calendars";
 import { DateManager } from "@/libraries/date-manager";
 
-import { Button } from "../Button";
-import { PageTitle } from "../common/PageTitle";
-import { TimeSelect } from "./TimeSelect";
+import { Button,Button as CButton } from "../Button";
+
+const ModalStyle = {
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "white",
+  border: "0.5px solid",
+  borderRadius: 5,
+  boxShadow: 10,
+  p: 1,
+  py: 5,
+};
 
 type EventTimeLengthType = {
   value: IEventTimeDuration;
   label: string;
 };
 
-const EventMakePageBody: FC = () => {
+type Props = {
+  onSubmit: (range: TSelectionRange[], duration: number) => void;
+  className?: string;
+};
+
+const EventMakePageBody: FC<Props> = ({ onSubmit, className }) => {
   const { calendars } = useCalendars();
   const schedules = useMemo(() => transformSchedule(calendars), [calendars]);
-  const router = useRouter();
   const dateManager = useRef<DateManager>(new DateManager());
   const [selectedRanges, setSelectedRanges] = useState<TSelectionRange[]>([]);
+  const [emptyRangesError, setEmptyRangesError] = useState<boolean>(false);
 
-  // 時間
-  const [startTime, setStartTime] = useState<number>(10);
-  const [endTime, setEndTime] = useState<number>(17);
   // イベント時間の長さ
   const [eventTimeDuration, setEventTimeDuration] = useState<number>(1800);
-  // 日付
-  const [startDay] = useState<Dayjs | undefined>(dayjs());
-  const [endDay] = useState<Dayjs | undefined>(dayjs().add(3, "day"));
-
-  const handleStartTime = (time: number): void => {
-    localStorage.setItem("magiScheStartTime", String(time));
-    setStartTime(time);
-  };
-
-  const handleEndTime = (time: number): void => {
-    localStorage.setItem("magiScheEndTime", String(time));
-    setEndTime(time);
-  };
-
-  const submit = (): void => {
-    const startDayStr = startDay?.format("YYYY-MM-DD");
-    const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
-    // TODO:
-    void router.push(
-      `/preview?startday=${startDayStr}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
-    );
-  };
-
-  /**
-   * 過去選択した時間があればそれを反映
-   */
-  useEffect(() => {
-    const startTimeStr = localStorage.getItem("magiScheStartTime");
-    const endTimeStr = localStorage.getItem("magiScheEndTime");
-    if (startTimeStr) setStartTime(Number(startTimeStr));
-    if (endTimeStr) setEndTime(Number(endTimeStr));
-  }, []);
-
   const eventTimeLengthList: EventTimeLengthType[] = [
     {
       value: 1800,
@@ -96,23 +76,9 @@ const EventMakePageBody: FC = () => {
   ];
 
   return (
-    <>
+    <div className={className}>
       <Stack sx={{ p: 3 }} spacing={5}>
-        <PageTitle>イベント作成</PageTitle>
         <Stack spacing={6}>
-          {/* 時間帯設定 */}
-          <Stack spacing={0.5}>
-            <FormLabel>時間帯</FormLabel>
-            <Stack direction="row" spacing={4}>
-              <TimeSelect time={startTime} handleTime={handleStartTime} />
-              <Typography variant="h6">〜</Typography>
-              <TimeSelect
-                time={endTime}
-                handleTime={handleEndTime}
-                underTime={startTime}
-              />
-            </Stack>
-          </Stack>
           {/* イベントの長さ */}
           <FormControl>
             <FormLabel>イベントの長さ</FormLabel>
@@ -169,10 +135,43 @@ const EventMakePageBody: FC = () => {
         </div>
         <Divider />
         <Stack direction="row">
-          <Button text="決定" isPrimary={true} onClick={submit} />
+          <Button
+            text="決定"
+            isPrimary={true}
+            onClick={() => {
+              if (selectedRanges.length === 0) {
+                setEmptyRangesError(true);
+                return;
+              }
+              onSubmit(selectedRanges, eventTimeDuration);
+            }}
+          />
         </Stack>
       </Stack>
-    </>
+
+      <Modal open={emptyRangesError}>
+        <Container maxWidth="xs" sx={{ ...ModalStyle }}>
+          <Stack direction="column" sx={{ mx: 8 }}>
+            <Typography
+              variant="h6"
+              noWrap={true}
+              sx={{ textAlign: "center", mb: 4 }}
+            >
+              範囲を選択してください
+            </Typography>
+            <Stack spacing={2} sx={{ mb: 2 }}>
+              <CButton
+                text="OK"
+                isPrimary={false}
+                onClick={() => {
+                  setEmptyRangesError(false);
+                }}
+              />
+            </Stack>
+          </Stack>
+        </Container>
+      </Modal>
+    </div>
   );
 };
 
