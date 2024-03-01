@@ -14,17 +14,28 @@
       border-radius: 24px;
       &.active {
         .on {
-          background-color: #00bc9b;
+          background-color: #006a71;
+          .icon {
+            fill: white;
+          }
         }
         .off {
           background-color: transparent;
+          .icon {
+            fill: child;
+          }
         }
       }
       .on {
         background-color: transparent;
       }
-      .off {
-        background-color: #c50000;
+      &:not(.active) {
+        .off {
+          background-color: #c50000;
+          .icon {
+            fill: white;
+          }
+        }
       }
     }
   }

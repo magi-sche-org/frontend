@@ -28,10 +28,10 @@ const CalendarRangePicker: FC<Props> = ({
       <div className={Styles.toolbar}>
         <div className={`${Styles.toggle} ${isAdd && Styles.active}`}>
           <IconButton className={Styles.on} onClick={() => setIsAdd(true)}>
-            <PlaylistAddIcon />
+            <PlaylistAddIcon className={Styles.icon} />
           </IconButton>
           <IconButton className={Styles.off} onClick={() => setIsAdd(false)}>
-            <PlaylistRemoveIcon />
+            <PlaylistRemoveIcon className={Styles.icon} />
           </IconButton>
         </div>
       </div>

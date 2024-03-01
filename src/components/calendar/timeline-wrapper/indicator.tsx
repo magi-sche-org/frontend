@@ -18,6 +18,7 @@ const CalendarTimelineIndicator: FC<Props> = ({ headerHeight }) => {
       />
       <div className={Styles.container}>
         {timelineRange.map((_, index) => {
+          if (index % 3 !== 0) return <></>;
           return (
             <div className={Styles.item} key={index}>
               <span className={Styles.text}>{index}</span>

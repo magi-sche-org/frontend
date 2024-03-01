@@ -22,6 +22,7 @@
       .scrollWrapper {
         height: 100%;
         position: absolute;
+        overflow: hidden;
         .scrollContainer {
           height: 100%;
           display: flex;
