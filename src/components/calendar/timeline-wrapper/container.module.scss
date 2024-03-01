@@ -1,0 +1,97 @@
+@import "../variable";
+
+.wrapper {
+  border-left: solid 1px $border-color;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  scroll-snap-align: start;
+  &.weekend {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  &:last-child {
+    border-right: solid 1px $border-color;
+  }
+  .date {
+    border-bottom: solid $date-border $border-color;
+    text-align: center;
+    line-height: 100%;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .badge {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: $badge-color;
+      color: $badge-text-color;
+      padding: 0 5px;
+      border-radius: 5px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+    }
+    .schedules {
+      position: absolute;
+      top: calc(100% + 1px);
+      left: 0;
+      width: calc(100% + 2px);
+      margin: 0 -1px;
+      display: none;
+      flex-direction: column;
+      border: solid 1px $border-color;
+      background: #fff;
+      z-index: 1;
+      .link {
+        display: block;
+        color: #000;
+        padding: 5px;
+        &:hover {
+          background: #f0f0f0;
+        }
+      }
+    }
+    &:hover {
+      .schedules {
+        display: flex;
+      }
+    }
+  }
+  .container {
+    position: relative;
+    height: 100%;
+    .background {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      .item {
+        flex: 1;
+        position: relative;
+        &:not(:first-child):before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          border-top: solid 1px $border-color;
+        }
+        &:nth-child(6n + 1):before {
+          top: -1px;
+          border-top: solid 3px $border-color;
+          opacity: 0.8;
+        }
+        &:last-child:before {
+          bottom: 0;
+          border-bottom: solid 1px $border-color;
+        }
+      }
+    }
+    .schedule {
+      position: absolute;
+    }
+  }
+}

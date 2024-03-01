@@ -4,94 +4,62 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Modal,
   Radio,
   RadioGroup,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { useRouter } from "next/router";
 import type { FC } from "react";
-import { useEffect, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import type { IEventTimeDuration } from "@/@types/api/event";
+import type { UserCalendarProvider } from "@/@types/calender";
+import type {
+  TDateSchedule,
+  TSchedule,
+  TTimeSchedule,
+} from "@/@types/schedule";
+import type { TSelectionRange } from "@/@types/selection";
+import { CalendarRangePicker } from "@/components/calendar";
+import { useCalendars } from "@/hooks/calendars";
+import { DateManager } from "@/libraries/date-manager";
 
-import { Button } from "../Button";
-import { PageTitle } from "../common/PageTitle";
-import { DateRangePicker } from "./DateRangePicker/DateRangePicker";
-import { TimeSelect } from "./TimeSelect";
+import { Button, Button as CButton } from "../Button";
+
+const ModalStyle = {
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "white",
+  border: "0.5px solid",
+  borderRadius: 5,
+  boxShadow: 10,
+  p: 1,
+  py: 5,
+};
 
 type EventTimeLengthType = {
   value: IEventTimeDuration;
   label: string;
 };
 
-const EventMakePageBody: FC = () => {
-  const router = useRouter();
+type Props = {
+  onSubmit: (range: Record<string, boolean>, duration: number) => void;
+  className?: string;
+};
 
-  // 時間
-  const [startTime, setStartTime] = useState<number>(10);
-  const [endTime, setEndTime] = useState<number>(17);
+const EventMakePageBody: FC<Props> = ({ onSubmit, className }) => {
+  const { calendars } = useCalendars();
+  const schedules = useMemo(() => transformSchedule(calendars), [calendars]);
+  const dateManager = useRef<DateManager>(new DateManager());
+  const [selectedRanges, setSelectedRanges] = useState<TSelectionRange[]>([]);
+  const [emptyRangesError, setEmptyRangesError] = useState<boolean>(false);
+
   // イベント時間の長さ
   const [eventTimeDuration, setEventTimeDuration] = useState<number>(1800);
-  // 日付
-  const [startDay, setStartDay] = useState<Dayjs | undefined>(dayjs());
-  const [endDay, setEndDay] = useState<Dayjs | undefined>(
-    dayjs().add(3, "day"),
-  );
-
-  const handleStartTime = (time: number): void => {
-    localStorage.setItem("magiScheStartTime", String(time));
-    setStartTime(time);
-  };
-
-  const handleEndTime = (time: number): void => {
-    localStorage.setItem("magiScheEndTime", String(time));
-    setEndTime(time);
-  };
-
-  const handleStartDay = (newValue: Dayjs | undefined): void => {
-    setStartDay(newValue ?? undefined);
-    if (newValue != undefined && endDay != undefined) {
-      // 開始日より終了日が小さければ開始日で終了日を更新
-      if (newValue > endDay) {
-        setEndDay(newValue);
-      }
-    }
-  };
-
-  const handleEndDay = (newValue: Dayjs | undefined): void => {
-    setEndDay(newValue ?? undefined);
-    if (newValue != undefined && startDay != undefined) {
-      // 終了より開始日が小さければ開始日で終了日を更新
-      if (newValue < startDay) {
-        setStartDay(newValue);
-      }
-    }
-  };
-
-  const submit = (): void => {
-    const startDayStr = startDay?.format("YYYY-MM-DD");
-    const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
-    // TODO:
-    void router.push(
-      `/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
-    );
-  };
-
-  /**
-   * 過去選択した時間があればそれを反映
-   */
-  useEffect(() => {
-    const startTimeStr = localStorage.getItem("magiScheStartTime");
-    const endTimeStr = localStorage.getItem("magiScheEndTime");
-    if (startTimeStr) setStartTime(Number(startTimeStr));
-    if (endTimeStr) setEndTime(Number(endTimeStr));
-  }, []);
-
   const eventTimeLengthList: EventTimeLengthType[] = [
     {
       value: 1800,
@@ -108,23 +76,9 @@ const EventMakePageBody: FC = () => {
   ];
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" className={className}>
       <Stack sx={{ p: 3 }} spacing={5}>
-        <PageTitle>イベント作成</PageTitle>
         <Stack spacing={6}>
-          {/* 時間帯設定 */}
-          <Stack spacing={0.5}>
-            <FormLabel>時間帯</FormLabel>
-            <Stack direction="row" spacing={4}>
-              <TimeSelect time={startTime} handleTime={handleStartTime} />
-              <Typography variant="h6">〜</Typography>
-              <TimeSelect
-                time={endTime}
-                handleTime={handleEndTime}
-                underTime={startTime}
-              />
-            </Stack>
-          </Stack>
           {/* イベントの長さ */}
           <FormControl>
             <FormLabel>イベントの長さ</FormLabel>
@@ -149,24 +103,146 @@ const EventMakePageBody: FC = () => {
           </FormControl>
         </Stack>
         {/* 日付ピッカー */}
-        <Stack spacing={3}>
-          <Divider />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              startDay={startDay}
-              endDay={endDay}
-              setStartDay={handleStartDay}
-              setEndDay={handleEndDay}
-            />
-          </LocalizationProvider>
-        </Stack>
+        {/*<Stack spacing={3}>*/}
+        {/*  <Divider />*/}
+        {/*  <LocalizationProvider dateAdapter={AdapterDayjs}>*/}
+        {/*    <DateRangePicker*/}
+        {/*      startDay={startDay}*/}
+        {/*      endDay={endDay}*/}
+        {/*      setStartDay={handleStartDay}*/}
+        {/*      setEndDay={handleEndDay}*/}
+        {/*    />*/}
+        {/*  </LocalizationProvider>*/}
+        {/*</Stack>*/}
+        <div
+          style={{
+            width: "100%",
+            height: "500px",
+          }}
+        >
+          <CalendarRangePicker
+            schedules={schedules}
+            selectedRanges={selectedRanges}
+            dispatchOnChange={(range, isAdd) => {
+              if (isAdd) {
+                dateManager.current.addRange(range);
+              } else {
+                dateManager.current.removeRange(range);
+              }
+              setSelectedRanges(dateManager.current.range);
+            }}
+          />
+        </div>
         <Divider />
         <Stack direction="row">
-          <Button text="決定" isPrimary={true} onClick={submit} />
+          <Button
+            text="決定"
+            isPrimary={true}
+            onClick={() => {
+              if (selectedRanges.length === 0) {
+                setEmptyRangesError(true);
+                return;
+              }
+              onSubmit(
+                transformRange(selectedRanges, eventTimeDuration),
+                eventTimeDuration,
+              );
+            }}
+          />
         </Stack>
       </Stack>
+
+      <Modal open={emptyRangesError}>
+        <Container maxWidth="xs" sx={{ ...ModalStyle }}>
+          <Stack direction="column" sx={{ mx: 8 }}>
+            <Typography
+              variant="h6"
+              noWrap={true}
+              sx={{ textAlign: "center", mb: 4 }}
+            >
+              範囲を選択してください
+            </Typography>
+            <Stack spacing={2} sx={{ mb: 2 }}>
+              <CButton
+                text="OK"
+                isPrimary={false}
+                onClick={() => {
+                  setEmptyRangesError(false);
+                }}
+              />
+            </Stack>
+          </Stack>
+        </Container>
+      </Modal>
     </Container>
   );
 };
 
 export { EventMakePageBody };
+
+const transformSchedule = (
+  calendars: UserCalendarProvider[] | undefined,
+): TSchedule[] => {
+  return (
+    calendars
+      ?.map((calendar) =>
+        calendar.events.map<TSchedule>((event) => {
+          if (event.isAllDay) {
+            return {
+              id: event.id,
+              startDate: dayjs(event.start),
+              endDate: dayjs(event.end),
+              name: event.name,
+              url: event.url,
+              displayOnly: false,
+              isAllDay: true,
+              color: "red",
+              startTime: null,
+              endTime: null,
+            } as TDateSchedule;
+          }
+          return {
+            id: event.id,
+            startTime: dayjs(event.start),
+            endTime: dayjs(event.end),
+            name: event.name,
+            url: event.url,
+            displayOnly: false,
+            isAllDay: false,
+            color: "red",
+            startDate: null,
+            endDate: null,
+          } as TTimeSchedule;
+        }),
+      )
+      .flat(1) ?? []
+  );
+};
+
+const transformRange = (
+  ranges: TSelectionRange[],
+  duration: number,
+): Record<string, boolean> => {
+  const startTimes = ranges
+    .map((range) => {
+      let startTimestamp = range.pos1.unix();
+      const endTimestamp = range.pos2.unix();
+      if (duration === 86400) {
+        return [range.pos1.set("hour", 0).set("minute", 0).toISOString()];
+      }
+      if (endTimestamp - startTimestamp < duration) {
+        return [];
+      }
+      const result: string[] = [];
+      while (startTimestamp < endTimestamp) {
+        result.push(dayjs.unix(startTimestamp).toISOString());
+        startTimestamp += duration;
+      }
+      return result;
+    })
+    .flat(1);
+
+  return startTimes
+    .map<[string, boolean]>((v) => [v, true])
+    .reduce<Record<string, boolean>>((acc, [k, v]) => ({ ...acc, [k]: v }), {});
+};

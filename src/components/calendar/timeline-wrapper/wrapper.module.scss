@@ -1,0 +1,34 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  .container {
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    position: relative;
+    .inner {
+      overflow-x: scroll;
+      position: relative;
+      scroll-snap-type: x;
+      height: 100%;
+      &.scrollBlock {
+        overflow-x: hidden;
+      }
+      &.scrolling {
+        scroll-snap-type: none;
+      }
+      .scrollWrapper {
+        height: 100%;
+        position: absolute;
+        overflow: hidden;
+        .scrollContainer {
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+        }
+      }
+    }
+  }
+}

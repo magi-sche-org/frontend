@@ -14,12 +14,10 @@ import { Stack } from "@mui/system";
 import dayjs from "dayjs";
 import type { FC } from "react";
 
-import type { IEventTimeDuration } from "@/@types/api/event";
-
 import Styles from "../GuestPage/GuestPageBody.module.scss";
 
 type Props = {
-  eventTimeDuration: IEventTimeDuration;
+  eventTimeDuration: number;
   checkList: Record<string, boolean>;
   setCheckList: (checkList: Record<string, boolean>) => void;
 };
@@ -57,7 +55,8 @@ export const InputSchedule: FC<Props> = ({
                 <TableCell>
                   <Typography variant="body1">
                     {`${start.format("MM/DD")}(${start.format("ddd")}) `}
-                    {start.format("HH:mm")}〜{end.format("HH:mm")}
+                    {eventTimeDuration < 86400 &&
+                      `${start.format("HH:mm")}〜${end.format("HH:mm")}`}
                   </Typography>
                 </TableCell>
                 <TableCell className={`${Styles.wrapper}`}>
