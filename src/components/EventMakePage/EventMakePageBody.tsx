@@ -76,9 +76,8 @@ const EventMakePageBody: FC = () => {
   const submit = (): void => {
     const startDayStr = startDay?.format("YYYY-MM-DD");
     const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
-    // TODO:
     void router.push(
-      `/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
+      `/preview?startday=${startDayStr}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
   };
 
