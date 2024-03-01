@@ -8,6 +8,7 @@ env:
   ENV: prd
   AWS_REGION: ap-northeast-1
   AWS_ACCOUNT_ID: 905418376731
+  API_ENDPOINT: https://api.magi-sche.org
 
 jobs:
   build-and-push:
@@ -42,7 +43,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: login to ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
         id: login-ecr
 
       - id: set_env
@@ -77,7 +78,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           target: runner
           platforms: linux/amd64
-        #   platforms: linux/amd64,linux/arm64
+          #   platforms: linux/amd64,linux/arm64
+          build-args: |
+            NEXT_PUBLIC_API_ENDPOINT=${{ env.API_ENDPOINT }}
 
   deploy:
     permissions:
@@ -90,7 +93,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::905418376731:role/magische-${{ env.ENV }}-webfront-deploy
           aws-region: ${{ env.AWS_REGION }}
@@ -113,4 +116,4 @@ jobs:
           #   MEMORY: 1024
           #   CPU_ARCHITECTURE: ARM64
           CPU_ARCHITECTURE: X86_64
-          API_ENDPOINT: https://api.magi-sche.net
+          API_ENDPOINT: https://api.magi-sche.org
