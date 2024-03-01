@@ -26,7 +26,7 @@ import { CalendarRangePicker } from "@/components/calendar";
 import { useCalendars } from "@/hooks/calendars";
 import { DateManager } from "@/libraries/date-manager";
 
-import { Button,Button as CButton } from "../Button";
+import { Button, Button as CButton } from "../Button";
 
 const ModalStyle = {
   position: "absolute" as const,
@@ -76,7 +76,7 @@ const EventMakePageBody: FC<Props> = ({ onSubmit, className }) => {
   ];
 
   return (
-    <div className={className}>
+    <Container maxWidth="md" className={className}>
       <Stack sx={{ p: 3 }} spacing={5}>
         <Stack spacing={6}>
           {/* イベントの長さ */}
@@ -171,7 +171,7 @@ const EventMakePageBody: FC<Props> = ({ onSubmit, className }) => {
           </Stack>
         </Container>
       </Modal>
-    </div>
+    </Container>
   );
 };
 

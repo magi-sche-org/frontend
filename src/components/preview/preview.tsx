@@ -2,6 +2,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
   Button,
   Checkbox,
+  Container,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -97,7 +98,7 @@ const Preview: FC<Props> = ({ ranges, duration }) => {
     setShowModal(true);
   };
   return (
-    <>
+    <Container maxWidth="md">
       <Stack
         sx={{
           p: 3,
@@ -186,9 +187,13 @@ const Preview: FC<Props> = ({ ranges, duration }) => {
                     setParticipantsNumber("");
                     return;
                   }
+                  if (Number(v) < 1) {
+                    setParticipantsNumber("1");
+                    return;
+                  }
                   setParticipantsNumber(v);
                 }}
-                sx={{ ml: 0, mb: 2 }}
+                sx={{ width: "10em", ml: 0, mb: 2 }}
               />
             </FormControl>
             <TextField
@@ -207,7 +212,7 @@ const Preview: FC<Props> = ({ ranges, duration }) => {
         </Button>
         <DisplayShareURLModal isOpen={showModal} shareURL={shareURL} />
       </Stack>
-    </>
+    </Container>
   );
 };
 
