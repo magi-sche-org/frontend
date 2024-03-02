@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import {
   Box,
+  Container,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -136,7 +137,7 @@ const GuestPageBody: FC<Props> = ({ event }) => {
   };
 
   return (
-    <>
+    <Container maxWidth="md">
       {user?.isRegistered && calendars && (
         <UserCalender calendars={calendars} />
       )}
@@ -317,7 +318,7 @@ const GuestPageBody: FC<Props> = ({ event }) => {
           />
         </Stack>
       </Stack>
-    </>
+    </Container>
   );
 };
 
