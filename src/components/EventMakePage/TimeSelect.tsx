@@ -3,15 +3,20 @@ import { MenuItem, Select } from "@mui/material";
 import type { FC } from "react";
 import { useEffect } from "react";
 
-const timeList = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  23, 24,
-];
+import type { IHourOfDay } from "@/@types/api/event";
+import { HourOfDay } from "@/constants/event";
 
 type Props = {
   time: number;
   handleTime: (time: number) => void;
   underTime?: number;
+  upperTime?: number;
+};
+
+const timeFilter = (underTime?: number, upperTime?: number): IHourOfDay[] => {
+  const newUnderTime = underTime ?? 0;
+  const newUpperTime = upperTime ?? 24;
+  return HourOfDay.filter((i) => newUpperTime >= i && i >= newUnderTime);
 };
 
 /**
@@ -19,25 +24,31 @@ type Props = {
  *
  *  @param time 選択されている時間
  *  @param handleTime 時間を更新するhandler
- *  @param underTime 以下の時間を選択できないようにする
+ *  @param underTime 選択できる時間の下限
+ *  @param upperTime 選択できる時間の上限
  */
-export const TimeSelect: FC<Props> = ({ time, handleTime, underTime }) => {
-  // 開始時間よりも前の時間を選択できないようにする
-  const editTimeList = underTime
-    ? timeList.filter((item) => {
-        return item > underTime;
-      })
-    : timeList;
+export const TimeSelect: FC<Props> = ({
+  time,
+  handleTime,
+  underTime,
+  upperTime,
+}) => {
+  // 条件に合った時間の候補を取得
+  const editTimeList = timeFilter(underTime, upperTime);
 
-  const isNonItem = editTimeList.length === 0;
-
-  // 開始時間よりも前の時間を選択を選択した場合、開始時間+1に合わせる
+  // 下限が変更された場合、値を下限+1に設定しなおす
   useEffect(() => {
     if (underTime && time < underTime) {
-      handleTime(isNonItem ? underTime : underTime + 1);
+      handleTime(underTime + 1);
     }
   }, [underTime]);
 
+  // 上限が変更された場合、値を上限に設定しなおす
+  useEffect(() => {
+    if (upperTime && time >= upperTime) {
+      handleTime(upperTime);
+    }
+  }, [upperTime]);
   return (
     <Select
       value={String(time)}
@@ -49,17 +60,13 @@ export const TimeSelect: FC<Props> = ({ time, handleTime, underTime }) => {
         minWidth: 80,
       }}
     >
-      {!isNonItem ? (
-        editTimeList.map((timeInfo) => {
-          return (
-            <MenuItem key={timeInfo} value={timeInfo}>
-              {timeInfo}
-            </MenuItem>
-          );
-        })
-      ) : (
-        <MenuItem value={24}>{24}</MenuItem>
-      )}
+      {editTimeList.map((timeInfo) => {
+        return (
+          <MenuItem key={timeInfo} value={timeInfo}>
+            {timeInfo}
+          </MenuItem>
+        );
+      })}
     </Select>
   );
 };
