@@ -76,9 +76,8 @@ const EventMakePageBody: FC = () => {
   const submit = (): void => {
     const startDayStr = startDay?.format("YYYY-MM-DD");
     const endDayStr = endDay ? endDay.format("YYYY-MM-DD") : startDayStr;
-    // TODO:
     void router.push(
-      `/preview?startday=${startDay}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
+      `/preview?startday=${startDayStr}&endday=${endDayStr}&starttime=${startTime}&endtime=${endTime}&eventtimeduration=${eventTimeDuration}`,
     );
   };
 
@@ -116,7 +115,11 @@ const EventMakePageBody: FC = () => {
           <Stack spacing={0.5}>
             <FormLabel>時間帯</FormLabel>
             <Stack direction="row" spacing={4}>
-              <TimeSelect time={startTime} handleTime={handleStartTime} />
+              <TimeSelect
+                time={startTime}
+                handleTime={handleStartTime}
+                upperTime={Math.min(24, endTime)}
+              />
               <Typography variant="h6">〜</Typography>
               <TimeSelect
                 time={endTime}

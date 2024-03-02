@@ -32,7 +32,10 @@ export const Header: FC<Props> = ({ type = "primary" }) => {
   return (
     <>
       <Head>
-        <meta name="theme-color" content="#FFFFDD" />
+        <meta
+          name="theme-color"
+          content={type === "primary" ? "#006A71" : "#FFFFDD"}
+        />
       </Head>
       <AppBar
         position="static"
