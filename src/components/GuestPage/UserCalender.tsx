@@ -78,7 +78,13 @@ export const UserCalender: FC<Props> = ({ calendars }) => {
                       >
                         <Typography
                           variant="caption"
-                          sx={{ color: "primary.main", lineHeight: "1.2" }}
+                          sx={{
+                            color: "primary.main",
+                            lineHeight: "1.2",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
                         >
                           {duration}
                           <br />
