@@ -126,7 +126,7 @@ const Preview: FC = () => {
     setShowModal(true);
   };
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" disableGutters>
       {user?.isRegistered && calendars && (
         <UserCalender calendars={calendars} />
       )}
@@ -134,6 +134,7 @@ const Preview: FC = () => {
         sx={{
           p: 3,
           mb: 3,
+          px: 5,
         }}
         spacing={5}
       >

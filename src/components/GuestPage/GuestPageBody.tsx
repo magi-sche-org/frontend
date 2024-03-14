@@ -137,12 +137,12 @@ const GuestPageBody: FC<Props> = ({ event }) => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" disableGutters>
       {user?.isRegistered && calendars && (
         <UserCalender calendars={calendars} />
       )}
       {/* タイトル・名前入力 */}
-      <Stack direction="column" sx={{ p: 3 }}>
+      <Stack direction="column" sx={{ p: 3, px: 5 }}>
         <Stack sx={{ mx: 10, mb: 5, mt: 1 }}>
           {isAnswered && (
             <Button
